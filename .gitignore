@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+Thumbs.db
+.~lock.*#
+
+# Editors
+.vscode/
+.idea/
+
+# Backend (Laravel) — see /backend/.gitignore for the full Laravel-generated list
+/backend/vendor/
+/backend/node_modules/
+/backend/.env
+/backend/.phpunit.result.cache
+/backend/storage/*.key
+/backend/public/storage
+/backend/public/hot
+
+# Mobile (Expo/React Native) — see /mobile/.gitignore for the full Expo-generated list
+/mobile/node_modules/
+/mobile/.expo/
+/mobile/.expo-shared/
+/mobile/dist/
+/mobile/web-build/
+/mobile/*.jks
+/mobile/*.p8
+/mobile/*.p12
+/mobile/*.key
+/mobile/*.mobileprovision
+/mobile/.env
