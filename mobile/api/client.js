@@ -1,4 +1,23 @@
-const BASE_URL = 'http://localhost:8000/api';
+import Constants from 'expo-constants';
+
+// In dev, Expo Go / a simulator on another device (or the Android emulator,
+// where "localhost" means the emulator itself) can't reach the API through
+// "localhost" — derive the dev machine's LAN IP from the Expo host instead.
+// Falls back to localhost for the web/iOS-simulator case where that works.
+function resolveBaseUrl() {
+  if (__DEV__) {
+    const hostUri = Constants.expoConfig?.hostUri;
+    const host = hostUri?.split(':')?.[0];
+
+    if (host) {
+      return `http://${host}:8000/api`;
+    }
+  }
+
+  return 'http://localhost:8000/api';
+}
+
+const BASE_URL = resolveBaseUrl();
 
 let authToken = null;
 
