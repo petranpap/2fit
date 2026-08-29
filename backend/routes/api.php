@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,3 +22,15 @@ Route::prefix('auth')->group(function () {
 Route::get('/user', function (Request $request) {
     return new UserResource($request->user());
 })->middleware('auth:sanctum');
+
+Route::get('/search', SearchController::class);
+
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{category}', [CategoryController::class, 'show']);
+
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{category}', [CategoryController::class, 'update']);
+    Route::patch('/categories/{category}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
+});
