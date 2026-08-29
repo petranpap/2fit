@@ -5,7 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import { colors } from '../theme/tokens';
+import SearchScreen from '../screens/SearchScreen';
+import { colors, fonts } from '../theme/tokens';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,18 @@ function MainStack() {
   return (
     <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          headerShown: true,
+          headerTitle: 'Αναζήτηση',
+          headerTintColor: colors.primary,
+          headerStyle: { backgroundColor: colors.background },
+          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerShadowVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }
