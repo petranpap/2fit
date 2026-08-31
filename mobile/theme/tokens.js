@@ -10,6 +10,11 @@ export const colors = {
   textSecondary: '#5B6B66',
   border: '#DDE5E1',
   danger: '#C23B3B',
+  // Soft primary/secondary tints — icon-placeholder blocks where there's no
+  // real photo yet, matching design.md's "soft primary-tinted elevation
+  // instead of hard drop shadows" direction.
+  primaryTint: '#0F6E8C1F',
+  secondaryTint: '#EF83541F',
 };
 
 export const spacing = {

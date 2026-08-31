@@ -8,9 +8,9 @@ import { colors, spacing } from '../theme/tokens';
  * scrollable, padded body so content never sits under the status bar or the
  * keyboard.
  */
-export default function ScreenContainer({ children, style }) {
+export default function ScreenContainer({ children, style, edges = ['top', 'bottom'] }) {
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+    <SafeAreaView style={styles.safeArea} edges={edges}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
