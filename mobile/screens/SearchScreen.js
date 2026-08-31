@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { search } from '../api/search';
 import CategoryChip from '../components/CategoryChip';
+import CategoryIconTile from '../components/CategoryIconTile';
 import IconButton from '../components/IconButton';
 import PlaceCard from '../components/PlaceCard';
 import SearchBar from '../components/SearchBar';
@@ -39,6 +40,21 @@ export default function SearchScreen({ route, navigation }) {
     if ('category' in route.params) setCategory(route.params.category);
     if ('radiusKm' in route.params) setRadiusKm(route.params.radiusKm);
   }, [route.params]);
+
+  // Not every category applies to every type (e.g. no gym in the data has
+  // "Yoga & Pilates"), so a category picked under one type can silently zero
+  // out the results under another. Clear it when the type actually changes
+  // — but not on the initial mount, or it'd wipe out a category handed in
+  // via route.params (Home's category tiles / Filters' apply).
+  const isFirstTypeRender = useRef(true);
+  useEffect(() => {
+    if (isFirstTypeRender.current) {
+      isFirstTypeRender.current = false;
+      return;
+    }
+
+    setCategory(null);
+  }, [type]);
 
   useEffect(() => {
     getCurrentCoords().then(setCoords);
@@ -78,7 +94,7 @@ export default function SearchScreen({ route, navigation }) {
 
       {/* Plain View wrapper with a fixed height — react-native-web's FlatList
           forces flex:1 internally, which ignores a height on its own `style`. */}
-      <View style={styles.chipsWrap}>
+      <View style={styles.typeRowWrap}>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -92,7 +108,9 @@ export default function SearchScreen({ route, navigation }) {
       </View>
 
       {categories.length > 0 ? (
-        <View style={styles.chipsWrap}>
+        // Same icon-tile style as Home's category row, so the two screens
+        // read as one consistent way of browsing categories.
+        <View style={styles.categoryRowWrap}>
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -100,8 +118,8 @@ export default function SearchScreen({ route, navigation }) {
             keyExtractor={(item) => String(item.id)}
             contentContainerStyle={styles.chipsRow}
             renderItem={({ item }) => (
-              <CategoryChip
-                label={item.name}
+              <CategoryIconTile
+                category={item}
                 selected={category === item.slug}
                 onPress={() => setCategory(category === item.slug ? null : item.slug)}
               />
@@ -146,8 +164,11 @@ const styles = StyleSheet.create({
   searchBar: {
     flex: 1,
   },
-  chipsWrap: {
+  typeRowWrap: {
     height: 48,
+  },
+  categoryRowWrap: {
+    height: 92,
   },
   chipsRow: {
     paddingHorizontal: spacing.xl,

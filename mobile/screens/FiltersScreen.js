@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from '../components/Button';
 import CategoryChip from '../components/CategoryChip';
+import CategoryIconTile from '../components/CategoryIconTile';
 import { useCategories } from '../hooks/useCategories';
 import { colors, spacing, typography } from '../theme/tokens';
 
@@ -34,11 +35,11 @@ export default function FiltersScreen({ route, navigation }) {
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.sectionTitle}>Κατηγορία</Text>
-        <View style={styles.chipsWrap}>
+        <View style={styles.categoriesWrap}>
           {categories.map((item) => (
-            <CategoryChip
+            <CategoryIconTile
               key={item.id}
-              label={item.name}
+              category={item}
               selected={category === item.slug}
               onPress={() => setCategory(category === item.slug ? null : item.slug)}
             />
@@ -82,6 +83,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
+  },
+  categoriesWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    rowGap: spacing.md,
   },
   footer: {
     padding: spacing.xl,
