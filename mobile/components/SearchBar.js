@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { colors, radius, spacing, typography } from '../theme/tokens';
@@ -14,19 +15,20 @@ export default function SearchBar({
   editable = true,
   placeholder = 'Αναζήτησε γυμναστήρια, προπονητές, καταστήματα…',
   autoFocus = false,
+  style,
 }) {
   if (!editable) {
     return (
-      <Pressable onPress={onPress} style={({ pressed }) => [styles.bar, pressed && styles.pressed]}>
-        <Text style={styles.icon}>🔍</Text>
+      <Pressable onPress={onPress} style={({ pressed }) => [styles.bar, style, pressed && styles.pressed]}>
+        <Ionicons name="search-outline" size={18} color={colors.textSecondary} style={styles.icon} />
         <Text style={styles.placeholder}>{placeholder}</Text>
       </Pressable>
     );
   }
 
   return (
-    <View style={styles.bar}>
-      <Text style={styles.icon}>🔍</Text>
+    <View style={[styles.bar, style]}>
+      <Ionicons name="search-outline" size={18} color={colors.textSecondary} style={styles.icon} />
       <TextInput
         style={styles.input}
         value={value}
@@ -55,7 +57,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   icon: {
-    fontSize: 16,
     marginRight: spacing.sm,
   },
   placeholder: {
