@@ -9,6 +9,7 @@ import FavoritesScreen from '../screens/FavoritesScreen';
 import FiltersScreen from '../screens/FiltersScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import PlaceDetailScreen from '../screens/PlaceDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import SearchScreen from '../screens/SearchScreen';
@@ -77,6 +78,17 @@ function MainStack() {
         options={{
           presentation: 'modal',
           headerTitle: t('filters.title'),
+          headerTintColor: colors.primary,
+          headerStyle: { backgroundColor: colors.background },
+          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="PlaceDetail"
+        component={PlaceDetailScreen}
+        options={{
+          headerTitle: '',
           headerTintColor: colors.primary,
           headerStyle: { backgroundColor: colors.background },
           headerTitleStyle: { fontFamily: fonts.headingSemiBold },
