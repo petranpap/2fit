@@ -13,8 +13,12 @@ class CategoryController extends Controller
 {
     public function index(): JsonResponse
     {
+        $categories = Category::withCount(['gyms', 'trainers', 'shops'])
+            ->orderBy('name')
+            ->get();
+
         return response()->json([
-            'data' => CategoryResource::collection(Category::orderBy('name')->get()),
+            'data' => CategoryResource::collection($categories),
         ]);
     }
 
