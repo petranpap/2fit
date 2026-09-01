@@ -1,14 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, shadows, spacing, typography } from '../theme/tokens';
 
 export default function PlaceCard({ place }) {
   const { t } = useLocale();
+  const navigation = useNavigation();
   const categoryNames = place.categories?.map((c) => c.name).join(' · ');
 
   return (
-    <View style={[styles.card, shadows.small]}>
+    <Pressable
+      onPress={() => navigation.navigate('PlaceDetail', { type: place.type, id: place.id, distanceKm: place.distance_km })}
+      style={({ pressed }) => [styles.card, shadows.small, pressed && styles.pressed]}
+    >
       <View style={styles.headerRow}>
         <Text style={styles.name} numberOfLines={1}>
           {place.name}
@@ -34,7 +39,7 @@ export default function PlaceCard({ place }) {
           {categoryNames}
         </Text>
       ) : null}
-    </View>
+    </Pressable>
   );
 }
 
@@ -44,6 +49,9 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     padding: spacing.lg,
     marginBottom: spacing.md,
+  },
+  pressed: {
+    opacity: 0.85,
   },
   headerRow: {
     flexDirection: 'row',

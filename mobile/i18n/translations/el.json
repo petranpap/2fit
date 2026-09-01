@@ -94,6 +94,23 @@
     "emptyTitle": "Δεν έχεις αποθηκεύσει τίποτα ακόμα",
     "emptySubtitle": "Τα αγαπημένα σου γυμναστήρια, προπονητές και καταστήματα θα εμφανίζονται εδώ."
   },
+  "placeDetail": {
+    "aboutSection": "Σχετικά",
+    "contactSection": "Επικοινωνία",
+    "categoriesSection": "Κατηγορίες",
+    "reviewsSection": "Αξιολογήσεις",
+    "noReviewsYet": "Δεν υπάρχουν ακόμα αξιολογήσεις.",
+    "reviews": "{{count}} αξιολογήσεις",
+    "reviewsOne": "{{count}} αξιολόγηση",
+    "hourlyRate": "{{rate}} € / ώρα",
+    "callAction": "Κλήση",
+    "emailAction": "Email",
+    "websiteAction": "Ιστοσελίδα",
+    "shareAction": "Κοινοποίηση",
+    "shareMessage": "Δες το {{name}} στο 2fit!",
+    "notFound": "Δεν βρέθηκε.",
+    "loadError": "Κάτι πήγε στραβά. Δοκίμασε ξανά."
+  },
   "validation": {
     "emailRequired": "Το email είναι υποχρεωτικό.",
     "emailInvalid": "Δώσε ένα έγκυρο email.",

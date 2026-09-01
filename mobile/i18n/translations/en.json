@@ -94,6 +94,23 @@
     "emptyTitle": "Nothing saved yet",
     "emptySubtitle": "Your favorite gyms, trainers and shops will show up here."
   },
+  "placeDetail": {
+    "aboutSection": "About",
+    "contactSection": "Contact",
+    "categoriesSection": "Categories",
+    "reviewsSection": "Reviews",
+    "noReviewsYet": "No reviews yet.",
+    "reviews": "{{count}} reviews",
+    "reviewsOne": "{{count}} review",
+    "hourlyRate": "€{{rate}} / hour",
+    "callAction": "Call",
+    "emailAction": "Email",
+    "websiteAction": "Website",
+    "shareAction": "Share",
+    "shareMessage": "Check out {{name}} on 2fit!",
+    "notFound": "Not found.",
+    "loadError": "Something went wrong. Try again."
+  },
   "validation": {
     "emailRequired": "Email is required.",
     "emailInvalid": "Enter a valid email.",

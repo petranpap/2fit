@@ -3,14 +3,16 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { colors, spacing, typography } from '../theme/tokens';
 
-export default function MenuListItem({ icon, label, onPress, danger = false }) {
+export default function MenuListItem({ icon, label, onPress, danger = false, showChevron = !danger }) {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
       <View style={styles.left}>
         <Ionicons name={icon} size={20} color={danger ? colors.danger : colors.textPrimary} />
-        <Text style={[styles.label, danger && styles.labelDanger]}>{label}</Text>
+        <Text style={[styles.label, danger && styles.labelDanger]} numberOfLines={1}>
+          {label}
+        </Text>
       </View>
-      {!danger && <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />}
+      {showChevron && <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />}
     </Pressable>
   );
 }
