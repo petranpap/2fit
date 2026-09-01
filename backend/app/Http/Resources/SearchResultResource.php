@@ -7,6 +7,7 @@ use App\Models\Shop;
 use App\Models\Trainer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Normalizes Gym/Trainer/Shop into one shape for the merged search response.
@@ -18,6 +19,8 @@ class SearchResultResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $imagePath = $this instanceof Trainer ? $this->photo_path : $this->logo_path;
+
         return [
             'id' => $this->id,
             'type' => $this->resolveType(),
@@ -28,7 +31,7 @@ class SearchResultResource extends JsonResource
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'distance_km' => $this->distance_km !== null ? round((float) $this->distance_km, 2) : null,
-            'image_path' => $this instanceof Trainer ? $this->photo_path : $this->logo_path,
+            'image_url' => $imagePath ? Storage::disk('public')->url($imagePath) : null,
             'is_verified' => $this->is_verified,
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
         ];
