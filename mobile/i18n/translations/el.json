@@ -1,0 +1,106 @@
+{
+  "common": {
+    "comingSoonTitle": "Σύντομα διαθέσιμο",
+    "comingSoonMessage": "Αυτή η λειτουργία δεν είναι έτοιμη ακόμα.",
+    "seeAll": "Δες όλα",
+    "searchPlaceholder": "Αναζήτησε γυμναστήρια, προπονητές, καταστήματα…"
+  },
+  "placeTypes": {
+    "gym": "Γυμναστήριο",
+    "trainer": "Προπονητής",
+    "shop": "Κατάστημα"
+  },
+  "nav": {
+    "home": "Αρχική",
+    "search": "Εξερεύνηση",
+    "favorites": "Αγαπημένα",
+    "profile": "Προφίλ"
+  },
+  "auth": {
+    "login": {
+      "title": "Καλωσόρισες πίσω",
+      "subtitle": "Συνδέσου για να συνεχίσεις.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Κωδικός",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Σύνδεση",
+      "noAccount": "Δεν έχεις λογαριασμό;",
+      "registerLink": "Εγγραφή",
+      "badCredentials": "Λάθος email ή κωδικός."
+    },
+    "register": {
+      "title": "Δημιούργησε λογαριασμό",
+      "subtitle": "Βρες γυμναστήρια, προπονητές και προσφορές κοντά σου.",
+      "nameLabel": "Όνομα",
+      "namePlaceholder": "Το όνομά σου",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@example.com",
+      "phoneLabel": "Τηλέφωνο (προαιρετικό)",
+      "phonePlaceholder": "99 123456",
+      "passwordLabel": "Κωδικός",
+      "passwordPlaceholder": "Τουλάχιστον 8 χαρακτήρες",
+      "confirmLabel": "Επιβεβαίωση κωδικού",
+      "confirmPlaceholder": "Ξαναγράψε τον κωδικό",
+      "submit": "Εγγραφή",
+      "hasAccount": "Έχεις ήδη λογαριασμό;",
+      "loginLink": "Σύνδεση"
+    }
+  },
+  "home": {
+    "greeting": "Γεια σου, {{name}} 👋",
+    "subtitlePrefix": "Έτοιμος/η να ανακαλύψεις την ",
+    "subtitleHighlight": "καλύτερη εκδοχή",
+    "subtitleSuffix": " του εαυτού σου;",
+    "recommendedTitle": "Προτείνονται για εσένα",
+    "nearbyEmpty": "Δεν βρέθηκαν αποτελέσματα κοντά σου.",
+    "bannerTitlePlain": "Βρες. Προπονήσου. ",
+    "bannerTitleAccent": "Εξοικονόμησε.",
+    "bannerSubtitle": "Όλα σε μία εφαρμογή."
+  },
+  "search": {
+    "headerTitle": "Εξερεύνηση",
+    "filterAll": "Όλα",
+    "filterGym": "Γυμναστήρια",
+    "filterTrainer": "Προπονητές",
+    "filterShop": "Καταστήματα",
+    "topCategoriesTitle": "Δημοφιλείς κατηγορίες",
+    "popularNearbyTitle": "Δημοφιλή κοντά σου",
+    "listings": "{{count}} καταχωρήσεις",
+    "listingsOne": "{{count}} καταχώρηση",
+    "empty": "Δεν βρέθηκαν αποτελέσματα.",
+    "error": "Κάτι πήγε στραβά. Δοκίμασε ξανά.",
+    "locationFallback": "Η τοποθεσία σου",
+    "filtersA11y": "Φίλτρα"
+  },
+  "filters": {
+    "title": "Φίλτρα",
+    "categorySection": "Κατηγορία",
+    "distanceSection": "Απόσταση",
+    "distanceAll": "Όλες",
+    "apply": "Εφαρμογή φίλτρων"
+  },
+  "profile": {
+    "favorites": "Αγαπημένα",
+    "myReviews": "Οι αξιολογήσεις μου",
+    "notifications": "Ειδοποιήσεις",
+    "help": "Βοήθεια & Υποστήριξη",
+    "logout": "Αποσύνδεση",
+    "languageSection": "Γλώσσα",
+    "languageGreek": "Ελληνικά",
+    "languageEnglish": "English"
+  },
+  "favorites": {
+    "emptyTitle": "Δεν έχεις αποθηκεύσει τίποτα ακόμα",
+    "emptySubtitle": "Τα αγαπημένα σου γυμναστήρια, προπονητές και καταστήματα θα εμφανίζονται εδώ."
+  },
+  "validation": {
+    "emailRequired": "Το email είναι υποχρεωτικό.",
+    "emailInvalid": "Δώσε ένα έγκυρο email.",
+    "passwordRequired": "Ο κωδικός είναι υποχρεωτικός.",
+    "nameRequired": "Δώσε το όνομά σου.",
+    "phoneInvalid": "Το τηλέφωνο φαίνεται ελλιπές.",
+    "passwordMin": "Τουλάχιστον 8 χαρακτήρες.",
+    "passwordMismatch": "Οι κωδικοί δεν ταιριάζουν."
+  }
+}

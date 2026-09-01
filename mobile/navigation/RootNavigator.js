@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityIndicator, View } from 'react-native';
 
 import { useAuth } from '../context/AuthContext';
+import { useLocale } from '../i18n/LocaleContext';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import FiltersScreen from '../screens/FiltersScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -23,11 +24,11 @@ const TAB_ICONS = {
   Profile: 'person',
 };
 
-const TAB_LABELS = {
-  Home: 'Αρχική',
-  Search: 'Εξερεύνηση',
-  Favorites: 'Αγαπημένα',
-  Profile: 'Προφίλ',
+const TAB_LABEL_KEYS = {
+  Home: 'nav.home',
+  Search: 'nav.search',
+  Favorites: 'nav.favorites',
+  Profile: 'nav.profile',
 };
 
 function AuthStack() {
@@ -40,6 +41,8 @@ function AuthStack() {
 }
 
 function MainTabs() {
+  const { t } = useLocale();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -48,7 +51,7 @@ function MainTabs() {
         tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
         tabBarLabelStyle: { fontFamily: fonts.bodyMedium, fontSize: 11 },
-        tabBarLabel: TAB_LABELS[route.name],
+        tabBarLabel: t(TAB_LABEL_KEYS[route.name]),
         tabBarIcon: ({ color, size, focused }) => (
           <Ionicons name={`${TAB_ICONS[route.name]}${focused ? '' : '-outline'}`} size={size} color={color} />
         ),
@@ -63,6 +66,8 @@ function MainTabs() {
 }
 
 function MainStack() {
+  const { t } = useLocale();
+
   return (
     <Stack.Navigator initialRouteName="MainTabs">
       <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
@@ -71,7 +76,7 @@ function MainStack() {
         component={FiltersScreen}
         options={{
           presentation: 'modal',
-          headerTitle: 'Φίλτρα',
+          headerTitle: t('filters.title'),
           headerTintColor: colors.primary,
           headerStyle: { backgroundColor: colors.background },
           headerTitleStyle: { fontFamily: fonts.headingSemiBold },

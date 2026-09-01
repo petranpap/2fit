@@ -5,11 +5,13 @@ import Button from '../components/Button';
 import ScreenContainer from '../components/ScreenContainer';
 import TextField from '../components/TextField';
 import { useAuth } from '../context/AuthContext';
+import { useLocale } from '../i18n/LocaleContext';
 import { colors, spacing, typography } from '../theme/tokens';
 import { validateRegisterForm } from '../utils/validation';
 
 export default function RegisterScreen({ navigation }) {
   const { register } = useAuth();
+  const { t } = useLocale();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -20,7 +22,7 @@ export default function RegisterScreen({ navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    const validationErrors = validateRegisterForm({ name, email, phone, password, passwordConfirmation });
+    const validationErrors = validateRegisterForm({ name, email, phone, password, passwordConfirmation }, t);
     setErrors(validationErrors);
     setSubmitError(null);
 
@@ -56,66 +58,66 @@ export default function RegisterScreen({ navigation }) {
     <ScreenContainer>
       <View style={styles.header}>
         <Text style={styles.wordmark}>2fit</Text>
-        <Text style={styles.title}>Δημιούργησε λογαριασμό</Text>
-        <Text style={styles.subtitle}>Βρες γυμναστήρια, προπονητές και προσφορές κοντά σου.</Text>
+        <Text style={styles.title}>{t('auth.register.title')}</Text>
+        <Text style={styles.subtitle}>{t('auth.register.subtitle')}</Text>
       </View>
 
       <View style={styles.form}>
         <TextField
-          label="Όνομα"
+          label={t('auth.register.nameLabel')}
           value={name}
           onChangeText={setName}
           error={errors.name}
           autoComplete="name"
-          placeholder="Το όνομά σου"
+          placeholder={t('auth.register.namePlaceholder')}
         />
         <TextField
-          label="Email"
+          label={t('auth.register.emailLabel')}
           value={email}
           onChangeText={setEmail}
           error={errors.email}
           autoCapitalize="none"
           keyboardType="email-address"
           autoComplete="email"
-          placeholder="name@example.com"
+          placeholder={t('auth.register.emailPlaceholder')}
         />
         <TextField
-          label="Τηλέφωνο (προαιρετικό)"
+          label={t('auth.register.phoneLabel')}
           value={phone}
           onChangeText={setPhone}
           error={errors.phone}
           keyboardType="phone-pad"
           autoComplete="tel"
-          placeholder="99 123456"
+          placeholder={t('auth.register.phonePlaceholder')}
         />
         <TextField
-          label="Κωδικός"
+          label={t('auth.register.passwordLabel')}
           value={password}
           onChangeText={setPassword}
           error={errors.password}
           secureTextEntry
           autoComplete="password-new"
-          placeholder="Τουλάχιστον 8 χαρακτήρες"
+          placeholder={t('auth.register.passwordPlaceholder')}
         />
         <TextField
-          label="Επιβεβαίωση κωδικού"
+          label={t('auth.register.confirmLabel')}
           value={passwordConfirmation}
           onChangeText={setPasswordConfirmation}
           error={errors.passwordConfirmation}
           secureTextEntry
           autoComplete="password-new"
-          placeholder="Ξαναγράψε τον κωδικό"
+          placeholder={t('auth.register.confirmPlaceholder')}
         />
 
         {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
 
-        <Button label="Εγγραφή" onPress={handleSubmit} loading={isSubmitting} />
+        <Button label={t('auth.register.submit')} onPress={handleSubmit} loading={isSubmitting} />
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Έχεις ήδη λογαριασμό;</Text>
+        <Text style={styles.footerText}>{t('auth.register.hasAccount')}</Text>
         <Text style={styles.footerLink} onPress={() => navigation.navigate('Login')}>
-          {' '}Σύνδεση
+          {' '}{t('auth.register.loginLink')}
         </Text>
       </View>
     </ScreenContainer>

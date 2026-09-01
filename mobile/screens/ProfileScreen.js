@@ -1,8 +1,10 @@
 import { Alert, Linking, StyleSheet, Text, View } from 'react-native';
 
+import CategoryChip from '../components/CategoryChip';
 import MenuListItem from '../components/MenuListItem';
 import ScreenContainer from '../components/ScreenContainer';
 import { useAuth } from '../context/AuthContext';
+import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
 
 function initials(name = '') {
@@ -14,12 +16,11 @@ function initials(name = '') {
     .join('');
 }
 
-function comingSoon() {
-  Alert.alert('Σύντομα διαθέσιμο', 'Αυτή η λειτουργία δεν είναι έτοιμη ακόμα.');
-}
-
 export default function ProfileScreen({ navigation }) {
   const { user, logout } = useAuth();
+  const { t, locale, setLocale } = useLocale();
+
+  const comingSoon = () => Alert.alert(t('common.comingSoonTitle'), t('common.comingSoonMessage'));
 
   return (
     <ScreenContainer edges={['top']}>
@@ -34,17 +35,23 @@ export default function ProfileScreen({ navigation }) {
       <View style={styles.menu}>
         <MenuListItem
           icon="heart-outline"
-          label="Αγαπημένα"
+          label={t('profile.favorites')}
           onPress={() => navigation.navigate('Favorites')}
         />
-        <MenuListItem icon="star-outline" label="Οι αξιολογήσεις μου" onPress={comingSoon} />
-        <MenuListItem icon="notifications-outline" label="Ειδοποιήσεις" onPress={comingSoon} />
+        <MenuListItem icon="star-outline" label={t('profile.myReviews')} onPress={comingSoon} />
+        <MenuListItem icon="notifications-outline" label={t('profile.notifications')} onPress={comingSoon} />
         <MenuListItem
           icon="help-circle-outline"
-          label="Βοήθεια & Υποστήριξη"
+          label={t('profile.help')}
           onPress={() => Linking.openURL('mailto:support@2fit.app')}
         />
-        <MenuListItem icon="log-out-outline" label="Αποσύνδεση" onPress={logout} danger />
+        <MenuListItem icon="log-out-outline" label={t('profile.logout')} onPress={logout} danger />
+      </View>
+
+      <Text style={styles.sectionTitle}>{t('profile.languageSection')}</Text>
+      <View style={styles.languageRow}>
+        <CategoryChip label={t('profile.languageGreek')} selected={locale === 'el'} onPress={() => setLocale('el')} />
+        <CategoryChip label={t('profile.languageEnglish')} selected={locale === 'en'} onPress={() => setLocale('en')} />
       </View>
     </ScreenContainer>
   );
@@ -79,5 +86,13 @@ const styles = StyleSheet.create({
   },
   menu: {
     marginTop: spacing.md,
+  },
+  sectionTitle: {
+    ...typography.subheading,
+    marginTop: spacing.xl,
+    marginBottom: spacing.md,
+  },
+  languageRow: {
+    flexDirection: 'row',
   },
 });

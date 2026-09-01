@@ -6,11 +6,13 @@ import { Manrope_400Regular, Manrope_500Medium, Manrope_600SemiBold } from '@exp
 import * as SplashScreen from 'expo-splash-screen';
 
 import { AuthProvider } from './context/AuthContext';
+import { LocaleProvider, useLocale } from './i18n/LocaleContext';
 import RootNavigator from './navigation/RootNavigator';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function App() {
+function AppContent() {
+  const { isReady: isLocaleReady } = useLocale();
   const [fontsLoaded, fontError] = useFonts({
     Archivo_600SemiBold,
     Archivo_700Bold,
@@ -19,13 +21,15 @@ export default function App() {
     Manrope_600SemiBold,
   });
 
+  const isReady = (fontsLoaded || fontError) && isLocaleReady;
+
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    if (isReady) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError]);
+  }, [isReady]);
 
-  if (!fontsLoaded && !fontError) {
+  if (!isReady) {
     return null;
   }
 
@@ -36,5 +40,13 @@ export default function App() {
         <StatusBar style="auto" />
       </NavigationContainer>
     </AuthProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <LocaleProvider>
+      <AppContent />
+    </LocaleProvider>
   );
 }
