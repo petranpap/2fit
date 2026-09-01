@@ -4,47 +4,47 @@ export function isValidEmail(value) {
   return EMAIL_PATTERN.test(value.trim());
 }
 
-export function validateLoginForm({ email, password }) {
+export function validateLoginForm({ email, password }, t) {
   const errors = {};
 
   if (!email.trim()) {
-    errors.email = 'Το email είναι υποχρεωτικό.';
+    errors.email = t('validation.emailRequired');
   } else if (!isValidEmail(email)) {
-    errors.email = 'Δώσε ένα έγκυρο email.';
+    errors.email = t('validation.emailInvalid');
   }
 
   if (!password) {
-    errors.password = 'Ο κωδικός είναι υποχρεωτικός.';
+    errors.password = t('validation.passwordRequired');
   }
 
   return errors;
 }
 
-export function validateRegisterForm({ name, email, phone, password, passwordConfirmation }) {
+export function validateRegisterForm({ name, email, phone, password, passwordConfirmation }, t) {
   const errors = {};
 
   if (!name.trim() || name.trim().length < 2) {
-    errors.name = 'Δώσε το όνομά σου.';
+    errors.name = t('validation.nameRequired');
   }
 
   if (!email.trim()) {
-    errors.email = 'Το email είναι υποχρεωτικό.';
+    errors.email = t('validation.emailRequired');
   } else if (!isValidEmail(email)) {
-    errors.email = 'Δώσε ένα έγκυρο email.';
+    errors.email = t('validation.emailInvalid');
   }
 
   if (phone.trim() && phone.trim().replace(/[\s-]/g, '').length < 8) {
-    errors.phone = 'Το τηλέφωνο φαίνεται ελλιπές.';
+    errors.phone = t('validation.phoneInvalid');
   }
 
   if (!password) {
-    errors.password = 'Ο κωδικός είναι υποχρεωτικός.';
+    errors.password = t('validation.passwordRequired');
   } else if (password.length < 8) {
-    errors.password = 'Τουλάχιστον 8 χαρακτήρες.';
+    errors.password = t('validation.passwordMin');
   }
 
   if (passwordConfirmation !== password) {
-    errors.passwordConfirmation = 'Οι κωδικοί δεν ταιριάζουν.';
+    errors.passwordConfirmation = t('validation.passwordMismatch');
   }
 
   return errors;

@@ -1,14 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 
+import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, shadows, spacing, typography } from '../theme/tokens';
 
-const TYPE_LABELS = {
-  gym: 'Γυμναστήριο',
-  trainer: 'Προπονητής',
-  shop: 'Κατάστημα',
-};
-
 export default function PlaceCard({ place }) {
+  const { t } = useLocale();
   const categoryNames = place.categories?.map((c) => c.name).join(' · ');
 
   return (
@@ -21,7 +17,7 @@ export default function PlaceCard({ place }) {
       </View>
 
       <View style={styles.metaRow}>
-        <Text style={styles.typeBadge}>{TYPE_LABELS[place.type] ?? place.type}</Text>
+        <Text style={styles.typeBadge}>{t(`placeTypes.${place.type}`)}</Text>
         {place.distance_km != null ? (
           <Text style={styles.distance}>{place.distance_km.toFixed(1)} km</Text>
         ) : null}

@@ -5,11 +5,13 @@ import Button from '../components/Button';
 import ScreenContainer from '../components/ScreenContainer';
 import TextField from '../components/TextField';
 import { useAuth } from '../context/AuthContext';
+import { useLocale } from '../i18n/LocaleContext';
 import { colors, spacing, typography } from '../theme/tokens';
 import { validateLoginForm } from '../utils/validation';
 
 export default function LoginScreen({ navigation }) {
   const { login } = useAuth();
+  const { t } = useLocale();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
@@ -17,7 +19,7 @@ export default function LoginScreen({ navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    const validationErrors = validateLoginForm({ email, password });
+    const validationErrors = validateLoginForm({ email, password }, t);
     setErrors(validationErrors);
     setSubmitError(null);
 
@@ -29,7 +31,7 @@ export default function LoginScreen({ navigation }) {
     try {
       await login({ email: email.trim(), password });
     } catch (error) {
-      setSubmitError(error.message === 'Request failed' ? 'Λάθος email ή κωδικός.' : error.message);
+      setSubmitError(error.message === 'Request failed' ? t('auth.login.badCredentials') : error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -39,40 +41,40 @@ export default function LoginScreen({ navigation }) {
     <ScreenContainer style={styles.content}>
       <View style={styles.header}>
         <Text style={styles.wordmark}>2fit</Text>
-        <Text style={styles.title}>Καλωσόρισες πίσω</Text>
-        <Text style={styles.subtitle}>Συνδέσου για να συνεχίσεις.</Text>
+        <Text style={styles.title}>{t('auth.login.title')}</Text>
+        <Text style={styles.subtitle}>{t('auth.login.subtitle')}</Text>
       </View>
 
       <View style={styles.form}>
         <TextField
-          label="Email"
+          label={t('auth.login.emailLabel')}
           value={email}
           onChangeText={setEmail}
           error={errors.email}
           autoCapitalize="none"
           keyboardType="email-address"
           autoComplete="email"
-          placeholder="name@example.com"
+          placeholder={t('auth.login.emailPlaceholder')}
         />
         <TextField
-          label="Κωδικός"
+          label={t('auth.login.passwordLabel')}
           value={password}
           onChangeText={setPassword}
           error={errors.password}
           secureTextEntry
           autoComplete="password"
-          placeholder="••••••••"
+          placeholder={t('auth.login.passwordPlaceholder')}
         />
 
         {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
 
-        <Button label="Σύνδεση" onPress={handleSubmit} loading={isSubmitting} />
+        <Button label={t('auth.login.submit')} onPress={handleSubmit} loading={isSubmitting} />
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Δεν έχεις λογαριασμό;</Text>
+        <Text style={styles.footerText}>{t('auth.login.noAccount')}</Text>
         <Text style={styles.footerLink} onPress={() => navigation.navigate('Register')}>
-          {' '}Εγγραφή
+          {' '}{t('auth.login.registerLink')}
         </Text>
       </View>
     </ScreenContainer>

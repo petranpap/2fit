@@ -1,36 +1,40 @@
 import { useEffect, useRef, useState } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { search } from '../api/search';
 import CategoryChip from '../components/CategoryChip';
-import CategoryIconTile from '../components/CategoryIconTile';
+import CategoryGridCard from '../components/CategoryGridCard';
 import IconButton from '../components/IconButton';
 import PlaceCard from '../components/PlaceCard';
 import SearchBar from '../components/SearchBar';
 import { useCategories } from '../hooks/useCategories';
+import { useLocale } from '../i18n/LocaleContext';
 import { colors, spacing, typography } from '../theme/tokens';
-import { getCurrentCoords } from '../utils/location';
+import { getCurrentCoords, getLocationLabel } from '../utils/location';
 
 const DEBOUNCE_MS = 400;
 
-const TYPE_OPTIONS = [
-  { label: 'Όλα', value: 'all' },
-  { label: 'Γυμναστήρια', value: 'gym' },
-  { label: 'Προπονητές', value: 'trainer' },
-  { label: 'Καταστήματα', value: 'shop' },
-];
-
 export default function SearchScreen({ route, navigation }) {
   const { categories } = useCategories();
+  const { t } = useLocale();
   const [query, setQuery] = useState(route.params?.initialQuery ?? '');
   const [type, setType] = useState('all');
   const [category, setCategory] = useState(route.params?.category ?? null);
   const [radiusKm, setRadiusKm] = useState(route.params?.radiusKm ?? null);
   const [coords, setCoords] = useState(null);
+  const [locationLabel, setLocationLabel] = useState(null);
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const typeOptions = [
+    { label: t('search.filterAll'), value: 'all' },
+    { label: t('search.filterGym'), value: 'gym' },
+    { label: t('search.filterTrainer'), value: 'trainer' },
+    { label: t('search.filterShop'), value: 'shop' },
+  ];
 
   // Home's category tiles and the Filters screen both hand filters back via
   // route.params — re-sync whenever they change, not just on first mount.
@@ -61,6 +65,12 @@ export default function SearchScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
+    if (!coords) return;
+
+    getLocationLabel(coords).then(setLocationLabel);
+  }, [coords]);
+
+  useEffect(() => {
     const timeout = setTimeout(() => {
       setIsLoading(true);
       setError(null);
@@ -74,23 +84,36 @@ export default function SearchScreen({ route, navigation }) {
         lng: coords?.lng,
       })
         .then(({ data }) => setResults(data))
-        .catch(() => setError('Κάτι πήγε στραβά. Δοκίμασε ξανά.'))
+        .catch(() => setError(t('search.error')))
         .finally(() => setIsLoading(false));
     }, DEBOUNCE_MS);
 
     return () => clearTimeout(timeout);
   }, [query, type, category, radiusKm, coords]);
 
-  return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <View style={styles.header}>
-        <SearchBar value={query} onChangeText={setQuery} autoFocus style={styles.searchBar} />
+  const header = (
+    <View>
+      <View style={styles.titleRow}>
+        <View>
+          <Text style={styles.title}>{t('search.headerTitle')}</Text>
+          <View style={styles.locationRow}>
+            <Ionicons name="location-outline" size={14} color={colors.textSecondary} />
+            <Text style={styles.locationText}>{locationLabel ?? t('search.locationFallback')}</Text>
+          </View>
+        </View>
         <IconButton
           name="options-outline"
-          accessibilityLabel="Φίλτρα"
+          accessibilityLabel={t('search.filtersA11y')}
           onPress={() => navigation.navigate('Filters', { category, radiusKm })}
         />
       </View>
+
+      <SearchBar
+        value={query}
+        onChangeText={setQuery}
+        placeholder={t('common.searchPlaceholder')}
+        style={styles.searchBar}
+      />
 
       {/* Plain View wrapper with a fixed height — react-native-web's FlatList
           forces flex:1 internally, which ignores a height on its own `style`. */}
@@ -98,9 +121,9 @@ export default function SearchScreen({ route, navigation }) {
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={TYPE_OPTIONS}
+          data={typeOptions}
           keyExtractor={(item) => item.value}
-          contentContainerStyle={styles.chipsRow}
+          contentContainerStyle={styles.typeRow}
           renderItem={({ item }) => (
             <CategoryChip label={item.label} selected={type === item.value} onPress={() => setType(item.value)} />
           )}
@@ -108,42 +131,41 @@ export default function SearchScreen({ route, navigation }) {
       </View>
 
       {categories.length > 0 ? (
-        // Same icon-tile style as Home's category row, so the two screens
-        // read as one consistent way of browsing categories.
-        <View style={styles.categoryRowWrap}>
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={categories}
-            keyExtractor={(item) => String(item.id)}
-            contentContainerStyle={styles.chipsRow}
-            renderItem={({ item }) => (
-              <CategoryIconTile
+        <>
+          <Text style={styles.sectionTitle}>{t('search.topCategoriesTitle')}</Text>
+          <View style={styles.categoryGrid}>
+            {categories.map((item) => (
+              <CategoryGridCard
+                key={item.id}
                 category={item}
                 selected={category === item.slug}
                 onPress={() => setCategory(category === item.slug ? null : item.slug)}
               />
-            )}
-          />
-        </View>
+            ))}
+          </View>
+        </>
       ) : null}
 
-      <View style={styles.results}>
-        {isLoading ? (
-          <ActivityIndicator color={colors.primary} style={styles.spinner} />
-        ) : error ? (
-          <Text style={styles.message}>{error}</Text>
-        ) : results.length === 0 ? (
-          <Text style={styles.message}>Δεν βρέθηκαν αποτελέσματα.</Text>
-        ) : (
-          <FlatList
-            data={results}
-            keyExtractor={(item) => `${item.type}-${item.id}`}
-            renderItem={({ item }) => <PlaceCard place={item} />}
-            contentContainerStyle={styles.list}
-          />
-        )}
-      </View>
+      <Text style={styles.sectionTitle}>{t('search.popularNearbyTitle')}</Text>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <FlatList
+        data={results}
+        keyExtractor={(item) => `${item.type}-${item.id}`}
+        renderItem={({ item }) => <PlaceCard place={item} />}
+        contentContainerStyle={styles.list}
+        ListHeaderComponent={header}
+        ListEmptyComponent={
+          isLoading ? (
+            <ActivityIndicator color={colors.primary} style={styles.spinner} />
+          ) : (
+            <Text style={styles.message}>{error ?? t('search.empty')}</Text>
+          )
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -153,42 +175,56 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  header: {
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: spacing.lg,
+  },
+  title: {
+    ...typography.heading,
+    fontSize: 24,
+    lineHeight: 30,
+  },
+  locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.sm,
+    gap: spacing.xs,
+    marginTop: spacing.xs,
+  },
+  locationText: {
+    ...typography.caption,
   },
   searchBar: {
-    flex: 1,
+    marginBottom: spacing.md,
   },
   typeRowWrap: {
     height: 48,
   },
-  categoryRowWrap: {
-    height: 92,
-  },
-  chipsRow: {
-    paddingHorizontal: spacing.xl,
+  typeRow: {
     paddingBottom: spacing.md,
   },
-  results: {
-    flex: 1,
+  sectionTitle: {
+    ...typography.subheading,
+    marginTop: spacing.lg,
+    marginBottom: spacing.md,
+  },
+  categoryGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.md,
   },
   list: {
     paddingHorizontal: spacing.xl,
     paddingBottom: spacing.xl,
   },
   spinner: {
-    marginTop: spacing['2xl'],
+    marginTop: spacing.xl,
   },
   message: {
     ...typography.body,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginTop: spacing['2xl'],
-    paddingHorizontal: spacing.xl,
+    marginTop: spacing.xl,
   },
 });

@@ -1,20 +1,17 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, shadows, spacing, typography } from '../theme/tokens';
 import { getTypeIcon } from '../utils/categoryIcons';
 
-const TYPE_LABELS = {
-  gym: 'Γυμναστήριο',
-  trainer: 'Προπονητής',
-  shop: 'Κατάστημα',
-};
-
 /**
- * Compact horizontal-carousel card (Home's "Κοντά σου" row). No real photos
- * exist yet, so the image slot is a primary-tinted icon block instead.
+ * Compact horizontal-carousel card (Home's "Recommended for you" row). No
+ * real photos exist yet, so the image slot is a primary-tinted icon block.
  */
 export default function PlaceCardCompact({ place }) {
+  const { t } = useLocale();
+
   return (
     <View style={[styles.card, shadows.small]}>
       <View style={styles.imagePlaceholder}>
@@ -25,7 +22,7 @@ export default function PlaceCardCompact({ place }) {
         {place.name}
       </Text>
       <Text style={styles.meta} numberOfLines={1}>
-        {TYPE_LABELS[place.type] ?? place.type}
+        {t(`placeTypes.${place.type}`)}
         {place.distance_km != null ? ` · ${place.distance_km.toFixed(1)} km` : ''}
       </Text>
     </View>

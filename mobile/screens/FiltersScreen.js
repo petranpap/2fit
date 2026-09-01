@@ -6,19 +6,14 @@ import Button from '../components/Button';
 import CategoryChip from '../components/CategoryChip';
 import CategoryIconTile from '../components/CategoryIconTile';
 import { useCategories } from '../hooks/useCategories';
+import { useLocale } from '../i18n/LocaleContext';
 import { colors, spacing, typography } from '../theme/tokens';
 
-const DISTANCE_OPTIONS = [
-  { label: '1 km', value: 1 },
-  { label: '5 km', value: 5 },
-  { label: '10 km', value: 10 },
-  { label: '25 km', value: 25 },
-  { label: '50 km', value: 50 },
-  { label: 'Όλες', value: null },
-];
+const DISTANCE_KM_VALUES = [1, 5, 10, 25, 50];
 
 export default function FiltersScreen({ route, navigation }) {
   const { categories } = useCategories();
+  const { t } = useLocale();
   const [category, setCategory] = useState(route.params?.category ?? null);
   const [radiusKm, setRadiusKm] = useState(route.params?.radiusKm ?? null);
 
@@ -34,7 +29,7 @@ export default function FiltersScreen({ route, navigation }) {
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Κατηγορία</Text>
+        <Text style={styles.sectionTitle}>{t('filters.categorySection')}</Text>
         <View style={styles.categoriesWrap}>
           {categories.map((item) => (
             <CategoryIconTile
@@ -46,21 +41,26 @@ export default function FiltersScreen({ route, navigation }) {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Απόσταση</Text>
+        <Text style={styles.sectionTitle}>{t('filters.distanceSection')}</Text>
         <View style={styles.chipsWrap}>
-          {DISTANCE_OPTIONS.map((option) => (
+          {DISTANCE_KM_VALUES.map((km) => (
             <CategoryChip
-              key={option.label}
-              label={option.label}
-              selected={radiusKm === option.value}
-              onPress={() => setRadiusKm(option.value)}
+              key={km}
+              label={`${km} km`}
+              selected={radiusKm === km}
+              onPress={() => setRadiusKm(km)}
             />
           ))}
+          <CategoryChip
+            label={t('filters.distanceAll')}
+            selected={radiusKm === null}
+            onPress={() => setRadiusKm(null)}
+          />
         </View>
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button label="Εφαρμογή φίλτρων" onPress={handleApply} />
+        <Button label={t('filters.apply')} onPress={handleApply} />
       </View>
     </SafeAreaView>
   );
