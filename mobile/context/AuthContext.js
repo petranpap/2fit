@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import * as authApi from '../api/auth';
-import { setAuthToken } from '../api/client';
+import { setAuthToken, setUnauthorizedHandler } from '../api/client';
 import * as secureStorage from '../utils/secureStorage';
 
 const TOKEN_KEY = '2fit_auth_token';
@@ -12,6 +12,28 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Drops local session state only — does not call the API (the token is
+  // already invalid or gone server-side, so there's nothing to revoke).
+  const clearSession = useCallback(async () => {
+    setAuthToken(null);
+    setUser(null);
+    await Promise.all([
+      secureStorage.deleteItem(TOKEN_KEY),
+      secureStorage.deleteItem(USER_KEY),
+    ]);
+  }, []);
+
+  // A stored token can go stale server-side (expired, revoked, or — in
+  // local dev — the DB got reset) without the app knowing. Without this,
+  // every authenticated call would keep failing with a bare 401 while the
+  // app still shows the user as logged in. Registering here, rather than
+  // only calling it from logout(), means it also fires the moment any
+  // screen's API call discovers the token is dead.
+  useEffect(() => {
+    setUnauthorizedHandler(clearSession);
+    return () => setUnauthorizedHandler(null);
+  }, [clearSession]);
 
   // Restore a persisted session on cold start.
   useEffect(() => {
@@ -65,13 +87,8 @@ export function AuthProvider({ children }) {
     } catch {
       // Token may already be invalid server-side — clear local state regardless.
     }
-    setAuthToken(null);
-    setUser(null);
-    await Promise.all([
-      secureStorage.deleteItem(TOKEN_KEY),
-      secureStorage.deleteItem(USER_KEY),
-    ]);
-  }, []);
+    await clearSession();
+  }, [clearSession]);
 
   const value = useMemo(
     () => ({ user, isLoading, isAuthenticated: !!user, register, login, logout }),
