@@ -39,6 +39,21 @@ class OfferService
     }
 
     /**
+     * The listing a partner user owns, whichever type their role maps to —
+     * used by the Partner panel to auto-attach a new offer without asking
+     * the owner to pick their own business from a list of one.
+     */
+    public function resolveOwnOfferable(User $user): Gym|Trainer|Shop|null
+    {
+        return match ($user->role) {
+            'gym_owner' => $user->gyms()->first(),
+            'trainer' => $user->trainers()->first(),
+            'shop' => $user->shops()->first(),
+            default => null,
+        };
+    }
+
+    /**
      * Idempotent: a user who already holds an active code for this offer
      * gets that same code back instead of accumulating duplicates.
      */
