@@ -4,7 +4,10 @@ import { ActivityIndicator, Linking, Pressable, ScrollView, Share, StyleSheet, T
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { fetchPlace } from '../api/places';
+import Button from '../components/Button';
 import CategoryChip from '../components/CategoryChip';
+import ClassListItem from '../components/ClassListItem';
+import FacilityTile from '../components/FacilityTile';
 import Gallery from '../components/Gallery';
 import MenuListItem from '../components/MenuListItem';
 import { useLocale } from '../i18n/LocaleContext';
@@ -103,6 +106,40 @@ export default function PlaceDetailScreen({ route, navigation }) {
             </View>
           ) : null}
 
+          {place.facilities?.length > 0 ? (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('placeDetail.facilitiesSection')}</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {place.facilities.map((facility) => (
+                  <FacilityTile key={facility.id} facility={facility} />
+                ))}
+              </ScrollView>
+            </View>
+          ) : null}
+
+          {place.fitness_classes?.length > 0 ? (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('placeDetail.classesSection')}</Text>
+              <View>
+                {place.fitness_classes.map((fitnessClass) => (
+                  <ClassListItem
+                    key={fitnessClass.id}
+                    fitnessClass={fitnessClass}
+                    onBook={() =>
+                      navigation.navigate('BookingRequest', {
+                        bookableType: place.type,
+                        bookableId: place.id,
+                        placeName: place.name,
+                        fitnessClassId: fitnessClass.id,
+                        className: fitnessClass.name,
+                      })
+                    }
+                  />
+                ))}
+              </View>
+            </View>
+          ) : null}
+
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('placeDetail.reviewsSection')}</Text>
             {place.reviews_count === 0 ? (
@@ -151,6 +188,19 @@ export default function PlaceDetailScreen({ route, navigation }) {
           ) : null}
         </View>
       </ScrollView>
+
+      <View style={styles.footer}>
+        <Button
+          label={t('placeDetail.bookNowAction')}
+          onPress={() =>
+            navigation.navigate('BookingRequest', {
+              bookableType: place.type,
+              bookableId: place.id,
+              placeName: place.name,
+            })
+          }
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -216,5 +266,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
+  },
+  footer: {
+    padding: spacing.xl,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.background,
   },
 });

@@ -5,6 +5,7 @@ import { ActivityIndicator, View } from 'react-native';
 
 import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../i18n/LocaleContext';
+import BookingRequestScreen from '../screens/BookingRequestScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import FiltersScreen from '../screens/FiltersScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -113,6 +114,18 @@ function MainStack() {
         component={OfferDetailScreen}
         options={{
           headerTitle: '',
+          headerTintColor: colors.primary,
+          headerStyle: { backgroundColor: colors.background },
+          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="BookingRequest"
+        component={BookingRequestScreen}
+        options={{
+          presentation: 'modal',
+          headerTitle: t('booking.requestTitle'),
           headerTintColor: colors.primary,
           headerStyle: { backgroundColor: colors.background },
           headerTitleStyle: { fontFamily: fonts.headingSemiBold },
