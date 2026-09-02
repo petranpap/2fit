@@ -25,6 +25,18 @@ export function setAuthToken(token) {
   authToken = token;
 }
 
+// A stored token can go stale server-side without the app knowing (it
+// expired, was revoked, or — in local dev — the DB got reset), and every
+// authenticated call would otherwise fail with a bare 401 while the app
+// still believes it's logged in. AuthContext registers a handler here that
+// clears the session, so a stale token drops the user back to Login instead
+// of leaving them stuck on a broken screen.
+let onUnauthorized = null;
+
+export function setUnauthorizedHandler(handler) {
+  onUnauthorized = handler;
+}
+
 export async function apiRequest(path, { method = 'GET', body, headers = {} } = {}) {
   const response = await fetch(`${BASE_URL}${path}`, {
     method,
@@ -40,6 +52,10 @@ export async function apiRequest(path, { method = 'GET', body, headers = {} } = 
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (response.status === 401 && authToken) {
+      onUnauthorized?.();
+    }
+
     throw Object.assign(new Error(data?.message ?? 'Request failed'), {
       status: response.status,
       errors: data?.errors,
