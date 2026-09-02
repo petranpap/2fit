@@ -9,6 +9,8 @@ import FavoritesScreen from '../screens/FavoritesScreen';
 import FiltersScreen from '../screens/FiltersScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import OfferDetailScreen from '../screens/OfferDetailScreen';
+import OffersScreen from '../screens/OffersScreen';
 import PlaceDetailScreen from '../screens/PlaceDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -87,6 +89,28 @@ function MainStack() {
       <Stack.Screen
         name="PlaceDetail"
         component={PlaceDetailScreen}
+        options={{
+          headerTitle: '',
+          headerTintColor: colors.primary,
+          headerStyle: { backgroundColor: colors.background },
+          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="Offers"
+        component={OffersScreen}
+        options={{
+          headerTitle: t('offers.headerTitle'),
+          headerTintColor: colors.primary,
+          headerStyle: { backgroundColor: colors.background },
+          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="OfferDetail"
+        component={OfferDetailScreen}
         options={{
           headerTitle: '',
           headerTintColor: colors.primary,
