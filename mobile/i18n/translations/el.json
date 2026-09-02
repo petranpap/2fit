@@ -91,8 +91,26 @@
     "languageEnglish": "English"
   },
   "favorites": {
-    "emptyTitle": "Δεν έχεις αποθηκεύσει τίποτα ακόμα",
-    "emptySubtitle": "Τα αγαπημένα σου γυμναστήρια, προπονητές και καταστήματα θα εμφανίζονται εδώ."
+    "emptyTitle": "Δεν έχεις προσφορές ακόμα",
+    "emptySubtitle": "Οι προσφορές που θα διεκδικήσεις θα εμφανίζονται εδώ."
+  },
+  "offers": {
+    "headerTitle": "Προσφορές",
+    "savedDealsTitle": "Οι προσφορές μου",
+    "empty": "Δεν υπάρχουν διαθέσιμες προσφορές αυτή τη στιγμή.",
+    "error": "Κάτι πήγε στραβά. Δοκίμασε ξανά.",
+    "discountPercentage": "-{{value}}%",
+    "discountFixed": "-{{value}} €",
+    "at": "στο {{name}}",
+    "expiresOn": "Λήγει {{date}}",
+    "claimButton": "Διεκδίκησε την προσφορά",
+    "claiming": "Γίνεται διεκδίκηση…",
+    "claimError": "Δεν μπορέσαμε να διεκδικήσουμε την προσφορά. Δοκίμασε ξανά.",
+    "claimedTitle": "Ο κωδικός σου",
+    "claimedSubtitle": "Δείξε αυτόν τον κωδικό στην επιχείρηση για να τον εξαργυρώσεις.",
+    "statusRedeemed": "Έχει εξαργυρωθεί",
+    "statusExpired": "Έληξε",
+    "notFound": "Η προσφορά δεν βρέθηκε."
   },
   "placeDetail": {
     "aboutSection": "Σχετικά",

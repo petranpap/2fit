@@ -91,8 +91,26 @@
     "languageEnglish": "English"
   },
   "favorites": {
-    "emptyTitle": "Nothing saved yet",
-    "emptySubtitle": "Your favorite gyms, trainers and shops will show up here."
+    "emptyTitle": "No deals yet",
+    "emptySubtitle": "Offers you claim will show up here."
+  },
+  "offers": {
+    "headerTitle": "Deals",
+    "savedDealsTitle": "My deals",
+    "empty": "No deals available right now.",
+    "error": "Something went wrong. Try again.",
+    "discountPercentage": "-{{value}}%",
+    "discountFixed": "-€{{value}}",
+    "at": "at {{name}}",
+    "expiresOn": "Expires {{date}}",
+    "claimButton": "Claim this deal",
+    "claiming": "Claiming…",
+    "claimError": "Couldn't claim this deal. Try again.",
+    "claimedTitle": "Your code",
+    "claimedSubtitle": "Show this code to the business to redeem it.",
+    "statusRedeemed": "Redeemed",
+    "statusExpired": "Expired",
+    "notFound": "Deal not found."
   },
   "placeDetail": {
     "aboutSection": "About",
