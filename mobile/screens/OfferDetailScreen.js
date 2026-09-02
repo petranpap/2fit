@@ -30,7 +30,10 @@ export default function OfferDetailScreen({ route, navigation }) {
         setOffer(data);
         navigation.setOptions({ headerTitle: data.title });
       })
-      .catch(() => setError(t('offers.notFound')))
+      .catch((err) => {
+        console.error('fetchOffer failed', err);
+        setError(err.message && err.message !== 'Request failed' ? err.message : t('offers.notFound'));
+      })
       .finally(() => setIsLoading(false));
   }, [offerId]);
 
@@ -50,8 +53,12 @@ export default function OfferDetailScreen({ route, navigation }) {
     try {
       const { data } = await claimOffer(offerId);
       setDiscountCode(data);
-    } catch {
-      setError(t('offers.claimError'));
+    } catch (err) {
+      // Surface the server's actual reason (e.g. "not currently active",
+      // or an auth error) instead of a one-size-fits-all message — both
+      // for the user and for debugging.
+      console.error('claimOffer failed', err);
+      setError(err.message && err.message !== 'Request failed' ? err.message : t('offers.claimError'));
     } finally {
       setIsClaiming(false);
     }
