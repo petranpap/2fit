@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
+    public function discountCodes(): HasMany
+    {
+        return $this->hasMany(DiscountCode::class);
+    }
+
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));

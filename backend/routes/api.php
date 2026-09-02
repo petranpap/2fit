@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DiscountCodeController;
 use App\Http\Controllers\Api\GymController;
+use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ShopController;
 use App\Http\Controllers\Api\TrainerController;
@@ -48,4 +50,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/trainers/{trainer}/photo', [TrainerController::class, 'uploadPhoto']);
     Route::post('/shops/{shop}/logo', [ShopController::class, 'uploadLogo']);
     Route::post('/shops/{shop}/cover', [ShopController::class, 'uploadCover']);
+});
+
+Route::get('/offers', [OfferController::class, 'index']);
+Route::get('/offers/{offer}', [OfferController::class, 'show']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/offers', [OfferController::class, 'store']);
+    Route::put('/offers/{offer}', [OfferController::class, 'update']);
+    Route::patch('/offers/{offer}', [OfferController::class, 'update']);
+    Route::delete('/offers/{offer}', [OfferController::class, 'destroy']);
+    Route::post('/offers/{offer}/claim', [OfferController::class, 'claim']);
+
+    // Static /mine path must be registered before the {discountCode} routes,
+    // or Laravel would try to resolve "mine" as a code.
+    Route::get('/discount-codes/mine', [DiscountCodeController::class, 'mine']);
+    Route::get('/discount-codes/{discountCode}', [DiscountCodeController::class, 'show']);
+    Route::post('/discount-codes/{discountCode}/redeem', [DiscountCodeController::class, 'redeem']);
 });
