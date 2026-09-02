@@ -26,4 +26,13 @@ class DiscountCode extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Route-bound by the code string, not the numeric id — that's how a
+     * business looks a code up when a customer presents it for redemption.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'code';
+    }
 }
