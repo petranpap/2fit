@@ -41,9 +41,24 @@ class Shop extends Model
         return $this->morphToMany(Category::class, 'categorizable');
     }
 
+    public function facilities(): MorphToMany
+    {
+        return $this->morphToMany(Facility::class, 'facilitatable');
+    }
+
     public function offers(): MorphMany
     {
         return $this->morphMany(Offer::class, 'offerable');
+    }
+
+    public function fitnessClasses(): MorphMany
+    {
+        return $this->morphMany(FitnessClass::class, 'classable');
+    }
+
+    public function bookings(): MorphMany
+    {
+        return $this->morphMany(Booking::class, 'bookable');
     }
 
     public function reviews(): MorphMany

@@ -65,6 +65,10 @@ class ShopResource extends Resource
                 ->relationship('categories', 'name')
                 ->multiple()
                 ->preload(),
+            Select::make('facilities')
+                ->relationship('facilities', 'name')
+                ->multiple()
+                ->preload(),
             Toggle::make('is_active')
                 ->default(true),
         ]);

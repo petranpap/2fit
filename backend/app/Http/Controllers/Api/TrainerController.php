@@ -23,7 +23,9 @@ class TrainerController extends Controller
     {
         abort_unless($trainer->is_active, 404);
 
-        $trainer->load('categories')->loadCount('reviews')->loadAvg('reviews', 'rating');
+        $trainer->load(['categories', 'fitnessClasses' => fn ($query) => $query->where('is_active', true)])
+            ->loadCount('reviews')
+            ->loadAvg('reviews', 'rating');
 
         return response()->json([
             'data' => new TrainerDetailResource($trainer),

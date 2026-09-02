@@ -30,6 +30,10 @@ class ShopDetailResource extends JsonResource
             'opening_hours' => $this->opening_hours,
             'is_verified' => $this->is_verified,
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
+            'facilities' => FacilityResource::collection($this->whenLoaded('facilities')),
+            'fitness_classes' => FitnessClassResource::collection(
+                $this->whenLoaded('fitnessClasses', fn () => $this->fitnessClasses->sortByDesc('is_popular')->values())
+            ),
             'reviews_count' => $this->reviews_count ?? 0,
             'rating_avg' => $this->reviews_avg_rating !== null ? round((float) $this->reviews_avg_rating, 1) : null,
         ];
