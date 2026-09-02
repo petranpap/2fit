@@ -46,6 +46,16 @@ class Trainer extends Model
         return $this->morphMany(Offer::class, 'offerable');
     }
 
+    public function fitnessClasses(): MorphMany
+    {
+        return $this->morphMany(FitnessClass::class, 'classable');
+    }
+
+    public function bookings(): MorphMany
+    {
+        return $this->morphMany(Booking::class, 'bookable');
+    }
+
     public function reviews(): MorphMany
     {
         return $this->morphMany(Review::class, 'reviewable');

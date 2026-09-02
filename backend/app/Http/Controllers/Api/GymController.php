@@ -23,7 +23,9 @@ class GymController extends Controller
     {
         abort_unless($gym->is_active, 404);
 
-        $gym->load('categories')->loadCount('reviews')->loadAvg('reviews', 'rating');
+        $gym->load(['categories', 'facilities', 'fitnessClasses' => fn ($query) => $query->where('is_active', true)])
+            ->loadCount('reviews')
+            ->loadAvg('reviews', 'rating');
 
         return response()->json([
             'data' => new GymDetailResource($gym),

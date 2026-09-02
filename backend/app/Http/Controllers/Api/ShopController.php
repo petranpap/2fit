@@ -23,7 +23,9 @@ class ShopController extends Controller
     {
         abort_unless($shop->is_active, 404);
 
-        $shop->load('categories')->loadCount('reviews')->loadAvg('reviews', 'rating');
+        $shop->load(['categories', 'facilities', 'fitnessClasses' => fn ($query) => $query->where('is_active', true)])
+            ->loadCount('reviews')
+            ->loadAvg('reviews', 'rating');
 
         return response()->json([
             'data' => new ShopDetailResource($shop),

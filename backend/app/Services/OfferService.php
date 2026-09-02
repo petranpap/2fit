@@ -43,7 +43,7 @@ class OfferService
      * used by the Partner panel to auto-attach a new offer without asking
      * the owner to pick their own business from a list of one.
      */
-    public function resolveOwnOfferable(User $user): Gym|Trainer|Shop|null
+    public function resolveOwnListing(User $user): Gym|Trainer|Shop|null
     {
         return match ($user->role) {
             'gym_owner' => $user->gyms()->first(),

@@ -60,6 +60,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(DiscountCode::class);
     }
 
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));

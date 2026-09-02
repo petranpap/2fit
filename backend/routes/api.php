@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DiscountCodeController;
 use App\Http\Controllers\Api\GymController;
@@ -67,4 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/discount-codes/mine', [DiscountCodeController::class, 'mine']);
     Route::get('/discount-codes/{discountCode}', [DiscountCodeController::class, 'show']);
     Route::post('/discount-codes/{discountCode}/redeem', [DiscountCodeController::class, 'redeem']);
+
+    Route::get('/bookings/mine', [BookingController::class, 'mine']);
+    Route::post('/bookings', [BookingController::class, 'store']);
 });

@@ -17,7 +17,7 @@ class PartnerStatsWidget extends BaseWidget
     protected function getStats(): array
     {
         $user = auth()->user();
-        $offerable = app(OfferService::class)->resolveOwnOfferable($user);
+        $offerable = app(OfferService::class)->resolveOwnListing($user);
 
         if (! $offerable) {
             return [
@@ -33,11 +33,14 @@ class PartnerStatsWidget extends BaseWidget
         )->pluck('id');
 
         $codes = DiscountCode::whereIn('offer_id', $offerIds);
+        $pendingBookings = $offerable->bookings()->where('status', 'pending')->count();
 
         return [
             Stat::make('Active offers', Offer::whereIn('id', $offerIds)->where('is_active', true)->count()),
             Stat::make('Codes claimed', (clone $codes)->count()),
             Stat::make('Codes redeemed', (clone $codes)->where('status', 'redeemed')->count()),
+            Stat::make('Pending bookings', $pendingBookings)
+                ->color($pendingBookings > 0 ? 'warning' : null),
             Stat::make('Reviews', $offerable->reviews()->count())
                 ->description(
                     $offerable->reviews()->count() > 0

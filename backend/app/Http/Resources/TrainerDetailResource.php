@@ -28,6 +28,9 @@ class TrainerDetailResource extends JsonResource
             'hourly_rate' => $this->hourly_rate,
             'is_verified' => $this->is_verified,
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
+            'fitness_classes' => FitnessClassResource::collection(
+                $this->whenLoaded('fitnessClasses', fn () => $this->fitnessClasses->sortByDesc('is_popular')->values())
+            ),
             'reviews_count' => $this->reviews_count ?? 0,
             'rating_avg' => $this->reviews_avg_rating !== null ? round((float) $this->reviews_avg_rating, 1) : null,
         ];
