@@ -21,7 +21,7 @@ class ShopController extends Controller
 
     public function show(Shop $shop): JsonResponse
     {
-        abort_unless($shop->is_active, 404);
+        abort_unless($shop->is_active && $shop->is_verified, 404);
 
         $shop->load(['categories', 'facilities', 'fitnessClasses' => fn ($query) => $query->where('is_active', true)])
             ->loadCount('reviews')

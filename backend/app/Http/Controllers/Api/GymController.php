@@ -21,7 +21,7 @@ class GymController extends Controller
 
     public function show(Gym $gym): JsonResponse
     {
-        abort_unless($gym->is_active, 404);
+        abort_unless($gym->is_active && $gym->is_verified, 404);
 
         $gym->load(['categories', 'facilities', 'fitnessClasses' => fn ($query) => $query->where('is_active', true)])
             ->loadCount('reviews')

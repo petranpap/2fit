@@ -81,7 +81,10 @@ class SearchService
      */
     private function buildQuery(string $modelClass, string $type, array $filters): Builder
     {
-        $query = $modelClass::query()->with('categories')->where('is_active', true);
+        // Pending listings (not yet approved in the Admin panel) stay out of
+        // public search — that's what makes it an approval queue and not
+        // just a cosmetic badge.
+        $query = $modelClass::query()->with('categories')->where('is_active', true)->where('is_verified', true);
 
         if (! empty($filters['q'])) {
             $textColumn = $type === 'trainer' ? 'bio' : 'description';

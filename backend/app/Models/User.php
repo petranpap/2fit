@@ -73,10 +73,16 @@ class User extends Authenticatable implements FilamentUser
     /**
      * The Partner panel is for business owners managing their own listing —
      * plain customers ('user') have no reason to be in there. Admins get in
-     * too, useful for support/oversight.
+     * too, useful for support/oversight. The Admin panel (moderation,
+     * approval queue) is admin-only — a partner has no business there even
+     * though they can log into Partner.
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return in_array($this->role, ['gym_owner', 'trainer', 'shop', 'admin'], true);
+        return match ($panel->getId()) {
+            'admin' => $this->role === 'admin',
+            'partner' => in_array($this->role, ['gym_owner', 'trainer', 'shop', 'admin'], true),
+            default => false,
+        };
     }
 }

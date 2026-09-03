@@ -21,7 +21,7 @@ class TrainerController extends Controller
 
     public function show(Trainer $trainer): JsonResponse
     {
-        abort_unless($trainer->is_active, 404);
+        abort_unless($trainer->is_active && $trainer->is_verified, 404);
 
         $trainer->load(['categories', 'fitnessClasses' => fn ($query) => $query->where('is_active', true)])
             ->loadCount('reviews')
