@@ -23,11 +23,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategorySeeder::class,
             FacilitySeeder::class,
+            SubscriptionPlanSeeder::class,
             AdminUserSeeder::class,
             DemoListingSeeder::class,
             DemoOfferSeeder::class,
             DemoFitnessClassSeeder::class,
             DemoReviewSeeder::class,
+            DemoStatisticSeeder::class,
         ]);
     }
 }
