@@ -19,6 +19,17 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-splash-screen",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Το 2fit χρησιμοποιεί την τοποθεσία σου για να δείξει γυμναστήρια, προπονητές και καταστήματα κοντά σου."
+        }
+      ],
+      "expo-localization"
+    ]
   }
 }

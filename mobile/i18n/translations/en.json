@@ -1,0 +1,178 @@
+{
+  "common": {
+    "comingSoonTitle": "Coming soon",
+    "comingSoonMessage": "This feature isn't ready yet.",
+    "seeAll": "See all",
+    "searchPlaceholder": "Search gyms, trainers, shops…"
+  },
+  "placeTypes": {
+    "gym": "Gym",
+    "trainer": "Trainer",
+    "shop": "Shop"
+  },
+  "nav": {
+    "home": "Home",
+    "search": "Explore",
+    "favorites": "Favorites",
+    "profile": "Profile"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up",
+      "badCredentials": "Wrong email or password."
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Find gyms, trainers and deals near you.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@example.com",
+      "phoneLabel": "Phone (optional)",
+      "phonePlaceholder": "99 123456",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmLabel": "Confirm password",
+      "confirmPlaceholder": "Type it again",
+      "submit": "Sign up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in"
+    }
+  },
+  "home": {
+    "greeting": "Hello, {{name}} 👋",
+    "subtitlePrefix": "Ready to become your ",
+    "subtitleHighlight": "best self",
+    "subtitleSuffix": "?",
+    "recommendedTitle": "Recommended for you",
+    "nearbyEmpty": "No results found near you.",
+    "bannerTitlePlain": "Find. Train. ",
+    "bannerTitleAccent": "Save.",
+    "bannerSubtitle": "All in one app."
+  },
+  "search": {
+    "headerTitle": "Explore",
+    "filterAll": "All",
+    "filterGym": "Gyms",
+    "filterTrainer": "Trainers",
+    "filterShop": "Shops",
+    "topCategoriesTitle": "Top categories",
+    "popularNearbyTitle": "Popular near you",
+    "listings": "{{count}} listings",
+    "listingsOne": "{{count}} listing",
+    "empty": "No results found.",
+    "error": "Something went wrong. Try again.",
+    "locationFallback": "Your location",
+    "filtersA11y": "Filters"
+  },
+  "filters": {
+    "title": "Filters",
+    "categorySection": "Category",
+    "distanceSection": "Distance",
+    "distanceAll": "Any",
+    "apply": "Apply filters"
+  },
+  "profile": {
+    "favorites": "Favorites",
+    "myReviews": "My reviews",
+    "notifications": "Notifications",
+    "help": "Help & Support",
+    "logout": "Log out",
+    "languageSection": "Language",
+    "languageGreek": "Ελληνικά",
+    "languageEnglish": "English"
+  },
+  "favorites": {
+    "emptyTitle": "No deals yet",
+    "emptySubtitle": "Offers you claim will show up here."
+  },
+  "offers": {
+    "headerTitle": "Deals",
+    "savedDealsTitle": "My deals",
+    "empty": "No deals available right now.",
+    "error": "Something went wrong. Try again.",
+    "discountPercentage": "-{{value}}%",
+    "discountFixed": "-€{{value}}",
+    "at": "at {{name}}",
+    "expiresOn": "Expires {{date}}",
+    "claimButton": "Claim this deal",
+    "claiming": "Claiming…",
+    "claimError": "Couldn't claim this deal. Try again.",
+    "claimedTitle": "Your code",
+    "claimedSubtitle": "Show this code to the business to redeem it.",
+    "statusRedeemed": "Redeemed",
+    "statusExpired": "Expired",
+    "notFound": "Deal not found."
+  },
+  "placeDetail": {
+    "aboutSection": "About",
+    "contactSection": "Contact",
+    "categoriesSection": "Categories",
+    "facilitiesSection": "Facilities",
+    "classesSection": "Classes",
+    "popularBadge": "Popular",
+    "bookAction": "Book",
+    "bookNowAction": "Book now",
+    "reviewsSection": "Reviews",
+    "noReviewsYet": "No reviews yet.",
+    "reviews": "{{count}} reviews",
+    "reviewsOne": "{{count}} review",
+    "hourlyRate": "€{{rate}} / hour",
+    "callAction": "Call",
+    "emailAction": "Email",
+    "websiteAction": "Website",
+    "shareAction": "Share",
+    "shareMessage": "Check out {{name}} on 2fit!",
+    "notFound": "Not found.",
+    "loadError": "Something went wrong. Try again."
+  },
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "mondayShort": "Mon",
+    "tuesdayShort": "Tue",
+    "wednesdayShort": "Wed",
+    "thursdayShort": "Thu",
+    "fridayShort": "Fri",
+    "saturdayShort": "Sat",
+    "sundayShort": "Sun"
+  },
+  "booking": {
+    "requestTitle": "Request booking",
+    "today": "Today",
+    "dateSection": "Choose a day",
+    "timeSection": "Choose a time",
+    "notesLabel": "Notes (optional)",
+    "notesPlaceholder": "e.g. number of people, special request…",
+    "confirmAction": "Confirm booking",
+    "confirming": "Submitting…",
+    "submitError": "We couldn't submit your booking. Try again.",
+    "pickDateTimeError": "Pick a day and a time.",
+    "successTitle": "Booking requested!",
+    "successMessage": "The business will confirm your booking shortly.",
+    "statusPending": "Awaiting confirmation",
+    "doneAction": "Done"
+  },
+  "validation": {
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Enter a valid email.",
+    "passwordRequired": "Password is required.",
+    "nameRequired": "Enter your name.",
+    "phoneInvalid": "That phone number looks incomplete.",
+    "passwordMin": "At least 8 characters.",
+    "passwordMismatch": "Passwords don't match."
+  }
+}

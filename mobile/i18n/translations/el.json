@@ -1,0 +1,178 @@
+{
+  "common": {
+    "comingSoonTitle": "Σύντομα διαθέσιμο",
+    "comingSoonMessage": "Αυτή η λειτουργία δεν είναι έτοιμη ακόμα.",
+    "seeAll": "Δες όλα",
+    "searchPlaceholder": "Αναζήτησε γυμναστήρια, προπονητές, καταστήματα…"
+  },
+  "placeTypes": {
+    "gym": "Γυμναστήριο",
+    "trainer": "Προπονητής",
+    "shop": "Κατάστημα"
+  },
+  "nav": {
+    "home": "Αρχική",
+    "search": "Εξερεύνηση",
+    "favorites": "Αγαπημένα",
+    "profile": "Προφίλ"
+  },
+  "auth": {
+    "login": {
+      "title": "Καλωσόρισες πίσω",
+      "subtitle": "Συνδέσου για να συνεχίσεις.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@example.com",
+      "passwordLabel": "Κωδικός",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Σύνδεση",
+      "noAccount": "Δεν έχεις λογαριασμό;",
+      "registerLink": "Εγγραφή",
+      "badCredentials": "Λάθος email ή κωδικός."
+    },
+    "register": {
+      "title": "Δημιούργησε λογαριασμό",
+      "subtitle": "Βρες γυμναστήρια, προπονητές και προσφορές κοντά σου.",
+      "nameLabel": "Όνομα",
+      "namePlaceholder": "Το όνομά σου",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@example.com",
+      "phoneLabel": "Τηλέφωνο (προαιρετικό)",
+      "phonePlaceholder": "99 123456",
+      "passwordLabel": "Κωδικός",
+      "passwordPlaceholder": "Τουλάχιστον 8 χαρακτήρες",
+      "confirmLabel": "Επιβεβαίωση κωδικού",
+      "confirmPlaceholder": "Ξαναγράψε τον κωδικό",
+      "submit": "Εγγραφή",
+      "hasAccount": "Έχεις ήδη λογαριασμό;",
+      "loginLink": "Σύνδεση"
+    }
+  },
+  "home": {
+    "greeting": "Γεια σου, {{name}} 👋",
+    "subtitlePrefix": "Έτοιμος/η να ανακαλύψεις την ",
+    "subtitleHighlight": "καλύτερη εκδοχή",
+    "subtitleSuffix": " του εαυτού σου;",
+    "recommendedTitle": "Προτείνονται για εσένα",
+    "nearbyEmpty": "Δεν βρέθηκαν αποτελέσματα κοντά σου.",
+    "bannerTitlePlain": "Βρες. Προπονήσου. ",
+    "bannerTitleAccent": "Εξοικονόμησε.",
+    "bannerSubtitle": "Όλα σε μία εφαρμογή."
+  },
+  "search": {
+    "headerTitle": "Εξερεύνηση",
+    "filterAll": "Όλα",
+    "filterGym": "Γυμναστήρια",
+    "filterTrainer": "Προπονητές",
+    "filterShop": "Καταστήματα",
+    "topCategoriesTitle": "Δημοφιλείς κατηγορίες",
+    "popularNearbyTitle": "Δημοφιλή κοντά σου",
+    "listings": "{{count}} καταχωρήσεις",
+    "listingsOne": "{{count}} καταχώρηση",
+    "empty": "Δεν βρέθηκαν αποτελέσματα.",
+    "error": "Κάτι πήγε στραβά. Δοκίμασε ξανά.",
+    "locationFallback": "Η τοποθεσία σου",
+    "filtersA11y": "Φίλτρα"
+  },
+  "filters": {
+    "title": "Φίλτρα",
+    "categorySection": "Κατηγορία",
+    "distanceSection": "Απόσταση",
+    "distanceAll": "Όλες",
+    "apply": "Εφαρμογή φίλτρων"
+  },
+  "profile": {
+    "favorites": "Αγαπημένα",
+    "myReviews": "Οι αξιολογήσεις μου",
+    "notifications": "Ειδοποιήσεις",
+    "help": "Βοήθεια & Υποστήριξη",
+    "logout": "Αποσύνδεση",
+    "languageSection": "Γλώσσα",
+    "languageGreek": "Ελληνικά",
+    "languageEnglish": "English"
+  },
+  "favorites": {
+    "emptyTitle": "Δεν έχεις προσφορές ακόμα",
+    "emptySubtitle": "Οι προσφορές που θα διεκδικήσεις θα εμφανίζονται εδώ."
+  },
+  "offers": {
+    "headerTitle": "Προσφορές",
+    "savedDealsTitle": "Οι προσφορές μου",
+    "empty": "Δεν υπάρχουν διαθέσιμες προσφορές αυτή τη στιγμή.",
+    "error": "Κάτι πήγε στραβά. Δοκίμασε ξανά.",
+    "discountPercentage": "-{{value}}%",
+    "discountFixed": "-{{value}} €",
+    "at": "στο {{name}}",
+    "expiresOn": "Λήγει {{date}}",
+    "claimButton": "Διεκδίκησε την προσφορά",
+    "claiming": "Γίνεται διεκδίκηση…",
+    "claimError": "Δεν μπορέσαμε να διεκδικήσουμε την προσφορά. Δοκίμασε ξανά.",
+    "claimedTitle": "Ο κωδικός σου",
+    "claimedSubtitle": "Δείξε αυτόν τον κωδικό στην επιχείρηση για να τον εξαργυρώσεις.",
+    "statusRedeemed": "Έχει εξαργυρωθεί",
+    "statusExpired": "Έληξε",
+    "notFound": "Η προσφορά δεν βρέθηκε."
+  },
+  "placeDetail": {
+    "aboutSection": "Σχετικά",
+    "contactSection": "Επικοινωνία",
+    "categoriesSection": "Κατηγορίες",
+    "facilitiesSection": "Ανέσεις",
+    "classesSection": "Μαθήματα",
+    "popularBadge": "Δημοφιλές",
+    "bookAction": "Κράτηση",
+    "bookNowAction": "Κάνε κράτηση",
+    "reviewsSection": "Αξιολογήσεις",
+    "noReviewsYet": "Δεν υπάρχουν ακόμα αξιολογήσεις.",
+    "reviews": "{{count}} αξιολογήσεις",
+    "reviewsOne": "{{count}} αξιολόγηση",
+    "hourlyRate": "{{rate}} € / ώρα",
+    "callAction": "Κλήση",
+    "emailAction": "Email",
+    "websiteAction": "Ιστοσελίδα",
+    "shareAction": "Κοινοποίηση",
+    "shareMessage": "Δες το {{name}} στο 2fit!",
+    "notFound": "Δεν βρέθηκε.",
+    "loadError": "Κάτι πήγε στραβά. Δοκίμασε ξανά."
+  },
+  "days": {
+    "monday": "Δευτέρα",
+    "tuesday": "Τρίτη",
+    "wednesday": "Τετάρτη",
+    "thursday": "Πέμπτη",
+    "friday": "Παρασκευή",
+    "saturday": "Σάββατο",
+    "sunday": "Κυριακή",
+    "mondayShort": "Δευ",
+    "tuesdayShort": "Τρι",
+    "wednesdayShort": "Τετ",
+    "thursdayShort": "Πεμ",
+    "fridayShort": "Παρ",
+    "saturdayShort": "Σαβ",
+    "sundayShort": "Κυρ"
+  },
+  "booking": {
+    "requestTitle": "Αίτημα κράτησης",
+    "today": "Σήμερα",
+    "dateSection": "Επίλεξε ημέρα",
+    "timeSection": "Επίλεξε ώρα",
+    "notesLabel": "Σημειώσεις (προαιρετικό)",
+    "notesPlaceholder": "π.χ. αριθμός ατόμων, ειδικό αίτημα…",
+    "confirmAction": "Επιβεβαίωση κράτησης",
+    "confirming": "Γίνεται υποβολή…",
+    "submitError": "Δεν μπορέσαμε να καταχωρήσουμε την κράτηση. Δοκίμασε ξανά.",
+    "pickDateTimeError": "Επίλεξε ημέρα και ώρα.",
+    "successTitle": "Η κράτηση καταχωρήθηκε!",
+    "successMessage": "Η επιχείρηση θα επιβεβαιώσει την κράτησή σου σύντομα.",
+    "statusPending": "Εκκρεμεί επιβεβαίωση",
+    "doneAction": "Τέλεια"
+  },
+  "validation": {
+    "emailRequired": "Το email είναι υποχρεωτικό.",
+    "emailInvalid": "Δώσε ένα έγκυρο email.",
+    "passwordRequired": "Ο κωδικός είναι υποχρεωτικός.",
+    "nameRequired": "Δώσε το όνομά σου.",
+    "phoneInvalid": "Το τηλέφωνο φαίνεται ελλιπές.",
+    "passwordMin": "Τουλάχιστον 8 χαρακτήρες.",
+    "passwordMismatch": "Οι κωδικοί δεν ταιριάζουν."
+  }
+}
