@@ -2,11 +2,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
-import { dayLabel, formatTime } from '../utils/schedule';
+import { daysLabel, formatTime } from '../utils/schedule';
 
 export default function ClassListItem({ fitnessClass, onBook }) {
   const { t } = useLocale();
-  const schedule = [dayLabel(fitnessClass.day_of_week, t), formatTime(fitnessClass.starts_at)]
+  const schedule = [daysLabel(fitnessClass.days_of_week, t), formatTime(fitnessClass.starts_at)]
     .filter(Boolean)
     .join(' · ');
 
