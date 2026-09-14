@@ -7,7 +7,7 @@ use App\Models\FitnessClass;
 use App\Models\Gym;
 use App\Models\Shop;
 use App\Models\Trainer;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
@@ -26,22 +26,27 @@ class FitnessClassResource extends Resource
 
     protected static ?string $navigationLabel = 'Classes';
 
+    public const DAY_OPTIONS = [
+        'monday' => 'Monday',
+        'tuesday' => 'Tuesday',
+        'wednesday' => 'Wednesday',
+        'thursday' => 'Thursday',
+        'friday' => 'Friday',
+        'saturday' => 'Saturday',
+        'sunday' => 'Sunday',
+    ];
+
     public static function form(Form $form): Form
     {
         return $form->schema([
             TextInput::make('name')
                 ->required()
                 ->maxLength(255),
-            Select::make('day_of_week')
-                ->options([
-                    'monday' => 'Monday',
-                    'tuesday' => 'Tuesday',
-                    'wednesday' => 'Wednesday',
-                    'thursday' => 'Thursday',
-                    'friday' => 'Friday',
-                    'saturday' => 'Saturday',
-                    'sunday' => 'Sunday',
-                ]),
+            CheckboxList::make('days_of_week')
+                ->label('Available days')
+                ->options(self::DAY_OPTIONS)
+                ->columns(4)
+                ->helperText('Pick every day this class runs — e.g. Monday/Wednesday/Friday for a 3x-a-week class.'),
             TimePicker::make('starts_at'),
             TextInput::make('duration_minutes')
                 ->numeric()
@@ -61,7 +66,11 @@ class FitnessClassResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->searchable(),
-                TextColumn::make('day_of_week'),
+                TextColumn::make('days_of_week')
+                    ->label('Days')
+                    ->state(fn (FitnessClass $record): string => $record->days_of_week
+                        ? collect($record->days_of_week)->map(fn (string $day) => self::DAY_OPTIONS[$day])->join(', ')
+                        : '—'),
                 TextColumn::make('starts_at')->time(),
                 IconColumn::make('is_popular')->boolean(),
                 IconColumn::make('is_active')->boolean(),
