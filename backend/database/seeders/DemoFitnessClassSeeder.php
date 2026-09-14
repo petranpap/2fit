@@ -22,15 +22,15 @@ class DemoFitnessClassSeeder extends Seeder
             );
 
             $gym->fitnessClasses()->createMany([
-                ['name' => 'HIIT Training', 'day_of_week' => 'monday', 'starts_at' => '18:00', 'duration_minutes' => 45, 'capacity' => 20, 'is_popular' => true],
-                ['name' => 'CrossFit Basics', 'day_of_week' => 'wednesday', 'starts_at' => '19:00', 'duration_minutes' => 60, 'capacity' => 15, 'is_popular' => true],
-                ['name' => 'Yoga Flow', 'day_of_week' => 'friday', 'starts_at' => '08:00', 'duration_minutes' => 50, 'capacity' => 12, 'is_popular' => false],
+                ['name' => 'HIIT Training', 'days_of_week' => ['monday', 'wednesday', 'friday'], 'starts_at' => '18:00', 'duration_minutes' => 45, 'capacity' => 20, 'is_popular' => true],
+                ['name' => 'CrossFit Basics', 'days_of_week' => ['tuesday', 'thursday'], 'starts_at' => '19:00', 'duration_minutes' => 60, 'capacity' => 15, 'is_popular' => true],
+                ['name' => 'Yoga Flow', 'days_of_week' => ['friday', 'sunday'], 'starts_at' => '08:00', 'duration_minutes' => 50, 'capacity' => 12, 'is_popular' => false],
             ]);
         }
 
         if ($trainer) {
             $trainer->fitnessClasses()->createMany([
-                ['name' => '1-on-1 Strength Session', 'day_of_week' => 'tuesday', 'starts_at' => '17:00', 'duration_minutes' => 60, 'capacity' => 1, 'is_popular' => true],
+                ['name' => '1-on-1 Strength Session', 'days_of_week' => ['monday', 'wednesday', 'friday'], 'starts_at' => '17:00', 'duration_minutes' => 60, 'capacity' => 1, 'is_popular' => true],
             ]);
         }
 

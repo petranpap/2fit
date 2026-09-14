@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 #[Fillable([
-    'classable_id', 'classable_type', 'name', 'day_of_week', 'starts_at',
+    'classable_id', 'classable_type', 'name', 'days_of_week', 'starts_at',
     'duration_minutes', 'capacity', 'is_popular', 'is_active',
 ])]
 class FitnessClass extends Model
@@ -16,6 +16,7 @@ class FitnessClass extends Model
     protected function casts(): array
     {
         return [
+            'days_of_week' => 'array',
             'is_popular' => 'boolean',
             'is_active' => 'boolean',
         ];
