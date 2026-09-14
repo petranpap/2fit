@@ -15,7 +15,7 @@ class FitnessClassResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'day_of_week' => $this->day_of_week,
+            'days_of_week' => $this->days_of_week ?? [],
             'starts_at' => $this->starts_at,
             'duration_minutes' => $this->duration_minutes,
             'capacity' => $this->capacity,

@@ -5,22 +5,34 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { createBooking } from '../api/bookings';
 import Button from '../components/Button';
+import CalendarPicker from '../components/CalendarPicker';
 import CategoryChip from '../components/CategoryChip';
 import TextField from '../components/TextField';
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
-import { TIME_SLOTS, upcomingDays } from '../utils/schedule';
+import { formatTime, TIME_SLOTS, toLocalIsoDate, upcomingOccurrencesForDays } from '../utils/schedule';
 
 export default function BookingRequestScreen({ route, navigation }) {
-  const { bookableType, bookableId, placeName, fitnessClassId, className } = route.params;
+  const {
+    bookableType,
+    bookableId,
+    placeName,
+    fitnessClassId,
+    className,
+    classDaysOfWeek,
+    classStartsAt,
+  } = route.params;
   const { t } = useLocale();
-  const days = upcomingDays(t);
 
-  // A class booking is already scheduled by the class itself — only a
-  // generic "Book Now" needs the requester to pick a day and time.
-  const needsSchedule = !fitnessClassId;
+  // Every booking needs an explicit date. A class already has a fixed time
+  // and a fixed set of weekdays — the user only picks *which* upcoming
+  // occurrence of those days they mean. A generic "Book Now" has neither,
+  // so it gets a full calendar plus a time-of-day choice.
+  const isClassBooking = Boolean(fitnessClassId);
+  const occurrences = isClassBooking ? upcomingOccurrencesForDays(classDaysOfWeek, t) : [];
 
-  const [selectedDay, setSelectedDay] = useState(needsSchedule ? days[0] : null);
+  const [selectedOccurrence, setSelectedOccurrence] = useState(occurrences[0] ?? null);
+  const [selectedDate, setSelectedDate] = useState(isClassBooking ? null : new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,10 +40,18 @@ export default function BookingRequestScreen({ route, navigation }) {
   const [booking, setBooking] = useState(null);
 
   const handleConfirm = async () => {
-    if (needsSchedule && (!selectedDay || !selectedTime)) {
+    if (isClassBooking && !selectedOccurrence) {
+      setError(t('booking.pickDateError'));
+      return;
+    }
+
+    if (!isClassBooking && (!selectedDate || !selectedTime)) {
       setError(t('booking.pickDateTimeError'));
       return;
     }
+
+    const isoDate = isClassBooking ? selectedOccurrence.isoDate : toLocalIsoDate(selectedDate);
+    const time = isClassBooking ? classStartsAt?.slice(0, 5) : selectedTime;
 
     setIsSubmitting(true);
     setError(null);
@@ -40,7 +60,7 @@ export default function BookingRequestScreen({ route, navigation }) {
         bookableType,
         bookableId,
         fitnessClassId,
-        scheduledAt: needsSchedule ? `${selectedDay.isoDate} ${selectedTime}:00` : undefined,
+        scheduledAt: time ? `${isoDate} ${time}:00` : undefined,
         notes,
       });
       setBooking(data);
@@ -76,19 +96,27 @@ export default function BookingRequestScreen({ route, navigation }) {
         <Text style={styles.summaryLabel}>{className ?? placeName}</Text>
         {className ? <Text style={styles.summarySubtitle}>{placeName}</Text> : null}
 
-        {needsSchedule ? (
+        {isClassBooking ? (
           <>
             <Text style={styles.sectionTitle}>{t('booking.dateSection')}</Text>
             <View style={styles.chipsWrap}>
-              {days.map((day) => (
+              {occurrences.map((occurrence) => (
                 <CategoryChip
-                  key={day.isoDate}
-                  label={`${day.label} ${day.dayNumber}`}
-                  selected={selectedDay?.isoDate === day.isoDate}
-                  onPress={() => setSelectedDay(day)}
+                  key={occurrence.isoDate}
+                  label={`${occurrence.label} ${occurrence.dayNumber}`}
+                  selected={selectedOccurrence?.isoDate === occurrence.isoDate}
+                  onPress={() => setSelectedOccurrence(occurrence)}
                 />
               ))}
             </View>
+            {classStartsAt ? (
+              <Text style={styles.fixedTime}>{t('booking.classTimeLabel', { time: formatTime(classStartsAt) })}</Text>
+            ) : null}
+          </>
+        ) : (
+          <>
+            <Text style={styles.sectionTitle}>{t('booking.dateSection')}</Text>
+            <CalendarPicker value={selectedDate} onChange={setSelectedDate} />
 
             <Text style={styles.sectionTitle}>{t('booking.timeSection')}</Text>
             <View style={styles.chipsWrap}>
@@ -102,7 +130,7 @@ export default function BookingRequestScreen({ route, navigation }) {
               ))}
             </View>
           </>
-        ) : null}
+        )}
 
         <TextField
           label={t('booking.notesLabel')}
@@ -154,6 +182,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
+  },
+  fixedTime: {
+    ...typography.caption,
+    marginTop: spacing.sm,
   },
   notesField: {
     marginTop: spacing.xl,

@@ -132,6 +132,8 @@ export default function PlaceDetailScreen({ route, navigation }) {
                         placeName: place.name,
                         fitnessClassId: fitnessClass.id,
                         className: fitnessClass.name,
+                        classDaysOfWeek: fitnessClass.days_of_week,
+                        classStartsAt: fitnessClass.starts_at,
                       })
                     }
                   />
