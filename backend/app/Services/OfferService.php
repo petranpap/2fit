@@ -101,7 +101,7 @@ class OfferService
         ]);
     }
 
-    private function generateUniqueCode(): string
+    public function generateUniqueCode(): string
     {
         do {
             $code = 'FIT-'.Str::upper(Str::random(8));
