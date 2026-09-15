@@ -121,6 +121,9 @@
     "popularBadge": "Δημοφιλές",
     "bookAction": "Κράτηση",
     "bookNowAction": "Κάνε κράτηση",
+    "spotsAvailable": "{{count}} θέσεις διαθέσιμες",
+    "spotsAvailableOne": "{{count}} θέση διαθέσιμη",
+    "classFull": "Δεν υπάρχουν διαθέσιμες θέσεις",
     "reviewsSection": "Αξιολογήσεις",
     "noReviewsYet": "Δεν υπάρχουν ακόμα αξιολογήσεις.",
     "reviews": "{{count}} αξιολογήσεις",
@@ -182,7 +185,22 @@
     "successTitle": "Η κράτηση καταχωρήθηκε!",
     "successMessage": "Η επιχείρηση θα επιβεβαιώσει την κράτησή σου σύντομα.",
     "statusPending": "Εκκρεμεί επιβεβαίωση",
+    "statusConfirmed": "Επιβεβαιωμένη",
+    "statusCancelled": "Ακυρώθηκε",
     "doneAction": "Τέλεια"
+  },
+  "myBookings": {
+    "headerTitle": "Οι κρατήσεις μου",
+    "emptyTitle": "Δεν έχεις κρατήσεις ακόμα",
+    "emptySubtitle": "Οι κρατήσεις που θα κάνεις θα εμφανίζονται εδώ.",
+    "generalBooking": "Γενική κράτηση",
+    "cancelAction": "Ακύρωση",
+    "cancelling": "Γίνεται ακύρωση…",
+    "cancelConfirmTitle": "Ακύρωση κράτησης;",
+    "cancelConfirmMessage": "Η θέση σου θα ελευθερωθεί για άλλους.",
+    "cancelConfirmYes": "Ναι, ακύρωση",
+    "cancelConfirmNo": "Όχι",
+    "cancelError": "Δεν μπορέσαμε να ακυρώσουμε την κράτηση. Δοκίμασε ξανά."
   },
   "validation": {
     "emailRequired": "Το email είναι υποχρεωτικό.",

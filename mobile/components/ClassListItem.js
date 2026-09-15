@@ -10,6 +10,15 @@ export default function ClassListItem({ fitnessClass, onBook }) {
     .filter(Boolean)
     .join(' · ');
 
+  const spots = fitnessClass.spots_available;
+  const isFull = spots === 0;
+  const spotsLabel =
+    spots == null
+      ? null
+      : isFull
+        ? t('placeDetail.classFull')
+        : t(spots === 1 ? 'placeDetail.spotsAvailableOne' : 'placeDetail.spotsAvailable', { count: spots });
+
   return (
     <View style={styles.row}>
       <View style={styles.info}>
@@ -24,13 +33,21 @@ export default function ClassListItem({ fitnessClass, onBook }) {
           ) : null}
         </View>
         {schedule ? <Text style={styles.schedule}>{schedule}</Text> : null}
+        {spotsLabel ? <Text style={[styles.spots, isFull && styles.spotsFull]}>{spotsLabel}</Text> : null}
       </View>
 
       <Pressable
         onPress={onBook}
-        style={({ pressed }) => [styles.bookButton, pressed && styles.bookButtonPressed]}
+        disabled={isFull}
+        style={({ pressed }) => [
+          styles.bookButton,
+          isFull && styles.bookButtonDisabled,
+          pressed && !isFull && styles.bookButtonPressed,
+        ]}
       >
-        <Text style={styles.bookButtonLabel}>{t('placeDetail.bookAction')}</Text>
+        <Text style={[styles.bookButtonLabel, isFull && styles.bookButtonLabelDisabled]}>
+          {t('placeDetail.bookAction')}
+        </Text>
       </Pressable>
     </View>
   );
@@ -73,12 +90,23 @@ const styles = StyleSheet.create({
     ...typography.caption,
     marginTop: 2,
   },
+  spots: {
+    ...typography.caption,
+    color: colors.primary,
+    marginTop: 2,
+  },
+  spotsFull: {
+    color: colors.danger,
+  },
   bookButton: {
     borderWidth: 1,
     borderColor: colors.primary,
     borderRadius: radius.full,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
+  },
+  bookButtonDisabled: {
+    borderColor: colors.border,
   },
   bookButtonPressed: {
     opacity: 0.7,
@@ -87,5 +115,8 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.primary,
     fontFamily: typography.bodyStrong.fontFamily,
+  },
+  bookButtonLabelDisabled: {
+    color: colors.textSecondary,
   },
 });

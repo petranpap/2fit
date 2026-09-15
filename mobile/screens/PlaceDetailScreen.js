@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useFocusEffect } from '@react-navigation/native';
 import { ActivityIndicator, Linking, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -20,12 +21,29 @@ export default function PlaceDetailScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchPlace(type, id)
-      .then(({ data }) => setPlace(data))
-      .catch(() => setError(t('placeDetail.loadError')))
-      .finally(() => setIsLoading(false));
-  }, [type, id]);
+  // Refetch on every focus, not just on mount — returning here after
+  // booking a class (or cancelling one) should show the updated spots
+  // available without a manual refresh.
+  useFocusEffect(
+    useCallback(() => {
+      let isCancelled = false;
+
+      fetchPlace(type, id)
+        .then(({ data }) => {
+          if (!isCancelled) setPlace(data);
+        })
+        .catch(() => {
+          if (!isCancelled) setError(t('placeDetail.loadError'));
+        })
+        .finally(() => {
+          if (!isCancelled) setIsLoading(false);
+        });
+
+      return () => {
+        isCancelled = true;
+      };
+    }, [type, id])
+  );
 
   useEffect(() => {
     navigation.setOptions({

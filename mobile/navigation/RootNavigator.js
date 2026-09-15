@@ -10,6 +10,7 @@ import FavoritesScreen from '../screens/FavoritesScreen';
 import FiltersScreen from '../screens/FiltersScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
+import MyBookingsScreen from '../screens/MyBookingsScreen';
 import OfferDetailScreen from '../screens/OfferDetailScreen';
 import OffersScreen from '../screens/OffersScreen';
 import PlaceDetailScreen from '../screens/PlaceDetailScreen';
@@ -126,6 +127,17 @@ function MainStack() {
         options={{
           presentation: 'modal',
           headerTitle: t('booking.requestTitle'),
+          headerTintColor: colors.primary,
+          headerStyle: { backgroundColor: colors.background },
+          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="MyBookings"
+        component={MyBookingsScreen}
+        options={{
+          headerTitle: t('myBookings.headerTitle'),
           headerTintColor: colors.primary,
           headerStyle: { backgroundColor: colors.background },
           headerTitleStyle: { fontFamily: fonts.headingSemiBold },

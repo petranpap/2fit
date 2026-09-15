@@ -16,3 +16,7 @@ export function createBooking({ bookableType, bookableId, fitnessClassId, schedu
 export function fetchMyBookings() {
   return apiRequest('/bookings/mine');
 }
+
+export function cancelBooking(bookingId) {
+  return apiRequest(`/bookings/${bookingId}/cancel`, { method: 'POST' });
+}
