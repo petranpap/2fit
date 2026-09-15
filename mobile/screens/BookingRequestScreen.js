@@ -11,11 +11,11 @@ import TextField from '../components/TextField';
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
 import { scheduleBookingReminder } from '../utils/notifications';
-import { formatTime, TIME_SLOTS, toLocalIsoDate, upcomingOccurrencesForClass } from '../utils/schedule';
+import { scheduleLabel, TIME_SLOTS, toLocalIsoDate, upcomingOccurrencesForClass } from '../utils/schedule';
 
 export default function BookingRequestScreen({ route, navigation }) {
   const { bookableType, bookableId, placeName, fitnessClassId, className, fitnessClass } = route.params;
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   // Every booking needs an explicit date. A class already has a fixed time
   // and a fixed set of possible dates (one-time: its own date; recurring:
@@ -97,12 +97,25 @@ export default function BookingRequestScreen({ route, navigation }) {
         <Text style={styles.summaryLabel}>{className ?? placeName}</Text>
         {className ? <Text style={styles.summarySubtitle}>{placeName}</Text> : null}
 
+        {isClassBooking && fitnessClass ? (
+          <View style={styles.recurrenceRow}>
+            <Ionicons
+              name={fitnessClass.recurrence_type === 'recurring' ? 'repeat' : 'calendar-outline'}
+              size={16}
+              color={colors.primary}
+            />
+            <Text style={styles.recurrenceText}>{scheduleLabel(fitnessClass, t, locale)}</Text>
+          </View>
+        ) : null}
+
         {isClassBooking ? (
           occurrences.length === 0 ? (
             <Text style={styles.errorText}>{t('booking.classUnavailable')}</Text>
           ) : (
             <>
-              <Text style={styles.sectionTitle}>{t('booking.dateSection')}</Text>
+              <Text style={styles.sectionTitle}>
+                {fitnessClass?.recurrence_type === 'recurring' ? t('booking.pickOccurrenceSection') : t('booking.dateSection')}
+              </Text>
               <View style={styles.chipsWrap}>
                 {occurrences.map((occurrence) => (
                   <CategoryChip
@@ -113,11 +126,6 @@ export default function BookingRequestScreen({ route, navigation }) {
                   />
                 ))}
               </View>
-              {classStartsAt ? (
-                <Text style={styles.fixedTime}>
-                  {t('booking.classTimeLabel', { time: formatTime(classStartsAt) })}
-                </Text>
-              ) : null}
             </>
           )
         ) : (
@@ -179,6 +187,22 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginTop: spacing.xs,
   },
+  recurrenceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginTop: spacing.md,
+    backgroundColor: colors.primaryTint,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    alignSelf: 'flex-start',
+  },
+  recurrenceText: {
+    ...typography.caption,
+    color: colors.primary,
+    fontFamily: typography.bodyStrong.fontFamily,
+  },
   sectionTitle: {
     ...typography.subheading,
     fontSize: 16,
@@ -189,10 +213,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
-  },
-  fixedTime: {
-    ...typography.caption,
-    marginTop: spacing.sm,
   },
   notesField: {
     marginTop: spacing.xl,
