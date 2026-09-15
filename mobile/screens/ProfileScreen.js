@@ -34,6 +34,11 @@ export default function ProfileScreen({ navigation }) {
 
       <View style={styles.menu}>
         <MenuListItem
+          icon="calendar-outline"
+          label={t('myBookings.headerTitle')}
+          onPress={() => navigation.navigate('MyBookings')}
+        />
+        <MenuListItem
           icon="heart-outline"
           label={t('profile.favorites')}
           onPress={() => navigation.navigate('Favorites')}
