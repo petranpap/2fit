@@ -15,7 +15,13 @@ class FitnessClassResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'recurrence_type' => $this->recurrence_type,
             'days_of_week' => $this->days_of_week ?? [],
+            // Date only (no time) — "YYYY-MM-DD" either way: when the
+            // recurring pattern starts, or the exact date of a one_time
+            // session.
+            'starts_on' => $this->starts_on?->toDateString(),
+            'recurrence_months' => $this->recurrence_months,
             'starts_at' => $this->starts_at,
             'duration_minutes' => $this->duration_minutes,
             'capacity' => $this->capacity,

@@ -3,12 +3,12 @@
 namespace App\Filament\Partner\Resources;
 
 use App\Filament\Concerns\HasClassDayOptions;
+use App\Filament\Concerns\HasClassRecurrenceFields;
 use App\Filament\Partner\Resources\FitnessClassResource\Pages;
 use App\Models\FitnessClass;
 use App\Models\Gym;
 use App\Models\Shop;
 use App\Models\Trainer;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Builder;
 class FitnessClassResource extends Resource
 {
     use HasClassDayOptions;
+    use HasClassRecurrenceFields;
 
     protected static ?string $model = FitnessClass::class;
 
@@ -36,11 +37,7 @@ class FitnessClassResource extends Resource
             TextInput::make('name')
                 ->required()
                 ->maxLength(255),
-            CheckboxList::make('days_of_week')
-                ->label('Available days')
-                ->options(self::DAY_OPTIONS)
-                ->columns(4)
-                ->helperText('Pick every day this class runs — e.g. Monday/Wednesday/Friday for a 3x-a-week class.'),
+            ...self::recurrenceFields(),
             TimePicker::make('starts_at'),
             TextInput::make('duration_minutes')
                 ->numeric()
@@ -66,9 +63,9 @@ class FitnessClassResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->searchable(),
-                TextColumn::make('days_of_week')
-                    ->label('Days')
-                    ->state(fn (FitnessClass $record): string => self::formatDaysOfWeek($record->days_of_week)),
+                TextColumn::make('schedule')
+                    ->label('Schedule')
+                    ->state(fn (FitnessClass $record): string => self::formatSchedule($record)),
                 TextColumn::make('starts_at')->time(),
                 TextColumn::make('booked')
                     ->label('Booked')
