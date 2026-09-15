@@ -200,3 +200,40 @@ Rules:
 - `main` is protected, only updated via PR at the end of each sprint (tagged)
 
 See root `CLAUDE.md` for the full sprint plan and task breakdown.
+
+
+Πώς να συνδεθείς με κάθε ρόλο
+Όλοι οι seeded λογαριασμοί έχουν το ίδιο password: password
+
+👤 Ως απλός χρήστης (Mobile app)
+Σύνδεση μέσα από το React Native app (Expo Go ή web preview):
+
+Email: test@example.com
+Password: password
+Βλέπει Home/Search/Categories, προφίλ γυμναστηρίων/trainers/shops, κάνει claim προσφορές (QR codes), κάνει bookings σε μαθήματα.
+
+🛠️ Ως Admin (Filament Admin panel)
+URL: http://localhost:8000/admin
+
+Email: admin@example.com
+Password: password
+Εδώ βλέπεις: έγκριση νέων εγγραφών (Gyms/Trainers/Shops — approval queue), moderation στα Reviews, εποπτεία σε Offers/Bookings/Discount Codes, Statistics, και Subscription Plans.
+
+🏋️ Ως Gym Owner (Partner panel)
+URL: http://localhost:8000/partner
+
+Email: powerhouse-gym-limassol-owner@example.com
+Password: password
+🧑‍🏫 Ως Trainer (Partner panel)
+URL: http://localhost:8000/partner
+
+Email: andreas-pauloy-owner@example.com
+Password: password
+🛍️ Ως Shop Owner (Partner panel)
+URL: http://localhost:8000/partner
+
+Email: sportsworld-cyprus-owner@example.com
+Password: password
+Στο Partner panel (και για τους 3 πιο πάνω ρόλους): διαχειρίζεσαι το δικό σου profile (λογότυπο, φωτογραφίες, ωράριο, categories/facilities), δημιουργείς offers, βλέπεις/redeem-άρεις discount codes, και confirm/cancel bookings πελατών.
+
+Σημείωση: κάθε seeded gym/trainer/shop έχει δικό του owner account με pattern {slug}-owner@example.com — π.χ. υπάρχουν κι άλλα σαν fitzone-nicosia-owner@example.com, maria-ioannoy-owner@example.com, nutrifit-supplements-owner@example.com κλπ. Πλήρη λίστα στο backend/database/seeders/DemoListingSeeder.php. Τρία από αυτά (Larnaca Strength Club, Κώστας Δημητρίου, Active Gear Paphos) είναι σκόπιμα unverified — καλά για να δοκιμάσεις το approval flow στο Admin panel.
