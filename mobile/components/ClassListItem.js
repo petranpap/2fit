@@ -2,13 +2,15 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
-import { daysLabel, formatTime } from '../utils/schedule';
+import { daysLabel, formatOneTimeDate, formatTime } from '../utils/schedule';
 
 export default function ClassListItem({ fitnessClass, onBook }) {
-  const { t } = useLocale();
-  const schedule = [daysLabel(fitnessClass.days_of_week, t), formatTime(fitnessClass.starts_at)]
-    .filter(Boolean)
-    .join(' · ');
+  const { t, locale } = useLocale();
+  const dayPart =
+    fitnessClass.recurrence_type === 'one_time'
+      ? formatOneTimeDate(fitnessClass.starts_on, locale)
+      : daysLabel(fitnessClass.days_of_week, t);
+  const schedule = [dayPart, formatTime(fitnessClass.starts_at)].filter(Boolean).join(' · ');
 
   const spots = fitnessClass.spots_available;
   const isFull = spots === 0;

@@ -10,26 +10,20 @@ import CategoryChip from '../components/CategoryChip';
 import TextField from '../components/TextField';
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
-import { formatTime, TIME_SLOTS, toLocalIsoDate, upcomingOccurrencesForDays } from '../utils/schedule';
+import { formatTime, TIME_SLOTS, toLocalIsoDate, upcomingOccurrencesForClass } from '../utils/schedule';
 
 export default function BookingRequestScreen({ route, navigation }) {
-  const {
-    bookableType,
-    bookableId,
-    placeName,
-    fitnessClassId,
-    className,
-    classDaysOfWeek,
-    classStartsAt,
-  } = route.params;
+  const { bookableType, bookableId, placeName, fitnessClassId, className, fitnessClass } = route.params;
   const { t } = useLocale();
 
   // Every booking needs an explicit date. A class already has a fixed time
-  // and a fixed set of weekdays — the user only picks *which* upcoming
-  // occurrence of those days they mean. A generic "Book Now" has neither,
-  // so it gets a full calendar plus a time-of-day choice.
+  // and a fixed set of possible dates (one-time: its own date; recurring:
+  // its weekdays, bounded by however long it runs for) — the user only
+  // picks *which* upcoming occurrence they mean. A generic "Book Now" has
+  // neither, so it gets a full calendar plus a time-of-day choice.
   const isClassBooking = Boolean(fitnessClassId);
-  const occurrences = isClassBooking ? upcomingOccurrencesForDays(classDaysOfWeek, t) : [];
+  const occurrences = isClassBooking ? upcomingOccurrencesForClass(fitnessClass, t) : [];
+  const classStartsAt = fitnessClass?.starts_at;
 
   const [selectedOccurrence, setSelectedOccurrence] = useState(occurrences[0] ?? null);
   const [selectedDate, setSelectedDate] = useState(isClassBooking ? null : new Date());
@@ -40,6 +34,11 @@ export default function BookingRequestScreen({ route, navigation }) {
   const [booking, setBooking] = useState(null);
 
   const handleConfirm = async () => {
+    if (isClassBooking && occurrences.length === 0) {
+      setError(t('booking.classUnavailable'));
+      return;
+    }
+
     if (isClassBooking && !selectedOccurrence) {
       setError(t('booking.pickDateError'));
       return;
@@ -97,22 +96,28 @@ export default function BookingRequestScreen({ route, navigation }) {
         {className ? <Text style={styles.summarySubtitle}>{placeName}</Text> : null}
 
         {isClassBooking ? (
-          <>
-            <Text style={styles.sectionTitle}>{t('booking.dateSection')}</Text>
-            <View style={styles.chipsWrap}>
-              {occurrences.map((occurrence) => (
-                <CategoryChip
-                  key={occurrence.isoDate}
-                  label={`${occurrence.label} ${occurrence.dayNumber}`}
-                  selected={selectedOccurrence?.isoDate === occurrence.isoDate}
-                  onPress={() => setSelectedOccurrence(occurrence)}
-                />
-              ))}
-            </View>
-            {classStartsAt ? (
-              <Text style={styles.fixedTime}>{t('booking.classTimeLabel', { time: formatTime(classStartsAt) })}</Text>
-            ) : null}
-          </>
+          occurrences.length === 0 ? (
+            <Text style={styles.errorText}>{t('booking.classUnavailable')}</Text>
+          ) : (
+            <>
+              <Text style={styles.sectionTitle}>{t('booking.dateSection')}</Text>
+              <View style={styles.chipsWrap}>
+                {occurrences.map((occurrence) => (
+                  <CategoryChip
+                    key={occurrence.isoDate}
+                    label={`${occurrence.label} ${occurrence.dayNumber}`}
+                    selected={selectedOccurrence?.isoDate === occurrence.isoDate}
+                    onPress={() => setSelectedOccurrence(occurrence)}
+                  />
+                ))}
+              </View>
+              {classStartsAt ? (
+                <Text style={styles.fixedTime}>
+                  {t('booking.classTimeLabel', { time: formatTime(classStartsAt) })}
+                </Text>
+              ) : null}
+            </>
+          )
         ) : (
           <>
             <Text style={styles.sectionTitle}>{t('booking.dateSection')}</Text>

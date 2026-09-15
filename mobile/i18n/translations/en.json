@@ -182,6 +182,7 @@
     "submitError": "We couldn't submit your booking. Try again.",
     "pickDateTimeError": "Pick a date and a time.",
     "pickDateError": "Pick a date.",
+    "classUnavailable": "This class is no longer available to book.",
     "successTitle": "Booking requested!",
     "successMessage": "The business will confirm your booking shortly.",
     "statusPending": "Awaiting confirmation",
