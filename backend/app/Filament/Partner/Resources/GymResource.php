@@ -2,6 +2,7 @@
 
 namespace App\Filament\Partner\Resources;
 
+use App\Filament\Concerns\HasLocationFields;
 use App\Filament\Partner\Resources\GymResource\Pages;
 use App\Models\Gym;
 use Filament\Forms\Components\FileUpload;
@@ -20,6 +21,8 @@ use Illuminate\Support\Str;
 
 class GymResource extends Resource
 {
+    use HasLocationFields;
+
     protected static ?string $model = Gym::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
@@ -42,8 +45,7 @@ class GymResource extends Resource
                 ->maxLength(2000)
                 ->columnSpanFull(),
             TextInput::make('address')->maxLength(255),
-            TextInput::make('latitude')->numeric(),
-            TextInput::make('longitude')->numeric(),
+            ...self::locationFields(),
             TextInput::make('phone')->tel()->maxLength(30),
             TextInput::make('email')->email()->maxLength(255),
             TextInput::make('website')->url()->maxLength(255),

@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ShopResource\Pages;
+use App\Filament\Concerns\HasLocationFields;
 use App\Models\Shop;
 use App\Models\User;
 use Filament\Forms\Components\FileUpload;
@@ -20,6 +21,8 @@ use Illuminate\Support\Str;
 
 class ShopResource extends Resource
 {
+    use HasLocationFields;
+
     protected static ?string $model = Shop::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
@@ -49,8 +52,7 @@ class ShopResource extends Resource
             TextInput::make('slug')->required()->maxLength(255)->unique(ignoreRecord: true),
             Textarea::make('description')->maxLength(2000)->columnSpanFull(),
             TextInput::make('address')->maxLength(255),
-            TextInput::make('latitude')->numeric(),
-            TextInput::make('longitude')->numeric(),
+            ...self::locationFields(),
             TextInput::make('phone')->tel()->maxLength(30),
             TextInput::make('email')->email()->maxLength(255),
             TextInput::make('website')->url()->maxLength(255),
