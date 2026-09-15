@@ -202,38 +202,79 @@ Rules:
 See root `CLAUDE.md` for the full sprint plan and task breakdown.
 
 
-Πώς να συνδεθείς με κάθε ρόλο
-Όλοι οι seeded λογαριασμοί έχουν το ίδιο password: password
 
-👤 Ως απλός χρήστης (Mobile app)
+# Πώς να συνδεθείς με κάθε ρόλο
+
+Όλοι οι seeded λογαριασμοί έχουν το ίδιο password: `password`
+
+---
+
+## 👤 Ως απλός χρήστης (Mobile App)
 Σύνδεση μέσα από το React Native app (Expo Go ή web preview):
 
-Email: test@example.com
-Password: password
-Βλέπει Home/Search/Categories, προφίλ γυμναστηρίων/trainers/shops, κάνει claim προσφορές (QR codes), κάνει bookings σε μαθήματα.
+* **Email:** `test@example.com`
+* **Password:** `password`
 
-🛠️ Ως Admin (Filament Admin panel)
-URL: http://localhost:8000/admin
+### Δυνατότητες:
+* Πρόσβαση σε Home, Search και Categories.
+* Προβολή προφίλ γυμναστηρίων, trainers και shops.
+* Claim προσφορών μέσω QR codes.
+* Δημιουργία κρατήσεων (bookings) σε μαθήματα.
 
-Email: admin@example.com
-Password: password
-Εδώ βλέπεις: έγκριση νέων εγγραφών (Gyms/Trainers/Shops — approval queue), moderation στα Reviews, εποπτεία σε Offers/Bookings/Discount Codes, Statistics, και Subscription Plans.
+---
 
-🏋️ Ως Gym Owner (Partner panel)
-URL: http://localhost:8000/partner
+## 🛠️ Ως Admin (Filament Admin Panel)
+* **URL:** `http://localhost:8000/admin`
+* **Email:** `admin@example.com`
+* **Password:** `password`
 
-Email: powerhouse-gym-limassol-owner@example.com
-Password: password
-🧑‍🏫 Ως Trainer (Partner panel)
-URL: http://localhost:8000/partner
+### Δυνατότητες & Εποπτεία:
+* Έγκριση νέων εγγραφών (Gyms / Trainers / Shops — approval queue).
+* Moderation στα reviews.
+* Εποπτεία σε Offers, Bookings και Discount Codes.
+* Στατιστικά και διαχείριση Subscription Plans.
 
-Email: andreas-pauloy-owner@example.com
-Password: password
-🛍️ Ως Shop Owner (Partner panel)
-URL: http://localhost:8000/partner
+---
 
-Email: sportsworld-cyprus-owner@example.com
-Password: password
-Στο Partner panel (και για τους 3 πιο πάνω ρόλους): διαχειρίζεσαι το δικό σου profile (λογότυπο, φωτογραφίες, ωράριο, categories/facilities), δημιουργείς offers, βλέπεις/redeem-άρεις discount codes, και confirm/cancel bookings πελατών.
+## 🏋️ Ως Gym Owner (Partner Panel)
+* **URL:** `http://localhost:8000/partner`
+* **Email:** `powerhouse-gym-limassol-owner@example.com`
+* **Password:** `password`
 
-Σημείωση: κάθε seeded gym/trainer/shop έχει δικό του owner account με pattern {slug}-owner@example.com — π.χ. υπάρχουν κι άλλα σαν fitzone-nicosia-owner@example.com, maria-ioannoy-owner@example.com, nutrifit-supplements-owner@example.com κλπ. Πλήρη λίστα στο backend/database/seeders/DemoListingSeeder.php. Τρία από αυτά (Larnaca Strength Club, Κώστας Δημητρίου, Active Gear Paphos) είναι σκόπιμα unverified — καλά για να δοκιμάσεις το approval flow στο Admin panel.
+---
+
+## 🧑‍🏫 Ως Trainer (Partner panel)
+* **URL:** `http://localhost:8000/partner`
+* **Email:** `andreas-pauloy-owner@example.com`
+* **Password:** `password`
+
+---
+
+## 🛍️ Ως Shop Owner (Partner panel)
+* **URL:** `http://localhost:8000/partner`
+* **Email:** `sportsworld-cyprus-owner@example.com`
+* **Password:** `password`
+
+---
+
+### Κοινές Δυνατότητες Partner Panel (για τους 3 παραπάνω ρόλους):
+* Διαχείριση δικού σου profile (λογότυπο, φωτογραφίες, ωράριο, categories/facilities).
+* Δημιουργία προσφορών (offers).
+* Προβολή και εξαργύρωση (redeem) discount codes.
+* Επιβεβαίωση ή ακύρωση κρατήσεων (bookings) πελατών.
+
+---
+
+## 💡 Σημείωση & Επιπλέον Λογαριασμοί
+Κάθε seeded gym, trainer και shop διαθέτει το δικό του owner account σύμφωνα με το pattern `{slug}-owner@example.com`. 
+
+* **Παραδειγματικοί λογαριασμοί:** 
+  * `fitzone-nicosia-owner@example.com`
+  * `maria-ioannoy-owner@example.com`
+  * `nutrifit-supplements-owner@example.com`
+  * *και πολλοί άλλοι...*
+
+> **Πλήρης λίστα:** Μπορείτε να βρείτε όλους τους διαθέσιμους λογαριασμούς στο αρχείο `backend/database/seeders/DemoListingSeeder.php`.
+
+**⚠️ Tips για Testing:** 
+Τρία από τα καταχωρημένα listings (Larnaca Strength Club, Κώστας Δημητρίου, Active Gear Paphos) είναι σκόπιμα **unverified** — ιδανικά για να δοκιμάσετε το approval flow απευθείας μέσα από το Admin panel.
