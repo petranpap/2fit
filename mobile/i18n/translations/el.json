@@ -124,6 +124,10 @@
     "spotsAvailable": "{{count}} θέσεις διαθέσιμες",
     "spotsAvailableOne": "{{count}} θέση διαθέσιμη",
     "classFull": "Δεν υπάρχουν διαθέσιμες θέσεις",
+    "everyDays": "Κάθε {{days}}",
+    "ongoingLabel": "συνεχές",
+    "untilDate": "έως {{date}}",
+    "oneTimeBadge": "Εφάπαξ",
     "reviewsSection": "Αξιολογήσεις",
     "noReviewsYet": "Δεν υπάρχουν ακόμα αξιολογήσεις.",
     "reviews": "{{count}} αξιολογήσεις",
@@ -201,7 +205,14 @@
     "cancelConfirmMessage": "Η θέση σου θα ελευθερωθεί για άλλους.",
     "cancelConfirmYes": "Ναι, ακύρωση",
     "cancelConfirmNo": "Όχι",
-    "cancelError": "Δεν μπορέσαμε να ακυρώσουμε την κράτηση. Δοκίμασε ξανά."
+    "cancelError": "Δεν μπορέσαμε να ακυρώσουμε την κράτηση. Δοκίμασε ξανά.",
+    "emptyForDay": "Δεν υπάρχουν κρατήσεις αυτή την ημέρα."
+  },
+  "notifications": {
+    "reminderTitle": "Η κράτησή σου πλησιάζει",
+    "reminderBody": "{{name}} σε {{hours}} ώρες στο {{place}}",
+    "reminderBodyNoPlace": "{{name}} σε {{hours}} ώρες",
+    "genericBookingName": "Η κράτησή σου"
   },
   "validation": {
     "emailRequired": "Το email είναι υποχρεωτικό.",

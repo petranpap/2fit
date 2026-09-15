@@ -2,15 +2,12 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
-import { daysLabel, formatOneTimeDate, formatTime } from '../utils/schedule';
+import { scheduleLabel } from '../utils/schedule';
 
 export default function ClassListItem({ fitnessClass, onBook }) {
   const { t, locale } = useLocale();
-  const dayPart =
-    fitnessClass.recurrence_type === 'one_time'
-      ? formatOneTimeDate(fitnessClass.starts_on, locale)
-      : daysLabel(fitnessClass.days_of_week, t);
-  const schedule = [dayPart, formatTime(fitnessClass.starts_at)].filter(Boolean).join(' · ');
+  const isOneTime = fitnessClass.recurrence_type === 'one_time';
+  const schedule = scheduleLabel(fitnessClass, t, locale);
 
   const spots = fitnessClass.spots_available;
   const isFull = spots === 0;
@@ -31,6 +28,11 @@ export default function ClassListItem({ fitnessClass, onBook }) {
           {fitnessClass.is_popular ? (
             <View style={styles.badge}>
               <Text style={styles.badgeText}>{t('placeDetail.popularBadge')}</Text>
+            </View>
+          ) : null}
+          {isOneTime ? (
+            <View style={[styles.badge, styles.oneTimeBadge]}>
+              <Text style={[styles.badgeText, styles.oneTimeBadgeText]}>{t('placeDetail.oneTimeBadge')}</Text>
             </View>
           ) : null}
         </View>
@@ -87,6 +89,12 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.secondary,
     fontFamily: typography.bodyStrong.fontFamily,
+  },
+  oneTimeBadge: {
+    backgroundColor: colors.primaryTint,
+  },
+  oneTimeBadgeText: {
+    color: colors.primary,
   },
   schedule: {
     ...typography.caption,

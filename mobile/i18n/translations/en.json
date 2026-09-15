@@ -124,6 +124,10 @@
     "spotsAvailable": "{{count}} spots available",
     "spotsAvailableOne": "{{count}} spot available",
     "classFull": "No spots available",
+    "everyDays": "Every {{days}}",
+    "ongoingLabel": "ongoing",
+    "untilDate": "until {{date}}",
+    "oneTimeBadge": "One-time",
     "reviewsSection": "Reviews",
     "noReviewsYet": "No reviews yet.",
     "reviews": "{{count}} reviews",
@@ -201,7 +205,14 @@
     "cancelConfirmMessage": "Your spot will be freed up for someone else.",
     "cancelConfirmYes": "Yes, cancel",
     "cancelConfirmNo": "No",
-    "cancelError": "We couldn't cancel the booking. Try again."
+    "cancelError": "We couldn't cancel the booking. Try again.",
+    "emptyForDay": "No bookings on this day."
+  },
+  "notifications": {
+    "reminderTitle": "Your booking is coming up",
+    "reminderBody": "{{name}} in {{hours}} hours at {{place}}",
+    "reminderBodyNoPlace": "{{name}} in {{hours}} hours",
+    "genericBookingName": "Your booking"
   },
   "validation": {
     "emailRequired": "Email is required.",

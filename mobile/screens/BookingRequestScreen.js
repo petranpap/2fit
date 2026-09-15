@@ -10,6 +10,7 @@ import CategoryChip from '../components/CategoryChip';
 import TextField from '../components/TextField';
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
+import { scheduleBookingReminder } from '../utils/notifications';
 import { formatTime, TIME_SLOTS, toLocalIsoDate, upcomingOccurrencesForClass } from '../utils/schedule';
 
 export default function BookingRequestScreen({ route, navigation }) {
@@ -63,6 +64,7 @@ export default function BookingRequestScreen({ route, navigation }) {
         notes,
       });
       setBooking(data);
+      scheduleBookingReminder(data, t);
     } catch (err) {
       console.error('createBooking failed', err);
       setError(err.message && err.message !== 'Request failed' ? err.message : t('booking.submitError'));
