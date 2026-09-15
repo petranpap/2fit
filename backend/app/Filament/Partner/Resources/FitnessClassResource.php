@@ -2,12 +2,14 @@
 
 namespace App\Filament\Partner\Resources;
 
+use App\Filament\Concerns\HasClassDayOptions;
 use App\Filament\Partner\Resources\FitnessClassResource\Pages;
 use App\Models\FitnessClass;
 use App\Models\Gym;
 use App\Models\Shop;
 use App\Models\Trainer;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
@@ -20,21 +22,13 @@ use Illuminate\Database\Eloquent\Builder;
 
 class FitnessClassResource extends Resource
 {
+    use HasClassDayOptions;
+
     protected static ?string $model = FitnessClass::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?string $navigationLabel = 'Classes';
-
-    public const DAY_OPTIONS = [
-        'monday' => 'Monday',
-        'tuesday' => 'Tuesday',
-        'wednesday' => 'Wednesday',
-        'thursday' => 'Thursday',
-        'friday' => 'Friday',
-        'saturday' => 'Saturday',
-        'sunday' => 'Sunday',
-    ];
 
     public static function form(Form $form): Form
     {
@@ -52,7 +46,13 @@ class FitnessClassResource extends Resource
                 ->numeric()
                 ->suffix('min'),
             TextInput::make('capacity')
-                ->numeric(),
+                ->numeric()
+                ->minValue(1)
+                ->helperText('Leave blank for unlimited spots. Once full, customers can no longer book this class.'),
+            Select::make('categories')
+                ->relationship('categories', 'name')
+                ->multiple()
+                ->preload(),
             Toggle::make('is_popular')
                 ->label('Show in "Popular Classes"')
                 ->helperText('Highlighted first on your public profile.'),
@@ -68,10 +68,11 @@ class FitnessClassResource extends Resource
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('days_of_week')
                     ->label('Days')
-                    ->state(fn (FitnessClass $record): string => $record->days_of_week
-                        ? collect($record->days_of_week)->map(fn (string $day) => self::DAY_OPTIONS[$day])->join(', ')
-                        : '—'),
+                    ->state(fn (FitnessClass $record): string => self::formatDaysOfWeek($record->days_of_week)),
                 TextColumn::make('starts_at')->time(),
+                TextColumn::make('booked')
+                    ->label('Booked')
+                    ->state(fn (FitnessClass $record): string => $record->bookings()->whereIn('status', ['pending', 'confirmed'])->count().' / '.($record->capacity ?? '∞')),
                 IconColumn::make('is_popular')->boolean(),
                 IconColumn::make('is_active')->boolean(),
             ])

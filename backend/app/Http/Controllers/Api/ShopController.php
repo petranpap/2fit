@@ -23,7 +23,13 @@ class ShopController extends Controller
     {
         abort_unless($shop->is_active && $shop->is_verified, 404);
 
-        $shop->load(['categories', 'facilities', 'fitnessClasses' => fn ($query) => $query->where('is_active', true)])
+        $shop->load([
+            'categories',
+            'facilities',
+            'fitnessClasses' => fn ($query) => $query->where('is_active', true)
+                ->with('categories')
+                ->withCount(['bookings as active_bookings_count' => fn ($bookings) => $bookings->whereIn('status', ['pending', 'confirmed'])]),
+        ])
             ->loadCount('reviews')
             ->loadAvg('reviews', 'rating');
 

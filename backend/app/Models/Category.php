@@ -23,4 +23,9 @@ class Category extends Model
     {
         return $this->morphedByMany(Shop::class, 'categorizable');
     }
+
+    public function fitnessClasses(): MorphToMany
+    {
+        return $this->morphedByMany(FitnessClass::class, 'categorizable');
+    }
 }
