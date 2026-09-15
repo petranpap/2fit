@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
-import { ISO_WEEK_DAYS } from '../utils/schedule';
+import { ISO_WEEK_DAYS, toLocalIsoDate } from '../utils/schedule';
 
 const MONTH_KEYS = [
   'january', 'february', 'march', 'april', 'may', 'june',
@@ -30,17 +30,27 @@ function mondayFirstWeekday(date) {
 // @react-native-community/datetimepicker has no web renderer (see git log
 // for the sprint 6 booking flow) and this needs to work identically in the
 // Expo Go app and the web preview.
-export default function CalendarPicker({ value, onChange, minDate }) {
+//
+// disablePastDates (default true) greys out/disables anything before
+// minDate (today by default) — the right behavior when picking a date to
+// book. Pass false for a browse-only calendar (e.g. My Bookings), where
+// past dates are just as valid to look at as future ones.
+// markedDates (a Set or array of "YYYY-MM-DD" strings) draws a small dot
+// under any day that has something on it, independent of selection.
+export default function CalendarPicker({ value, onChange, minDate, disablePastDates = true, markedDates }) {
   const { t } = useLocale();
-  const floor = startOfDay(minDate ?? new Date());
+  const floor = disablePastDates ? startOfDay(minDate ?? new Date()) : null;
   const today = startOfDay(new Date());
+  const marked = markedDates instanceof Set ? markedDates : new Set(markedDates ?? []);
 
   const [viewMonth, setViewMonth] = useState(() => {
-    const base = value ?? floor;
+    const base = value ?? floor ?? today;
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 
-  const isEarliestMonth = viewMonth.getFullYear() === floor.getFullYear() && viewMonth.getMonth() === floor.getMonth();
+  const isEarliestMonth = Boolean(
+    floor && viewMonth.getFullYear() === floor.getFullYear() && viewMonth.getMonth() === floor.getMonth()
+  );
   const firstWeekday = mondayFirstWeekday(new Date(viewMonth.getFullYear(), viewMonth.getMonth(), 1));
   const daysInMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 0).getDate();
 
@@ -88,9 +98,10 @@ export default function CalendarPicker({ value, onChange, minDate }) {
             return <View key={`blank-${index}`} style={styles.cell} />;
           }
 
-          const disabled = date < floor;
+          const disabled = Boolean(floor && date < floor);
           const selected = isSameDay(date, value);
           const isToday = isSameDay(date, today);
+          const isMarked = marked.has(toLocalIsoDate(date));
 
           return (
             <Pressable
@@ -113,6 +124,7 @@ export default function CalendarPicker({ value, onChange, minDate }) {
                   {date.getDate()}
                 </Text>
               </View>
+              {isMarked ? <View style={[styles.dot, selected && styles.dotSelected]} /> : null}
             </Pressable>
           );
         })}
@@ -180,5 +192,16 @@ const styles = StyleSheet.create({
   dayNumberSelected: {
     color: colors.surface,
     fontFamily: typography.bodyStrong.fontFamily,
+  },
+  dot: {
+    position: 'absolute',
+    bottom: 2,
+    width: 4,
+    height: 4,
+    borderRadius: radius.full,
+    backgroundColor: colors.secondary,
+  },
+  dotSelected: {
+    backgroundColor: colors.surface,
   },
 });

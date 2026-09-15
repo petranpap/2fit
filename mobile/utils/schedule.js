@@ -83,17 +83,59 @@ export function upcomingDays(t, count = 7) {
 // "2026-09-16" -> local midnight Date — deliberately not `new Date(iso)`,
 // which parses a bare date string as UTC midnight and can display as the
 // previous day for anyone west of... no, *east* of UTC (see toLocalIsoDate).
-function parseLocalDate(isoDate) {
+export function parseLocalDate(isoDate) {
   if (!isoDate) return null;
 
   const [year, month, day] = isoDate.split('-').map(Number);
   return new Date(year, month - 1, day);
 }
 
-function addMonths(date, months) {
+export function addMonths(date, months) {
   const result = new Date(date);
   result.setMonth(result.getMonth() + months);
   return result;
+}
+
+// "16 Δεκ 2026" / "Dec 16, 2026" — when a bounded recurring class's "repeat
+// for N months" window actually ends.
+export function formatRecurrenceEndDate(fitnessClass, locale) {
+  if (!fitnessClass.recurrence_months) return null;
+
+  const startsOn = parseLocalDate(fitnessClass.starts_on);
+  if (!startsOn) return null;
+
+  const end = addMonths(startsOn, fitnessClass.recurrence_months);
+
+  return end.toLocaleDateString(locale === 'el' ? 'el-GR' : 'en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
+// The one line that answers "when does this actually happen": a specific
+// date for a one-time session, or "Every Mon, Wed, Fri · 18:00 · ongoing"
+// (or "· until 16 Dec 2026" when bounded) for a recurring one — so a
+// recurring class reads unambiguously as recurring, not as a one-off list
+// of days.
+export function scheduleLabel(fitnessClass, t, locale) {
+  if (fitnessClass.recurrence_type === 'one_time') {
+    return [formatOneTimeDate(fitnessClass.starts_on, locale), formatTime(fitnessClass.starts_at)]
+      .filter(Boolean)
+      .join(' · ');
+  }
+
+  const days = daysLabel(fitnessClass.days_of_week, t);
+  const time = formatTime(fitnessClass.starts_at);
+
+  if (!days) return time;
+
+  const everyDays = t('placeDetail.everyDays', { days });
+  const bound = fitnessClass.recurrence_months
+    ? t('placeDetail.untilDate', { date: formatRecurrenceEndDate(fitnessClass, locale) })
+    : t('placeDetail.ongoingLabel');
+
+  return [everyDays, time, bound].filter(Boolean).join(' · ');
 }
 
 // For booking a class: the date(s) it can actually be booked on. A one_time
