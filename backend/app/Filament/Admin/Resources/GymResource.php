@@ -4,10 +4,10 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\GymResource\Pages;
 use App\Filament\Concerns\HasLocationFields;
+use App\Filament\Concerns\HasOpeningHoursFields;
 use App\Models\Gym;
 use App\Models\User;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -29,6 +29,7 @@ use Illuminate\Support\Str;
 class GymResource extends Resource
 {
     use HasLocationFields;
+    use HasOpeningHoursFields;
 
     protected static ?string $model = Gym::class;
 
@@ -65,7 +66,7 @@ class GymResource extends Resource
             TextInput::make('website')->url()->maxLength(255),
             FileUpload::make('logo_path')->label('Logo')->image()->disk('public')->directory('gyms/logos'),
             FileUpload::make('cover_image_path')->label('Cover photo')->image()->disk('public')->directory('gyms/covers'),
-            KeyValue::make('opening_hours')->keyLabel('Day')->valueLabel('Hours'),
+            ...self::openingHoursFields(),
             Select::make('categories')->relationship('categories', 'name')->multiple()->preload(),
             Select::make('facilities')->relationship('facilities', 'name')->multiple()->preload(),
             Toggle::make('is_verified')->label('Verified (approved, visible in search)')->default(true),
