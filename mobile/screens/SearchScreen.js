@@ -1,17 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { search } from '../api/search';
-import CategoryChip from '../components/CategoryChip';
 import CategoryGridCard from '../components/CategoryGridCard';
 import IconButton from '../components/IconButton';
 import PlaceCard from '../components/PlaceCard';
 import SearchBar from '../components/SearchBar';
 import { useCategories } from '../hooks/useCategories';
 import { useLocale } from '../i18n/LocaleContext';
-import { colors, spacing, typography } from '../theme/tokens';
+import { spacing } from '../theme/tokens';
 import { getCurrentCoords, getLocationLabel } from '../utils/location';
 
 const DEBOUNCE_MS = 400;
@@ -19,10 +25,21 @@ const DEBOUNCE_MS = 400;
 export default function SearchScreen({ route, navigation }) {
   const { categories } = useCategories();
   const { t } = useLocale();
-  const [query, setQuery] = useState(route.params?.initialQuery ?? '');
+
+  const [query, setQuery] = useState(
+    route.params?.initialQuery ?? ''
+  );
+
   const [type, setType] = useState('all');
-  const [category, setCategory] = useState(route.params?.category ?? null);
-  const [radiusKm, setRadiusKm] = useState(route.params?.radiusKm ?? null);
+
+  const [category, setCategory] = useState(
+    route.params?.category ?? null
+  );
+
+  const [radiusKm, setRadiusKm] = useState(
+    route.params?.radiusKm ?? null
+  );
+
   const [coords, setCoords] = useState(null);
   const [locationLabel, setLocationLabel] = useState(null);
   const [results, setResults] = useState([]);
@@ -30,27 +47,38 @@ export default function SearchScreen({ route, navigation }) {
   const [error, setError] = useState(null);
 
   const typeOptions = [
-    { label: t('search.filterAll'), value: 'all' },
-    { label: t('search.filterGym'), value: 'gym' },
-    { label: t('search.filterTrainer'), value: 'trainer' },
-    { label: t('search.filterShop'), value: 'shop' },
+    {
+      label: t('search.filterAll'),
+      value: 'all',
+    },
+    {
+      label: t('search.filterGym'),
+      value: 'gym',
+    },
+    {
+      label: t('search.filterTrainer'),
+      value: 'trainer',
+    },
+    {
+      label: t('search.filterShop'),
+      value: 'shop',
+    },
   ];
 
-  // Home's category tiles and the Filters screen both hand filters back via
-  // route.params — re-sync whenever they change, not just on first mount.
   useEffect(() => {
     if (!route.params) return;
 
-    if ('category' in route.params) setCategory(route.params.category);
-    if ('radiusKm' in route.params) setRadiusKm(route.params.radiusKm);
+    if ('category' in route.params) {
+      setCategory(route.params.category);
+    }
+
+    if ('radiusKm' in route.params) {
+      setRadiusKm(route.params.radiusKm);
+    }
   }, [route.params]);
 
-  // Not every category applies to every type (e.g. no gym in the data has
-  // "Yoga & Pilates"), so a category picked under one type can silently zero
-  // out the results under another. Clear it when the type actually changes
-  // — but not on the initial mount, or it'd wipe out a category handed in
-  // via route.params (Home's category tiles / Filters' apply).
   const isFirstTypeRender = useRef(true);
+
   useEffect(() => {
     if (isFirstTypeRender.current) {
       isFirstTypeRender.current = false;
@@ -89,34 +117,63 @@ export default function SearchScreen({ route, navigation }) {
     }, DEBOUNCE_MS);
 
     return () => clearTimeout(timeout);
-  }, [query, type, category, radiusKm, coords]);
+  }, [
+    query,
+    type,
+    category,
+    radiusKm,
+    coords,
+  ]);
 
   const header = (
     <View>
       <View style={styles.titleRow}>
         <View>
-          <Text style={styles.title}>{t('search.headerTitle')}</Text>
+          <Text style={styles.title}>
+            {t('search.headerTitle')}
+          </Text>
+
           <View style={styles.locationRow}>
-            <Ionicons name="location-outline" size={14} color={colors.textSecondary} />
-            <Text style={styles.locationText}>{locationLabel ?? t('search.locationFallback')}</Text>
+            <Ionicons
+              name="location-outline"
+              size={16}
+              color="#FFD400"
+            />
+
+            <Text style={styles.locationText}>
+              {locationLabel ??
+                t('search.locationFallback')}
+            </Text>
           </View>
         </View>
-        <IconButton
-          name="options-outline"
-          accessibilityLabel={t('search.filtersA11y')}
-          onPress={() => navigation.navigate('Filters', { category, radiusKm })}
+
+        <View style={styles.filterButton}>
+          <IconButton
+            name="options-outline"
+            accessibilityLabel={t(
+              'search.filtersA11y'
+            )}
+            onPress={() =>
+              navigation.navigate('Filters', {
+                category,
+                radiusKm,
+              })
+            }
+          />
+        </View>
+      </View>
+
+      <View style={styles.searchBox}>
+        <SearchBar
+          value={query}
+          onChangeText={setQuery}
+          placeholder={t(
+            'common.searchPlaceholder'
+          )}
+          style={styles.searchBar}
         />
       </View>
 
-      <SearchBar
-        value={query}
-        onChangeText={setQuery}
-        placeholder={t('common.searchPlaceholder')}
-        style={styles.searchBar}
-      />
-
-      {/* Plain View wrapper with a fixed height — react-native-web's FlatList
-          forces flex:1 internally, which ignores a height on its own `style`. */}
       <View style={styles.typeRowWrap}>
         <FlatList
           horizontal
@@ -124,45 +181,103 @@ export default function SearchScreen({ route, navigation }) {
           data={typeOptions}
           keyExtractor={(item) => item.value}
           contentContainerStyle={styles.typeRow}
-          renderItem={({ item }) => (
-            <CategoryChip label={item.label} selected={type === item.value} onPress={() => setType(item.value)} />
-          )}
+          renderItem={({ item }) => {
+            const isSelected = type === item.value;
+
+            return (
+              <Pressable
+                onPress={() => setType(item.value)}
+                style={[
+                  styles.typeChip,
+                  isSelected
+                    ? styles.typeChipSelected
+                    : styles.typeChipNormal,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.typeChipText,
+                    isSelected
+                      ? styles.typeChipTextSelected
+                      : styles.typeChipTextNormal,
+                  ]}
+                >
+                  {item.label}
+                </Text>
+              </Pressable>
+            );
+          }}
         />
       </View>
 
       {categories.length > 0 ? (
         <>
-          <Text style={styles.sectionTitle}>{t('search.topCategoriesTitle')}</Text>
+          <Text style={styles.sectionTitle}>
+            {t('search.topCategoriesTitle')}
+          </Text>
+
           <View style={styles.categoryGrid}>
             {categories.map((item) => (
-              <CategoryGridCard
+              <View
                 key={item.id}
-                category={item}
-                selected={category === item.slug}
-                onPress={() => setCategory(category === item.slug ? null : item.slug)}
-              />
+                style={
+                  category === item.slug
+                    ? styles.selectedCategoryWrap
+                    : styles.categoryWrap
+                }
+              >
+                <CategoryGridCard
+                  category={item}
+                  selected={
+                    category === item.slug
+                  }
+                  onPress={() =>
+                    setCategory(
+                      category === item.slug
+                        ? null
+                        : item.slug
+                    )
+                  }
+                />
+              </View>
             ))}
           </View>
         </>
       ) : null}
 
-      <Text style={styles.sectionTitle}>{t('search.popularNearbyTitle')}</Text>
+      <Text style={styles.sectionTitle}>
+        {t('search.popularNearbyTitle')}
+      </Text>
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={['top']}
+    >
       <FlatList
         data={results}
-        keyExtractor={(item) => `${item.type}-${item.id}`}
-        renderItem={({ item }) => <PlaceCard place={item} />}
+        keyExtractor={(item) =>
+          `${item.type}-${item.id}`
+        }
+        renderItem={({ item }) => (
+          <View style={styles.resultCardWrap}>
+            <PlaceCard place={item} />
+          </View>
+        )}
         contentContainerStyle={styles.list}
         ListHeaderComponent={header}
         ListEmptyComponent={
           isLoading ? (
-            <ActivityIndicator color={colors.primary} style={styles.spinner} />
+            <ActivityIndicator
+              color="#FFD400"
+              style={styles.spinner}
+            />
           ) : (
-            <Text style={styles.message}>{error ?? t('search.empty')}</Text>
+            <Text style={styles.message}>
+              {error ?? t('search.empty')}
+            </Text>
           )
         }
       />
@@ -173,57 +288,139 @@ export default function SearchScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: '#111111',
   },
+
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: spacing.lg,
   },
+
   title: {
-    ...typography.heading,
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: 30,
+    lineHeight: 36,
+    fontWeight: '800',
+    color: '#FFFFFF',
   },
+
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
     marginTop: spacing.xs,
   },
+
   locationText: {
-    ...typography.caption,
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#D8D8D8',
   },
-  searchBar: {
+
+  filterButton: {
+    backgroundColor: '#FFD400',
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    padding: 2,
+  },
+
+  searchBox: {
+    backgroundColor: '#1A1A1A',
+    borderWidth: 2,
+    borderColor: '#FFD400',
+    borderRadius: 18,
+    padding: 6,
     marginBottom: spacing.md,
   },
+
+  searchBar: {
+    marginBottom: 0,
+  },
+
   typeRowWrap: {
-    height: 48,
+    height: 58,
+    marginBottom: spacing.sm,
   },
+
   typeRow: {
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.sm,
   },
+
+  typeChip: {
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    marginRight: 10,
+    borderRadius: 22,
+    borderWidth: 2,
+  },
+
+  typeChipSelected: {
+    backgroundColor: '#FFD400',
+    borderColor: '#FFFFFF',
+  },
+
+  typeChipNormal: {
+    backgroundColor: '#F5F5F5',
+    borderColor: '#FFD400',
+  },
+
+  typeChipText: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+
+  typeChipTextSelected: {
+    color: '#111111',
+  },
+
+  typeChipTextNormal: {
+    color: '#222222',
+  },
+
   sectionTitle: {
-    ...typography.subheading,
+    fontSize: 20,
+    lineHeight: 26,
+    fontWeight: '800',
+    color: '#FFFFFF',
     marginTop: spacing.lg,
     marginBottom: spacing.md,
   },
+
   categoryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.md,
   },
+
+  categoryWrap: {
+    borderRadius: 16,
+  },
+
+  selectedCategoryWrap: {
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#FFD400',
+  },
+
+  resultCardWrap: {
+    marginBottom: spacing.md,
+  },
+
   list: {
     paddingHorizontal: spacing.xl,
     paddingBottom: spacing.xl,
   },
+
   spinner: {
     marginTop: spacing.xl,
   },
+
   message: {
-    ...typography.body,
-    color: colors.textSecondary,
+    fontSize: 16,
+    lineHeight: 22,
+    color: '#CFCFCF',
     textAlign: 'center',
     marginTop: spacing.xl,
   },
