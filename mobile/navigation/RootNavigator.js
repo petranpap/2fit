@@ -38,9 +38,19 @@ const TAB_LABEL_KEYS = {
 
 function AuthStack() {
   return (
-    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+      />
+
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+      />
     </Stack.Navigator>
   );
 }
@@ -52,20 +62,70 @@ function MainTabs() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textSecondary,
-        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
-        tabBarLabelStyle: { fontFamily: fonts.bodyMedium, fontSize: 11 },
+
+        tabBarActiveTintColor: '#111111',
+        tabBarInactiveTintColor: '#111111',
+
+        tabBarStyle: {
+          backgroundColor: '#FFD400',
+
+          borderTopColor: '#FFFFFF',
+          borderTopWidth: 3,
+
+          borderTopLeftRadius: 22,
+          borderTopRightRadius: 22,
+
+          height: 92,
+          paddingTop: 8,
+          paddingBottom: 22,
+
+          shadowColor: '#000000',
+          shadowOffset: {
+            width: 0,
+            height: -3,
+          },
+          shadowOpacity: 0.22,
+          shadowRadius: 6,
+
+          elevation: 10,
+        },
+
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '700',
+          color: '#111111',
+        },
+
         tabBarLabel: t(TAB_LABEL_KEYS[route.name]),
-        tabBarIcon: ({ color, size, focused }) => (
-          <Ionicons name={`${TAB_ICONS[route.name]}${focused ? '' : '-outline'}`} size={size} color={color} />
+
+        tabBarIcon: ({ size, focused }) => (
+          <Ionicons
+            name={`${TAB_ICONS[route.name]}${focused ? '' : '-outline'}`}
+            size={size}
+            color="#111111"
+          />
         ),
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Favorites" component={FavoritesScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+      />
+
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+      />
+
+      <Tab.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+      />
     </Tab.Navigator>
   );
 }
@@ -75,7 +135,15 @@ function MainStack() {
 
   return (
     <Stack.Navigator initialRouteName="MainTabs">
-      <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
+
+      <Stack.Screen
+        name="MainTabs"
+        component={MainTabs}
+        options={{
+          headerShown: false,
+        }}
+      />
+
       <Stack.Screen
         name="Filters"
         component={FiltersScreen}
@@ -83,44 +151,64 @@ function MainStack() {
           presentation: 'modal',
           headerTitle: t('filters.title'),
           headerTintColor: colors.primary,
-          headerStyle: { backgroundColor: colors.background },
-          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontFamily: fonts.headingSemiBold,
+          },
           headerShadowVisible: false,
         }}
       />
+
       <Stack.Screen
         name="PlaceDetail"
         component={PlaceDetailScreen}
         options={{
           headerTitle: '',
           headerTintColor: colors.primary,
-          headerStyle: { backgroundColor: colors.background },
-          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontFamily: fonts.headingSemiBold,
+          },
           headerShadowVisible: false,
         }}
       />
+
       <Stack.Screen
         name="Offers"
         component={OffersScreen}
         options={{
           headerTitle: t('offers.headerTitle'),
           headerTintColor: colors.primary,
-          headerStyle: { backgroundColor: colors.background },
-          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontFamily: fonts.headingSemiBold,
+          },
           headerShadowVisible: false,
         }}
       />
+
       <Stack.Screen
         name="OfferDetail"
         component={OfferDetailScreen}
         options={{
           headerTitle: '',
           headerTintColor: colors.primary,
-          headerStyle: { backgroundColor: colors.background },
-          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontFamily: fonts.headingSemiBold,
+          },
           headerShadowVisible: false,
         }}
       />
+
       <Stack.Screen
         name="BookingRequest"
         component={BookingRequestScreen}
@@ -128,8 +216,12 @@ function MainStack() {
           presentation: 'modal',
           headerTitle: t('booking.requestTitle'),
           headerTintColor: colors.primary,
-          headerStyle: { backgroundColor: colors.background },
-          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTitleStyle: {
+            fontFamily: fonts.headingSemiBold,
+          },
           headerShadowVisible: false,
         }}
       />
@@ -153,11 +245,22 @@ export default function RootNavigator() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background }}>
-        <ActivityIndicator color={colors.primary} />
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: colors.background,
+        }}
+      >
+        <ActivityIndicator
+          color={colors.primary}
+        />
       </View>
     );
   }
 
-  return isAuthenticated ? <MainStack /> : <AuthStack />;
+  return isAuthenticated
+    ? <MainStack />
+    : <AuthStack />;
 }
