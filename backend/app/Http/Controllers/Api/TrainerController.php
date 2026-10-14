@@ -23,7 +23,12 @@ class TrainerController extends Controller
     {
         abort_unless($trainer->is_active && $trainer->is_verified, 404);
 
-        $trainer->load(['categories', 'fitnessClasses' => fn ($query) => $query->where('is_active', true)])
+        $trainer->load([
+            'categories',
+            'fitnessClasses' => fn ($query) => $query->where('is_active', true)
+                ->with('categories')
+                ->withCount(['bookings as active_bookings_count' => fn ($bookings) => $bookings->whereIn('status', ['pending', 'confirmed'])]),
+        ])
             ->loadCount('reviews')
             ->loadAvg('reviews', 'rating');
 

@@ -2,13 +2,21 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
-import { daysLabel, formatTime } from '../utils/schedule';
+import { scheduleLabel } from '../utils/schedule';
 
 export default function ClassListItem({ fitnessClass, onBook }) {
-  const { t } = useLocale();
-  const schedule = [daysLabel(fitnessClass.days_of_week, t), formatTime(fitnessClass.starts_at)]
-    .filter(Boolean)
-    .join(' · ');
+  const { t, locale } = useLocale();
+  const isOneTime = fitnessClass.recurrence_type === 'one_time';
+  const schedule = scheduleLabel(fitnessClass, t, locale);
+
+  const spots = fitnessClass.spots_available;
+  const isFull = spots === 0;
+  const spotsLabel =
+    spots == null
+      ? null
+      : isFull
+        ? t('placeDetail.classFull')
+        : t(spots === 1 ? 'placeDetail.spotsAvailableOne' : 'placeDetail.spotsAvailable', { count: spots });
 
   return (
     <View style={styles.row}>
@@ -22,15 +30,28 @@ export default function ClassListItem({ fitnessClass, onBook }) {
               <Text style={styles.badgeText}>{t('placeDetail.popularBadge')}</Text>
             </View>
           ) : null}
+          {isOneTime ? (
+            <View style={[styles.badge, styles.oneTimeBadge]}>
+              <Text style={[styles.badgeText, styles.oneTimeBadgeText]}>{t('placeDetail.oneTimeBadge')}</Text>
+            </View>
+          ) : null}
         </View>
         {schedule ? <Text style={styles.schedule}>{schedule}</Text> : null}
+        {spotsLabel ? <Text style={[styles.spots, isFull && styles.spotsFull]}>{spotsLabel}</Text> : null}
       </View>
 
       <Pressable
         onPress={onBook}
-        style={({ pressed }) => [styles.bookButton, pressed && styles.bookButtonPressed]}
+        disabled={isFull}
+        style={({ pressed }) => [
+          styles.bookButton,
+          isFull && styles.bookButtonDisabled,
+          pressed && !isFull && styles.bookButtonPressed,
+        ]}
       >
-        <Text style={styles.bookButtonLabel}>{t('placeDetail.bookAction')}</Text>
+        <Text style={[styles.bookButtonLabel, isFull && styles.bookButtonLabelDisabled]}>
+          {t('placeDetail.bookAction')}
+        </Text>
       </Pressable>
     </View>
   );
@@ -69,9 +90,23 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     fontFamily: typography.bodyStrong.fontFamily,
   },
+  oneTimeBadge: {
+    backgroundColor: colors.primaryTint,
+  },
+  oneTimeBadgeText: {
+    color: colors.primary,
+  },
   schedule: {
     ...typography.caption,
     marginTop: 2,
+  },
+  spots: {
+    ...typography.caption,
+    color: colors.primary,
+    marginTop: 2,
+  },
+  spotsFull: {
+    color: colors.danger,
   },
   bookButton: {
     borderWidth: 1,
@@ -80,6 +115,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
   },
+  bookButtonDisabled: {
+    borderColor: colors.border,
+  },
   bookButtonPressed: {
     opacity: 0.7,
   },
@@ -87,5 +125,8 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.primary,
     fontFamily: typography.bodyStrong.fontFamily,
+  },
+  bookButtonLabelDisabled: {
+    color: colors.textSecondary,
   },
 });

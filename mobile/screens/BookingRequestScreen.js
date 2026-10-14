@@ -10,26 +10,21 @@ import CategoryChip from '../components/CategoryChip';
 import TextField from '../components/TextField';
 import { useLocale } from '../i18n/LocaleContext';
 import { colors, radius, spacing, typography } from '../theme/tokens';
-import { formatTime, TIME_SLOTS, toLocalIsoDate, upcomingOccurrencesForDays } from '../utils/schedule';
+import { scheduleBookingReminder } from '../utils/notifications';
+import { scheduleLabel, TIME_SLOTS, toLocalIsoDate, upcomingOccurrencesForClass } from '../utils/schedule';
 
 export default function BookingRequestScreen({ route, navigation }) {
-  const {
-    bookableType,
-    bookableId,
-    placeName,
-    fitnessClassId,
-    className,
-    classDaysOfWeek,
-    classStartsAt,
-  } = route.params;
-  const { t } = useLocale();
+  const { bookableType, bookableId, placeName, fitnessClassId, className, fitnessClass } = route.params;
+  const { t, locale } = useLocale();
 
   // Every booking needs an explicit date. A class already has a fixed time
-  // and a fixed set of weekdays — the user only picks *which* upcoming
-  // occurrence of those days they mean. A generic "Book Now" has neither,
-  // so it gets a full calendar plus a time-of-day choice.
+  // and a fixed set of possible dates (one-time: its own date; recurring:
+  // its weekdays, bounded by however long it runs for) — the user only
+  // picks *which* upcoming occurrence they mean. A generic "Book Now" has
+  // neither, so it gets a full calendar plus a time-of-day choice.
   const isClassBooking = Boolean(fitnessClassId);
-  const occurrences = isClassBooking ? upcomingOccurrencesForDays(classDaysOfWeek, t) : [];
+  const occurrences = isClassBooking ? upcomingOccurrencesForClass(fitnessClass, t) : [];
+  const classStartsAt = fitnessClass?.starts_at;
 
   const [selectedOccurrence, setSelectedOccurrence] = useState(occurrences[0] ?? null);
   const [selectedDate, setSelectedDate] = useState(isClassBooking ? null : new Date());
@@ -40,6 +35,11 @@ export default function BookingRequestScreen({ route, navigation }) {
   const [booking, setBooking] = useState(null);
 
   const handleConfirm = async () => {
+    if (isClassBooking && occurrences.length === 0) {
+      setError(t('booking.classUnavailable'));
+      return;
+    }
+
     if (isClassBooking && !selectedOccurrence) {
       setError(t('booking.pickDateError'));
       return;
@@ -64,6 +64,7 @@ export default function BookingRequestScreen({ route, navigation }) {
         notes,
       });
       setBooking(data);
+      scheduleBookingReminder(data, t);
     } catch (err) {
       console.error('createBooking failed', err);
       setError(err.message && err.message !== 'Request failed' ? err.message : t('booking.submitError'));
@@ -96,23 +97,37 @@ export default function BookingRequestScreen({ route, navigation }) {
         <Text style={styles.summaryLabel}>{className ?? placeName}</Text>
         {className ? <Text style={styles.summarySubtitle}>{placeName}</Text> : null}
 
+        {isClassBooking && fitnessClass ? (
+          <View style={styles.recurrenceRow}>
+            <Ionicons
+              name={fitnessClass.recurrence_type === 'recurring' ? 'repeat' : 'calendar-outline'}
+              size={16}
+              color={colors.primary}
+            />
+            <Text style={styles.recurrenceText}>{scheduleLabel(fitnessClass, t, locale)}</Text>
+          </View>
+        ) : null}
+
         {isClassBooking ? (
-          <>
-            <Text style={styles.sectionTitle}>{t('booking.dateSection')}</Text>
-            <View style={styles.chipsWrap}>
-              {occurrences.map((occurrence) => (
-                <CategoryChip
-                  key={occurrence.isoDate}
-                  label={`${occurrence.label} ${occurrence.dayNumber}`}
-                  selected={selectedOccurrence?.isoDate === occurrence.isoDate}
-                  onPress={() => setSelectedOccurrence(occurrence)}
-                />
-              ))}
-            </View>
-            {classStartsAt ? (
-              <Text style={styles.fixedTime}>{t('booking.classTimeLabel', { time: formatTime(classStartsAt) })}</Text>
-            ) : null}
-          </>
+          occurrences.length === 0 ? (
+            <Text style={styles.errorText}>{t('booking.classUnavailable')}</Text>
+          ) : (
+            <>
+              <Text style={styles.sectionTitle}>
+                {fitnessClass?.recurrence_type === 'recurring' ? t('booking.pickOccurrenceSection') : t('booking.dateSection')}
+              </Text>
+              <View style={styles.chipsWrap}>
+                {occurrences.map((occurrence) => (
+                  <CategoryChip
+                    key={occurrence.isoDate}
+                    label={`${occurrence.label} ${occurrence.dayNumber}`}
+                    selected={selectedOccurrence?.isoDate === occurrence.isoDate}
+                    onPress={() => setSelectedOccurrence(occurrence)}
+                  />
+                ))}
+              </View>
+            </>
+          )
         ) : (
           <>
             <Text style={styles.sectionTitle}>{t('booking.dateSection')}</Text>
@@ -172,6 +187,22 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginTop: spacing.xs,
   },
+  recurrenceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginTop: spacing.md,
+    backgroundColor: colors.primaryTint,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    alignSelf: 'flex-start',
+  },
+  recurrenceText: {
+    ...typography.caption,
+    color: colors.primary,
+    fontFamily: typography.bodyStrong.fontFamily,
+  },
   sectionTitle: {
     ...typography.subheading,
     fontSize: 16,
@@ -182,10 +213,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
-  },
-  fixedTime: {
-    ...typography.caption,
-    marginTop: spacing.sm,
   },
   notesField: {
     marginTop: spacing.xl,

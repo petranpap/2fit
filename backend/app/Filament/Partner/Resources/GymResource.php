@@ -2,10 +2,11 @@
 
 namespace App\Filament\Partner\Resources;
 
+use App\Filament\Concerns\HasLocationFields;
+use App\Filament\Concerns\HasOpeningHoursFields;
 use App\Filament\Partner\Resources\GymResource\Pages;
 use App\Models\Gym;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -20,6 +21,9 @@ use Illuminate\Support\Str;
 
 class GymResource extends Resource
 {
+    use HasLocationFields;
+    use HasOpeningHoursFields;
+
     protected static ?string $model = Gym::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
@@ -42,8 +46,7 @@ class GymResource extends Resource
                 ->maxLength(2000)
                 ->columnSpanFull(),
             TextInput::make('address')->maxLength(255),
-            TextInput::make('latitude')->numeric(),
-            TextInput::make('longitude')->numeric(),
+            ...self::locationFields(),
             TextInput::make('phone')->tel()->maxLength(30),
             TextInput::make('email')->email()->maxLength(255),
             TextInput::make('website')->url()->maxLength(255),
@@ -57,10 +60,7 @@ class GymResource extends Resource
                 ->image()
                 ->disk('public')
                 ->directory('gyms/covers'),
-            KeyValue::make('opening_hours')
-                ->keyLabel('Day')
-                ->valueLabel('Hours')
-                ->helperText('e.g. monday -> 09:00-21:00'),
+            ...self::openingHoursFields(),
             Select::make('categories')
                 ->relationship('categories', 'name')
                 ->multiple()

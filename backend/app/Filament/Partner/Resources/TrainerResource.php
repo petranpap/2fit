@@ -2,6 +2,7 @@
 
 namespace App\Filament\Partner\Resources;
 
+use App\Filament\Concerns\HasLocationFields;
 use App\Filament\Partner\Resources\TrainerResource\Pages;
 use App\Models\Trainer;
 use Filament\Forms\Components\FileUpload;
@@ -19,6 +20,8 @@ use Illuminate\Support\Str;
 
 class TrainerResource extends Resource
 {
+    use HasLocationFields;
+
     protected static ?string $model = Trainer::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
@@ -41,8 +44,7 @@ class TrainerResource extends Resource
                 ->maxLength(2000)
                 ->columnSpanFull(),
             TextInput::make('address')->maxLength(255),
-            TextInput::make('latitude')->numeric(),
-            TextInput::make('longitude')->numeric(),
+            ...self::locationFields(),
             TextInput::make('phone')->tel()->maxLength(30),
             TextInput::make('email')->email()->maxLength(255),
             TextInput::make('hourly_rate')
