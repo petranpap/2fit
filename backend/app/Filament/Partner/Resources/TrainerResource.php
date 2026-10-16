@@ -56,7 +56,7 @@ class TrainerResource extends Resource
                 ->disk('public')
                 ->directory('trainers/photos'),
             Select::make('categories')
-                ->relationship('categories', 'name')
+                ->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))
                 ->multiple()
                 ->preload(),
             Toggle::make('is_active')

@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Support\MediaUrl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class GymDetailResource extends JsonResource
 {
@@ -25,10 +25,13 @@ class GymDetailResource extends JsonResource
             'phone' => $this->phone,
             'email' => $this->email,
             'website' => $this->website,
-            'logo_url' => $this->logo_path ? Storage::disk('public')->url($this->logo_path) : null,
-            'cover_image_url' => $this->cover_image_path ? Storage::disk('public')->url($this->cover_image_path) : null,
+            'logo_url' => MediaUrl::resolve($this->logo_path),
+            'cover_image_url' => MediaUrl::resolve($this->cover_image_path),
             'opening_hours' => $this->opening_hours,
             'is_verified' => $this->is_verified,
+            'is_favorited' => $request->user('sanctum')
+                ? $this->favorites()->where('user_id', $request->user('sanctum')->id)->exists()
+                : false,
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             'facilities' => FacilityResource::collection($this->whenLoaded('facilities')),
             // Owner-curated highlights first, then the rest — matches the

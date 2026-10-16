@@ -24,6 +24,7 @@ class SearchRequest extends FormRequest
             'lat' => ['nullable', 'numeric', 'between:-90,90', 'required_with:lng'],
             'lng' => ['nullable', 'numeric', 'between:-180,180', 'required_with:lat'],
             'radius_km' => ['nullable', 'numeric', 'min:0.1', 'max:200'],
+            'min_rating' => ['nullable', 'numeric', 'min:1', 'max:5'],
             'sw_lat' => ['nullable', 'numeric', 'between:-90,90', 'required_with:sw_lng,ne_lat,ne_lng'],
             'sw_lng' => ['nullable', 'numeric', 'between:-180,180', 'required_with:sw_lat,ne_lat,ne_lng'],
             'ne_lat' => ['nullable', 'numeric', 'between:-90,90', 'required_with:sw_lat,sw_lng,ne_lng'],

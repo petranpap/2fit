@@ -16,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class TrainerResource extends Resource
@@ -56,7 +57,7 @@ class TrainerResource extends Resource
             TextInput::make('email')->email()->maxLength(255),
             TextInput::make('hourly_rate')->numeric()->prefix('€'),
             FileUpload::make('photo_path')->label('Photo')->image()->disk('public')->directory('trainers/photos'),
-            Select::make('categories')->relationship('categories', 'name')->multiple()->preload(),
+            Select::make('categories')->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))->multiple()->preload(),
             Toggle::make('is_verified')->label('Verified (approved, visible in search)')->default(true),
             Toggle::make('is_active')->label('Active')->default(true),
         ]);

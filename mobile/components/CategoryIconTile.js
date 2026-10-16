@@ -4,13 +4,34 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, radius, spacing, typography } from '../theme/tokens';
 import { getCategoryIcon } from '../utils/categoryIcons';
 
-export default function CategoryIconTile({ category, selected = false, onPress }) {
+/**
+ * variant 'light' (default) follows the teal theme tokens — used on
+ * FiltersScreen, which hasn't moved to the dark/yellow identity yet.
+ * variant 'dark' hardcodes the black-circle/yellow-icon look from Home's
+ * mockup, matching that screen's own hardcoded hex styles.
+ */
+export default function CategoryIconTile({ category, selected = false, onPress, variant = 'light' }) {
+  const isDark = variant === 'dark';
+
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.tile, pressed && styles.pressed]}>
-      <View style={[styles.iconCircle, selected && styles.iconCircleSelected]}>
-        <Ionicons name={getCategoryIcon(category.slug)} size={22} color={selected ? colors.surface : colors.primary} />
+      <View
+        style={[
+          styles.iconCircle,
+          isDark && styles.iconCircleDark,
+          selected && (isDark ? styles.iconCircleDarkSelected : styles.iconCircleSelected),
+        ]}
+      >
+        <Ionicons
+          name={getCategoryIcon(category.slug)}
+          size={22}
+          color={isDark ? '#FFD400' : selected ? colors.surface : colors.primary}
+        />
       </View>
-      <Text style={[styles.label, selected && styles.labelSelected]} numberOfLines={1}>
+      <Text
+        style={[styles.label, isDark && styles.labelDark, selected && (isDark ? styles.labelDarkSelected : styles.labelSelected)]}
+        numberOfLines={1}
+      >
         {category.name}
       </Text>
     </Pressable>
@@ -38,6 +59,14 @@ const styles = StyleSheet.create({
   iconCircleSelected: {
     backgroundColor: colors.primary,
   },
+  iconCircleDark: {
+    backgroundColor: '#1A1A1A',
+    borderWidth: 2,
+    borderColor: '#FFD400',
+  },
+  iconCircleDarkSelected: {
+    backgroundColor: '#FFD400',
+  },
   label: {
     ...typography.caption,
     color: colors.textPrimary,
@@ -46,5 +75,12 @@ const styles = StyleSheet.create({
   labelSelected: {
     color: colors.primary,
     fontFamily: typography.bodyStrong.fontFamily,
+  },
+  labelDark: {
+    color: '#FFFFFF',
+    fontFamily: typography.bodyStrong.fontFamily,
+  },
+  labelDarkSelected: {
+    color: '#FFD400',
   },
 });

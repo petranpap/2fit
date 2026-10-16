@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Admin's platform-wide view over every bookable class (no user_id
@@ -77,7 +78,7 @@ class FitnessClassResource extends Resource
                 ->minValue(1)
                 ->helperText('Leave blank for unlimited spots. Once full, customers can no longer book this class.'),
             Select::make('categories')
-                ->relationship('categories', 'name')
+                ->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))
                 ->multiple()
                 ->preload(),
             Toggle::make('is_popular')

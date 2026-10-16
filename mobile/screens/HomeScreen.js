@@ -17,7 +17,7 @@ import PlaceCardCompact from '../components/PlaceCardCompact';
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
 import { useAuth } from '../context/AuthContext';
-import { useCategories } from '../hooks/useCategories';
+import { usePrimaryCategories } from '../hooks/usePrimaryCategories';
 import { useLocale } from '../i18n/LocaleContext';
 import { spacing } from '../theme/tokens';
 import { getCurrentCoords } from '../utils/location';
@@ -25,7 +25,7 @@ import { getCurrentCoords } from '../utils/location';
 export default function HomeScreen({ navigation }) {
   const { user } = useAuth();
   const { t } = useLocale();
-  const { categories } = useCategories();
+  const { categories } = usePrimaryCategories();
 
   const [nearby, setNearby] = useState([]);
   const [isLoadingNearby, setIsLoadingNearby] = useState(true);
@@ -105,9 +105,10 @@ export default function HomeScreen({ navigation }) {
             renderItem={({ item }) => (
               <CategoryIconTile
                 category={item}
+                variant="dark"
                 onPress={() =>
-                  navigation.navigate('Search', {
-                    category: item.slug,
+                  navigation.navigate('CategorySubcategories', {
+                    category: item,
                   })
                 }
               />

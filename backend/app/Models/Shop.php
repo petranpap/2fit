@@ -66,6 +66,11 @@ class Shop extends Model
         return $this->morphMany(Review::class, 'reviewable');
     }
 
+    public function favorites(): MorphMany
+    {
+        return $this->morphMany(Favorite::class, 'favoritable');
+    }
+
     public function statistics(): MorphMany
     {
         return $this->morphMany(Statistic::class, 'statable');
