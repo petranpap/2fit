@@ -1,4 +1,5 @@
 import * as Location from 'expo-location';
+import { Linking } from 'react-native';
 
 // Limassol city center — used whenever we can't get a real device location
 // (permission denied, web, simulator with no location services).
@@ -18,6 +19,16 @@ export async function getCurrentCoords() {
   } catch {
     return DEFAULT_COORDS;
   }
+}
+
+/**
+ * Opens the device's own maps app for turn-by-turn directions to a place —
+ * the universal Google Maps URL works the same way on iOS, Android, and web
+ * (opens the native app via its own universal link when installed, the
+ * browser otherwise), so there's no need to branch per platform.
+ */
+export function openDirections(lat, lng) {
+  Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
 }
 
 /**

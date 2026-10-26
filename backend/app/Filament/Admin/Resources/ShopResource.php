@@ -17,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ShopResource extends Resource
@@ -60,7 +61,7 @@ class ShopResource extends Resource
             FileUpload::make('logo_path')->label('Logo')->image()->disk('public')->directory('shops/logos'),
             FileUpload::make('cover_image_path')->label('Cover photo')->image()->disk('public')->directory('shops/covers'),
             ...self::openingHoursFields(),
-            Select::make('categories')->relationship('categories', 'name')->multiple()->preload(),
+            Select::make('categories')->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))->multiple()->preload(),
             Select::make('facilities')->relationship('facilities', 'name')->multiple()->preload(),
             Toggle::make('is_verified')->label('Verified (approved, visible in search)')->default(true),
             Toggle::make('is_active')->label('Active')->default(true),

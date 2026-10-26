@@ -71,14 +71,32 @@
     "empty": "No results found.",
     "error": "Something went wrong. Try again.",
     "locationFallback": "Your location",
-    "filtersA11y": "Filters"
+    "filtersA11y": "Filters",
+    "mapViewA11y": "Map view",
+    "listViewA11y": "List view",
+    "resultsCount": "{{count}} results",
+    "resultsCountOne": "{{count}} result",
+    "sortA11y": "Sort",
+    "sortNearest": "Nearest",
+    "sortTopRated": "Top rated"
+  },
+  "map": {
+    "webUnsupportedTitle": "Map view needs the app",
+    "webUnsupportedSubtitle": "Maps aren't available in this web preview — try list view, or open the app on your phone."
   },
   "filters": {
     "title": "Filters",
+    "reset": "Reset",
     "categorySection": "Category",
+    "locationSection": "Location",
+    "locating": "Locating…",
     "distanceSection": "Distance",
     "distanceAll": "Any",
-    "apply": "Apply filters"
+    "distanceValue": "{{km}} km",
+    "ratingSection": "Rating",
+    "ratingValue": "{{rating}}+",
+    "apply": "Apply filters",
+    "applyWithCount": "Apply filters ({{count}} results)"
   },
   "profile": {
     "favorites": "Favorites",
@@ -91,8 +109,11 @@
     "languageEnglish": "English"
   },
   "favorites": {
-    "emptyTitle": "No deals yet",
-    "emptySubtitle": "Offers you claim will show up here."
+    "subtitle": "Your saved places and codes",
+    "savedPlacesTitle": "Saved places",
+    "savedCodesTitle": "Offers & codes",
+    "emptyTitle": "Nothing saved yet",
+    "emptySubtitle": "Tap the heart on a gym, trainer, or shop, or claim an offer, and it'll show up here."
   },
   "offers": {
     "headerTitle": "Deals",
@@ -116,6 +137,7 @@
     "aboutSection": "About",
     "contactSection": "Contact",
     "categoriesSection": "Categories",
+    "specialtiesSection": "Specialties",
     "facilitiesSection": "Facilities",
     "classesSection": "Classes",
     "popularBadge": "Popular",
@@ -134,12 +156,25 @@
     "reviewsOne": "{{count}} review",
     "hourlyRate": "€{{rate}} / hour",
     "callAction": "Call",
+    "directionsAction": "Directions",
     "emailAction": "Email",
     "websiteAction": "Website",
     "shareAction": "Share",
     "shareMessage": "Check out {{name}} on 2fit!",
     "notFound": "Not found.",
-    "loadError": "Something went wrong. Try again."
+    "loadError": "Something went wrong. Try again.",
+    "backA11y": "Back",
+    "favoriteA11y": "Favorite",
+    "distanceLabel": "Distance",
+    "priceLabel": "Price",
+    "typeLabel": "Type",
+    "todayLabel": "Today",
+    "closedTodayLabel": "Closed today",
+    "popularClassesSection": "Popular classes"
+  },
+  "categoryBrowse": {
+    "subtitle": "Choose a subcategory",
+    "empty": "No subcategories found."
   },
   "days": {
     "monday": "Monday",
@@ -194,19 +229,23 @@
     "statusCancelled": "Cancelled",
     "doneAction": "Done"
   },
-  "myBookings": {
-    "headerTitle": "My bookings",
-    "emptyTitle": "No bookings yet",
-    "emptySubtitle": "Bookings you make will show up here.",
-    "generalBooking": "General booking",
-    "cancelAction": "Cancel",
-    "cancelling": "Cancelling…",
-    "cancelConfirmTitle": "Cancel booking?",
-    "cancelConfirmMessage": "Your spot will be freed up for someone else.",
-    "cancelConfirmYes": "Yes, cancel",
-    "cancelConfirmNo": "No",
-    "cancelError": "We couldn't cancel the booking. Try again.",
-    "emptyForDay": "No bookings on this day."
+  "reviews": {
+    "headerTitle": "My reviews",
+    "writeAction": "Write a review",
+    "editAction": "Edit your review",
+    "ratingLabel": "Your rating",
+    "commentLabel": "Comment (optional)",
+    "commentPlaceholder": "Tell us about your experience…",
+    "submitAction": "Submit review",
+    "pickRatingError": "Pick a star rating.",
+    "submitError": "We couldn't submit the review. Try again.",
+    "deleteConfirmTitle": "Delete review?",
+    "deleteConfirmMessage": "This can't be undone.",
+    "deleteConfirmYes": "Yes, delete",
+    "deleteConfirmNo": "No",
+    "emptyTitle": "No reviews written yet",
+    "emptySubtitle": "Reviews you write for gyms, trainers, and shops will show up here.",
+    "unknownPlace": "Unknown listing"
   },
   "notifications": {
     "reminderTitle": "Your booking is coming up",

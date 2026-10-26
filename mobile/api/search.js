@@ -1,7 +1,7 @@
 import { apiRequest } from './client';
 
 /**
- * @param {{ q?: string, category?: string, type?: 'gym'|'trainer'|'shop'|'all', lat?: number, lng?: number, radiusKm?: number, perPage?: number }} filters
+ * @param {{ q?: string, category?: string, type?: 'gym'|'trainer'|'shop'|'all', lat?: number, lng?: number, radiusKm?: number, minRating?: number, perPage?: number }} filters
  */
 export function search(filters = {}) {
   const params = new URLSearchParams();
@@ -12,6 +12,7 @@ export function search(filters = {}) {
   if (filters.lat != null) params.set('lat', String(filters.lat));
   if (filters.lng != null) params.set('lng', String(filters.lng));
   if (filters.radiusKm != null) params.set('radius_km', String(filters.radiusKm));
+  if (filters.minRating != null) params.set('min_rating', String(filters.minRating));
   if (filters.perPage != null) params.set('per_page', String(filters.perPage));
 
   const query = params.toString();

@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Support\MediaUrl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class TrainerDetailResource extends JsonResource
 {
@@ -24,9 +24,12 @@ class TrainerDetailResource extends JsonResource
             'longitude' => $this->longitude,
             'phone' => $this->phone,
             'email' => $this->email,
-            'photo_url' => $this->photo_path ? Storage::disk('public')->url($this->photo_path) : null,
+            'photo_url' => MediaUrl::resolve($this->photo_path),
             'hourly_rate' => $this->hourly_rate,
             'is_verified' => $this->is_verified,
+            'is_favorited' => $request->user('sanctum')
+                ? $this->favorites()->where('user_id', $request->user('sanctum')->id)->exists()
+                : false,
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             'fitness_classes' => FitnessClassResource::collection(
                 $this->whenLoaded('fitnessClasses', fn () => $this->fitnessClasses->sortByDesc('is_popular')->values())

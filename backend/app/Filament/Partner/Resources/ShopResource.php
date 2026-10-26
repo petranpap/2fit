@@ -62,7 +62,7 @@ class ShopResource extends Resource
                 ->directory('shops/covers'),
             ...self::openingHoursFields(),
             Select::make('categories')
-                ->relationship('categories', 'name')
+                ->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))
                 ->multiple()
                 ->preload(),
             Select::make('facilities')

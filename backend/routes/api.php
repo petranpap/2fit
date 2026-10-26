@@ -4,8 +4,10 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DiscountCodeController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\GymController;
 use App\Http\Controllers\Api\OfferController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\ShopController;
 use App\Http\Controllers\Api\TrainerController;
@@ -32,6 +34,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/search', SearchController::class);
 
 Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{category}/children', [CategoryController::class, 'children']);
 Route::get('/categories/{category}', [CategoryController::class, 'show']);
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -56,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/offers', [OfferController::class, 'index']);
 Route::get('/offers/{offer}', [OfferController::class, 'show']);
 
+Route::get('/reviews', [ReviewController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/offers', [OfferController::class, 'store']);
     Route::put('/offers/{offer}', [OfferController::class, 'update']);
@@ -72,4 +77,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bookings/mine', [BookingController::class, 'mine']);
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+
+    Route::get('/favorites/mine', [FavoriteController::class, 'mine']);
+    Route::post('/favorites/toggle', [FavoriteController::class, 'toggle']);
+
+    // Static /mine path must be registered before the {review} route, or
+    // Laravel would try to resolve "mine" as a review ID.
+    Route::get('/reviews/mine', [ReviewController::class, 'mine']);
+    Route::post('/reviews', [ReviewController::class, 'store']);
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
 });
