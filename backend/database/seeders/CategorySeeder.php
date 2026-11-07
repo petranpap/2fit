@@ -194,7 +194,7 @@ class CategorySeeder extends Seeder
 
             // OTHER EXISTING CATEGORIES - UNCHANGED
             [
-                'name' => 'Αθλητικά Είδη',
+                'name' => 'exθλητικά Είδη',
                 'slug' => 'sportswear',
                 'icon' => 'shirt',
                 'parent' => 'shops',
