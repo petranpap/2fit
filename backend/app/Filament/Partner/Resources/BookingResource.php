@@ -25,19 +25,32 @@ class BookingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
 
-    protected static ?string $navigationLabel = 'Bookings';
+    public static function getNavigationLabel(): string
+    {
+        return __('partner.nav.bookings');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('partner.model.booking');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('partner.model.bookings');
+    }
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Select::make('status')
+            Select::make('status')->label(__('partner.fields.status'))
                 ->options([
-                    'pending' => 'Pending',
-                    'confirmed' => 'Confirmed',
-                    'cancelled' => 'Cancelled',
+                    'pending' => __('partner.options.pending'),
+                    'confirmed' => __('partner.options.confirmed'),
+                    'cancelled' => __('partner.options.cancelled'),
                 ])
                 ->required(),
-            Textarea::make('notes')
+            Textarea::make('notes')->label(__('partner.fields.notes'))
                 ->disabled()
                 ->columnSpanFull(),
         ]);
@@ -47,15 +60,15 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('user.name')->label('Customer')->searchable(),
-                TextColumn::make('fitnessClass.name')->label('Class')->placeholder('—'),
-                TextColumn::make('scheduled_at')->dateTime()->placeholder('—'),
-                TextColumn::make('status')->badge()->color(fn (string $state) => match ($state) {
+                TextColumn::make('user.name')->label(__('partner.fields.user_name'))->searchable(),
+                TextColumn::make('fitnessClass.name')->label(__('partner.fields.fitness_class_name'))->placeholder('—'),
+                TextColumn::make('scheduled_at')->label(__('partner.fields.scheduled_at'))->dateTime()->placeholder('—'),
+                TextColumn::make('status')->label(__('partner.fields.status'))->badge()->formatStateUsing(fn (string $state): string => __('partner.options.'.$state))->color(fn (string $state) => match ($state) {
                     'pending' => 'warning',
                     'confirmed' => 'success',
                     'cancelled' => 'danger',
                 }),
-                TextColumn::make('created_at')->dateTime()->label('Requested'),
+                TextColumn::make('created_at')->label(__('partner.fields.created_at'))->dateTime()->label(__('partner.fields.created_at')),
             ])
             ->defaultSort('created_at', 'desc')
             ->actions([

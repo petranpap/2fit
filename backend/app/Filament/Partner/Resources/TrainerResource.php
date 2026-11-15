@@ -26,40 +26,53 @@ class TrainerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
-    protected static ?string $navigationLabel = 'My Trainer Profile';
+    public static function getNavigationLabel(): string
+    {
+        return __('partner.nav.trainer');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('partner.model.trainer');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('partner.model.trainers');
+    }
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('name')
+            TextInput::make('name')->label(__('partner.fields.name'))
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
                 ->afterStateUpdated(fn (string $state, callable $set) => $set('slug', Str::slug($state))),
-            TextInput::make('slug')
+            TextInput::make('slug')->label(__('partner.fields.slug'))
                 ->required()
                 ->maxLength(255)
                 ->unique(ignoreRecord: true),
-            Textarea::make('bio')
+            Textarea::make('bio')->label(__('partner.fields.bio'))
                 ->maxLength(2000)
                 ->columnSpanFull(),
-            TextInput::make('address')->maxLength(255),
+            TextInput::make('address')->label(__('partner.fields.address'))->maxLength(255),
             ...self::locationFields(),
-            TextInput::make('phone')->tel()->maxLength(30),
-            TextInput::make('email')->email()->maxLength(255),
-            TextInput::make('hourly_rate')
+            TextInput::make('phone')->label(__('partner.fields.phone'))->tel()->maxLength(30),
+            TextInput::make('email')->label(__('partner.fields.email'))->email()->maxLength(255),
+            TextInput::make('hourly_rate')->label(__('partner.fields.hourly_rate'))
                 ->numeric()
                 ->prefix('€'),
-            FileUpload::make('photo_path')
-                ->label('Photo')
+            FileUpload::make('photo_path')->label(__('partner.fields.photo_path'))
+                ->label(__('partner.fields.photo_path'))
                 ->image()
                 ->disk('public')
                 ->directory('trainers/photos'),
-            Select::make('categories')
+            Select::make('categories')->label(__('partner.fields.categories'))
                 ->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))
                 ->multiple()
                 ->preload(),
-            Toggle::make('is_active')
+            Toggle::make('is_active')->label(__('partner.fields.is_active'))
                 ->default(true),
         ]);
     }
@@ -68,10 +81,10 @@ class TrainerResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('hourly_rate')->money('EUR'),
-                IconColumn::make('is_verified')->boolean(),
-                IconColumn::make('is_active')->boolean(),
+                TextColumn::make('name')->label(__('partner.fields.name'))->searchable(),
+                TextColumn::make('hourly_rate')->label(__('partner.fields.hourly_rate'))->money('EUR'),
+                IconColumn::make('is_verified')->label(__('partner.fields.is_verified'))->boolean(),
+                IconColumn::make('is_active')->label(__('partner.fields.is_active'))->boolean(),
             ])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),

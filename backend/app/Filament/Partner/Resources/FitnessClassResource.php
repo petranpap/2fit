@@ -29,31 +29,44 @@ class FitnessClassResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static ?string $navigationLabel = 'Classes';
+    public static function getNavigationLabel(): string
+    {
+        return __('partner.nav.classes');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('partner.model.class');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('partner.model.classes');
+    }
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('name')
+            TextInput::make('name')->label(__('partner.fields.name'))
                 ->required()
                 ->maxLength(255),
             ...self::recurrenceFields(),
-            TimePicker::make('starts_at'),
-            TextInput::make('duration_minutes')
+            TimePicker::make('starts_at')->label(__('partner.fields.starts_at')),
+            TextInput::make('duration_minutes')->label(__('partner.fields.duration_minutes'))
                 ->numeric()
                 ->suffix('min'),
-            TextInput::make('capacity')
+            TextInput::make('capacity')->label(__('partner.fields.capacity'))
                 ->numeric()
                 ->minValue(1)
-                ->helperText('Leave blank for unlimited spots. Once full, customers can no longer book this class.'),
-            Select::make('categories')
+                ->helperText(__('partner.help.capacity')),
+            Select::make('categories')->label(__('partner.fields.categories'))
                 ->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))
                 ->multiple()
                 ->preload(),
-            Toggle::make('is_popular')
-                ->label('Show in "Popular Classes"')
-                ->helperText('Highlighted first on your public profile.'),
-            Toggle::make('is_active')
+            Toggle::make('is_popular')->label(__('partner.fields.is_popular'))
+                ->label(__('partner.fields.is_popular'))
+                ->helperText(__('partner.help.popular')),
+            Toggle::make('is_active')->label(__('partner.fields.is_active'))
                 ->default(true),
         ]);
     }
@@ -62,16 +75,16 @@ class FitnessClassResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('schedule')
-                    ->label('Schedule')
+                TextColumn::make('name')->label(__('partner.fields.name'))->searchable(),
+                TextColumn::make('schedule')->label(__('partner.fields.schedule'))
+                    ->label(__('partner.fields.schedule'))
                     ->state(fn (FitnessClass $record): string => self::formatSchedule($record)),
-                TextColumn::make('starts_at')->time(),
-                TextColumn::make('booked')
-                    ->label('Booked')
+                TextColumn::make('starts_at')->label(__('partner.fields.starts_at'))->time(),
+                TextColumn::make('booked')->label(__('partner.fields.booked'))
+                    ->label(__('partner.fields.booked'))
                     ->state(fn (FitnessClass $record): string => $record->bookings()->whereIn('status', ['pending', 'confirmed'])->count().' / '.($record->capacity ?? '∞')),
-                IconColumn::make('is_popular')->boolean(),
-                IconColumn::make('is_active')->boolean(),
+                IconColumn::make('is_popular')->label(__('partner.fields.is_popular'))->boolean(),
+                IconColumn::make('is_active')->label(__('partner.fields.is_active'))->boolean(),
             ])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),

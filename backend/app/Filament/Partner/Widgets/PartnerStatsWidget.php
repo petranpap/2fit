@@ -21,8 +21,8 @@ class PartnerStatsWidget extends BaseWidget
 
         if (! $offerable) {
             return [
-                Stat::make('Get started', 'Create your business profile')
-                    ->description('Use the menu on the left to add your listing'),
+                Stat::make(__('partner.stats.get_started'), __('partner.stats.create_profile'))
+                    ->description(__('partner.stats.menu_hint')),
             ];
         }
 
@@ -36,16 +36,16 @@ class PartnerStatsWidget extends BaseWidget
         $pendingBookings = $offerable->bookings()->where('status', 'pending')->count();
 
         return [
-            Stat::make('Active offers', Offer::whereIn('id', $offerIds)->where('is_active', true)->count()),
-            Stat::make('Codes claimed', (clone $codes)->count()),
-            Stat::make('Codes redeemed', (clone $codes)->where('status', 'redeemed')->count()),
-            Stat::make('Pending bookings', $pendingBookings)
+            Stat::make(__('partner.stats.active_offers'), Offer::whereIn('id', $offerIds)->where('is_active', true)->count()),
+            Stat::make(__('partner.stats.codes_claimed'), (clone $codes)->count()),
+            Stat::make(__('partner.stats.codes_redeemed'), (clone $codes)->where('status', 'redeemed')->count()),
+            Stat::make(__('partner.stats.pending_bookings'), $pendingBookings)
                 ->color($pendingBookings > 0 ? 'warning' : null),
-            Stat::make('Reviews', $offerable->reviews()->count())
+            Stat::make(__('partner.stats.reviews'), $offerable->reviews()->count())
                 ->description(
                     $offerable->reviews()->count() > 0
-                        ? round($offerable->reviews()->avg('rating'), 1).' avg rating'
-                        : 'No reviews yet'
+                        ? round($offerable->reviews()->avg('rating'), 1).' '.__('partner.stats.avg_rating')
+                        : __('partner.stats.no_reviews')
                 ),
         ];
     }
