@@ -56,6 +56,36 @@ class TrainerResource extends Resource
             Textarea::make('bio')->label(__('partner.fields.bio'))
                 ->maxLength(2000)
                 ->columnSpanFull(),
+            Select::make('spoken_languages')
+                ->label(fn () => app()->getLocale() === 'el' ? 'Γλώσσες που γνωρίζω' : 'Languages spoken')
+                ->options([
+                    'el' => 'Ελληνικά / Greek',
+                    'en' => 'Αγγλικά / English',
+                    'ru' => 'Ρωσικά / Russian',
+                    'fr' => 'Γαλλικά / French',
+                    'de' => 'Γερμανικά / German',
+                    'es' => 'Ισπανικά / Spanish',
+                    'ar' => 'Αραβικά / Arabic',
+                    'tr' => 'Τουρκικά / Turkish',
+                    'other' => 'Άλλη / Other',
+                ])
+                ->multiple()
+                ->searchable()
+                ->preload(),
+            Textarea::make('gym_education')
+                ->label(fn () => app()->getLocale() === 'el' ? 'Σπουδές / Εκπαίδευση στη γυμναστική' : 'Gym / Fitness Education')
+                ->helperText(fn () => app()->getLocale() === 'el' ? 'Σχολή, πτυχίο, έτος και φορέας.' : 'School, degree, year and awarding institution.')
+                ->maxLength(4000)
+                ->columnSpanFull(),
+            Textarea::make('gym_training')
+                ->label(fn () => app()->getLocale() === 'el' ? 'Επαγγελματική κατάρτιση / Σεμινάρια' : 'Gym Training / Certifications')
+                ->helperText(fn () => app()->getLocale() === 'el' ? 'Σεμινάρια, πιστοποιήσεις και πρακτική κατάρτιση.' : 'Courses, certificates and practical training.')
+                ->maxLength(4000)
+                ->columnSpanFull(),
+            Toggle::make('qualification_declaration')
+                ->label(fn () => app()->getLocale() === 'el' ? 'Δηλώνω ότι τα στοιχεία εκπαίδευσης και κατάρτισης είναι αληθή' : 'I declare that my education and training details are true')
+                ->helperText(fn () => app()->getLocale() === 'el' ? 'Προσωπική δήλωση, όχι επίσημη επαλήθευση από το 2Fit.' : 'Self-declaration; not verification by 2Fit.')
+                ->default(false),
             TextInput::make('address')->label(__('partner.fields.address'))->maxLength(255),
             ...self::locationFields(),
             TextInput::make('phone')->label(__('partner.fields.phone'))->tel()->maxLength(30),

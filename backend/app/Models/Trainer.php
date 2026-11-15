@@ -11,13 +11,16 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 #[Fillable([
     'user_id', 'subscription_plan_id', 'name', 'slug', 'bio', 'address',
     'latitude', 'longitude', 'phone', 'email', 'photo_path', 'hourly_rate',
-    'is_verified', 'is_active',
+    'is_verified', 'is_active', 'spoken_languages', 'gym_education',
+    'gym_training', 'qualification_declaration',
 ])]
 class Trainer extends Model
 {
     protected function casts(): array
     {
         return [
+            'spoken_languages' => 'array',
+            'qualification_declaration' => 'boolean',
             'is_verified' => 'boolean',
             'is_active' => 'boolean',
             'latitude' => 'decimal:7',

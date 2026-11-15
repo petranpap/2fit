@@ -351,6 +351,35 @@ export default function PlaceDetailScreen({ route, navigation }) {
             </View>
           ) : null}
 
+          {isTrainer && (place.spoken_languages?.length > 0 || place.gym_education || place.gym_training) ? (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{locale === 'el' ? 'Προσόντα & Γλώσσες' : 'Qualifications & Languages'}</Text>
+              {place.spoken_languages?.length > 0 ? (
+                <Text style={styles.body}>{locale === 'el' ? 'Γλώσσες: ' : 'Languages: '}{place.spoken_languages.map((code) => ({ el: 'Ελληνικά', en: 'English', ru: 'Русский', fr: 'Français', de: 'Deutsch', es: 'Español', ar: 'العربية', tr: 'Türkçe', other: locale === 'el' ? 'Άλλη' : 'Other' }[code] ?? code)).join(', ')}</Text>
+              ) : null}
+              {place.gym_education ? (
+                <View style={{ marginTop: 10 }}><Text style={styles.sectionTitle}>{locale === 'el' ? 'Εκπαίδευση' : 'Education'}</Text><Text style={styles.body}>{place.gym_education}</Text></View>
+              ) : null}
+              {place.gym_training ? (
+                <View style={{ marginTop: 10 }}><Text style={styles.sectionTitle}>{locale === 'el' ? 'Κατάρτιση / Πιστοποιήσεις' : 'Training / Certifications'}</Text><Text style={styles.body}>{place.gym_training}</Text></View>
+              ) : null}
+              {place.qualification_declaration ? <Text style={[styles.body, { marginTop: 10, fontSize: 12 }]}>{locale === 'el' ? 'Ο προπονητής δηλώνει ότι οι πληροφορίες είναι αληθείς (χωρίς ανεξάρτητη επαλήθευση).' : 'Trainer self-declares that these details are true (not independently verified).'}</Text> : null}
+            </View>
+          ) : null}
+
+          {isTrainer && place.offers?.length > 0 ? (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{locale === 'el' ? 'Προσφορές Προπονητή' : 'Trainer Offers'}</Text>
+              {place.offers.map((offer) => (
+                <Pressable key={offer.id} onPress={() => navigation.navigate('OfferDetail', { offerId: offer.id, id: offer.id })} style={{ backgroundColor: '#242424', borderWidth: 1, borderColor: '#FFD400', borderRadius: 12, padding: 14, marginTop: 8 }}>
+                  <Text style={{ color: '#FFD400', fontWeight: '700', fontSize: 16 }}>{offer.title}</Text>
+                  {offer.description ? <Text style={styles.body}>{offer.description}</Text> : null}
+                  <Text style={{ color: '#FFD400', marginTop: 5 }}>{locale === 'el' ? 'Δείτε προσφορά' : 'View offer'} →</Text>
+                </Pressable>
+              ))}
+            </View>
+          ) : null}
+
           {place.categories?.length > 0 ? (
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>
