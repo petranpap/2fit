@@ -28,22 +28,22 @@ trait HasOpeningHoursFields
     protected static function openingHoursFields(): array
     {
         return [
-            Section::make('Opening hours')
+            Section::make(__('partner.fields.opening_hours'))
                 ->columns(1)
                 ->schema([
                     Grid::make(3)
                         ->schema([
                             TimePicker::make('bulk_opens_at')
-                                ->label('Opens at')
+                                ->label(__('partner.fields.opens_at'))
                                 ->seconds(false)
                                 ->dehydrated(false),
                             TimePicker::make('bulk_closes_at')
-                                ->label('Closes at')
+                                ->label(__('partner.fields.closes_at'))
                                 ->seconds(false)
                                 ->dehydrated(false),
                             Actions::make([
                                 Action::make('copyToAllDays')
-                                    ->label('Copy to all days')
+                                    ->label(__('partner.actions.copy_all'))
                                     ->icon('heroicon-m-clipboard-document')
                                     ->action(function (Get $get, Set $set) {
                                         $opensAt = $get('bulk_opens_at');
@@ -51,7 +51,7 @@ trait HasOpeningHoursFields
 
                                         if (! $opensAt || ! $closesAt) {
                                             Notification::make()
-                                                ->title('Set both times above first')
+                                                ->title(__('partner.messages.hours_missing'))
                                                 ->warning()
                                                 ->send();
 
@@ -65,7 +65,7 @@ trait HasOpeningHoursFields
                                         }
 
                                         Notification::make()
-                                            ->title('Applied to every day — edit any day below to fine-tune it')
+                                            ->title(__('partner.messages.hours_applied'))
                                             ->success()
                                             ->send();
                                     }),
@@ -74,16 +74,16 @@ trait HasOpeningHoursFields
                     ...collect(self::DAYS)
                         ->map(fn (string $day) => Grid::make(4)->schema([
                             Toggle::make("opening_hours.{$day}.is_open")
-                                ->label(Str::ucfirst($day))
+                                ->label(__('partner.days.'.$day))
                                 ->live()
                                 ->default(false),
                             TimePicker::make("opening_hours.{$day}.opens_at")
-                                ->label('Opens at')
+                                ->label(__('partner.fields.opens_at'))
                                 ->seconds(false)
                                 ->required()
                                 ->visible(fn (Get $get): bool => (bool) $get("opening_hours.{$day}.is_open")),
                             TimePicker::make("opening_hours.{$day}.closes_at")
-                                ->label('Closes at')
+                                ->label(__('partner.fields.closes_at'))
                                 ->seconds(false)
                                 ->required()
                                 ->after("opening_hours.{$day}.opens_at")

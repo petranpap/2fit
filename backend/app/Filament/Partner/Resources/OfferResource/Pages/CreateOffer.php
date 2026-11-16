@@ -17,7 +17,7 @@ class CreateOffer extends CreateRecord
 
         if (! $offerable) {
             Notification::make()
-                ->title('Create your business profile first')
+                ->title(__('partner.messages.profile_first'))
                 ->danger()
                 ->send();
 

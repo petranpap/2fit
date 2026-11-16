@@ -5,18 +5,19 @@ import { ActivityIndicator, View } from 'react-native';
 
 import { useAuth } from '../context/AuthContext';
 import { useLocale } from '../i18n/LocaleContext';
-import BookingRequestScreen from '../screens/BookingRequestScreen';
+import CategorySubcategoriesScreen from '../screens/CategorySubcategoriesScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import FiltersScreen from '../screens/FiltersScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
-import MyBookingsScreen from '../screens/MyBookingsScreen';
+import MyReviewsScreen from '../screens/MyReviewsScreen';
 import OfferDetailScreen from '../screens/OfferDetailScreen';
 import OffersScreen from '../screens/OffersScreen';
 import PlaceDetailScreen from '../screens/PlaceDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import SearchScreen from '../screens/SearchScreen';
+import WriteReviewScreen from '../screens/WriteReviewScreen';
 import { colors, fonts } from '../theme/tokens';
 
 const Stack = createNativeStackNavigator();
@@ -150,11 +151,28 @@ function MainStack() {
         options={{
           presentation: 'modal',
           headerTitle: t('filters.title'),
-          headerTintColor: colors.primary,
+          headerTintColor: '#FFD400',
           headerStyle: {
-            backgroundColor: colors.background,
+            backgroundColor: '#111111',
           },
           headerTitleStyle: {
+            color: '#FFFFFF',
+            fontFamily: fonts.headingSemiBold,
+          },
+          headerShadowVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="CategorySubcategories"
+        component={CategorySubcategoriesScreen}
+        options={{
+          headerTintColor: '#FFD400',
+          headerStyle: {
+            backgroundColor: '#111111',
+          },
+          headerTitleStyle: {
+            color: '#FFFFFF',
             fontFamily: fonts.headingSemiBold,
           },
           headerShadowVisible: false,
@@ -165,12 +183,39 @@ function MainStack() {
         name="PlaceDetail"
         component={PlaceDetailScreen}
         options={{
-          headerTitle: '',
-          headerTintColor: colors.primary,
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="WriteReview"
+        component={WriteReviewScreen}
+        options={{
+          presentation: 'modal',
+          headerTitle: t('reviews.writeAction'),
+          headerTintColor: '#FFD400',
           headerStyle: {
-            backgroundColor: colors.background,
+            backgroundColor: '#111111',
           },
           headerTitleStyle: {
+            color: '#FFFFFF',
+            fontFamily: fonts.headingSemiBold,
+          },
+          headerShadowVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="MyReviews"
+        component={MyReviewsScreen}
+        options={{
+          headerTitle: t('reviews.headerTitle'),
+          headerTintColor: '#FFD400',
+          headerStyle: {
+            backgroundColor: '#111111',
+          },
+          headerTitleStyle: {
+            color: '#FFFFFF',
             fontFamily: fonts.headingSemiBold,
           },
           headerShadowVisible: false,
@@ -209,33 +254,6 @@ function MainStack() {
         }}
       />
 
-      <Stack.Screen
-        name="BookingRequest"
-        component={BookingRequestScreen}
-        options={{
-          presentation: 'modal',
-          headerTitle: t('booking.requestTitle'),
-          headerTintColor: colors.primary,
-          headerStyle: {
-            backgroundColor: colors.background,
-          },
-          headerTitleStyle: {
-            fontFamily: fonts.headingSemiBold,
-          },
-          headerShadowVisible: false,
-        }}
-      />
-      <Stack.Screen
-        name="MyBookings"
-        component={MyBookingsScreen}
-        options={{
-          headerTitle: t('myBookings.headerTitle'),
-          headerTintColor: colors.primary,
-          headerStyle: { backgroundColor: colors.background },
-          headerTitleStyle: { fontFamily: fonts.headingSemiBold },
-          headerShadowVisible: false,
-        }}
-      />
     </Stack.Navigator>
   );
 }

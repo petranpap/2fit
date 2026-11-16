@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Category;
 use App\Models\Gym;
 use App\Models\Shop;
 use App\Models\Trainer;
@@ -84,7 +85,12 @@ class SearchService
         // Pending listings (not yet approved in the Admin panel) stay out of
         // public search — that's what makes it an approval queue and not
         // just a cosmetic badge.
-        $query = $modelClass::query()->with('categories')->where('is_active', true)->where('is_verified', true);
+        $query = $modelClass::query()
+            ->with('categories')
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
+            ->where('is_active', true)
+            ->where('is_verified', true);
 
         if (! empty($filters['q'])) {
             $textColumn = $type === 'trainer' ? 'bio' : 'description';
@@ -96,18 +102,25 @@ class SearchService
         }
 
         if (! empty($filters['category'])) {
-            $category = $filters['category'];
+            $categoryIds = $this->resolveCategoryIds($filters['category']);
 
-            $query->whereHas('categories', function (Builder $inner) use ($category) {
-                is_numeric($category)
-                    ? $inner->where('id', $category)
-                    : $inner->where('slug', $category);
+            $query->whereHas('categories', function (Builder $inner) use ($categoryIds) {
+                $inner->whereIn('id', $categoryIds);
             });
         }
 
+        // reviews_avg_rating is the withAvg() alias above, not a real
+        // column — having() instead of where() lets MySQL filter on it.
+        if (! empty($filters['min_rating'])) {
+            $query->having('reviews_avg_rating', '>=', $filters['min_rating']);
+        }
+
         if (isset($filters['lat'], $filters['lng'])) {
+            // withAvg/withCount above already seeded "{table}.*" into the
+            // select list — a second bare "*" here would produce invalid
+            // duplicate-wildcard SQL, so this only adds the computed column.
             $query->selectRaw(
-                '*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) as distance_km',
+                '(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) as distance_km',
                 [$filters['lat'], $filters['lng'], $filters['lat']]
             );
 
@@ -122,6 +135,30 @@ class SearchService
         }
 
         return $query;
+    }
+
+    /**
+     * A listing is tagged with a subcategory ("CrossFit"), never directly
+     * with its main category ("Gyms") — so filtering search by a main
+     * category needs to match that category's children too, or it would
+     * always return nothing. Filtering by a subcategory (or any category
+     * with no children) just matches itself.
+     *
+     * @return array<int, int>
+     */
+    private function resolveCategoryIds(int|string $category): array
+    {
+        $match = is_numeric($category)
+            ? Category::with('children')->find($category)
+            : Category::with('children')->where('slug', $category)->first();
+
+        if (! $match) {
+            // Unknown category — match nothing rather than erroring or
+            // (worse) silently ignoring the filter and returning everyone.
+            return [-1];
+        }
+
+        return [$match->id, ...$match->children->pluck('id')];
     }
 
     /**

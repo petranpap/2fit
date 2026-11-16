@@ -71,14 +71,32 @@
     "empty": "Δεν βρέθηκαν αποτελέσματα.",
     "error": "Κάτι πήγε στραβά. Δοκίμασε ξανά.",
     "locationFallback": "Η τοποθεσία σου",
-    "filtersA11y": "Φίλτρα"
+    "filtersA11y": "Φίλτρα",
+    "mapViewA11y": "Προβολή χάρτη",
+    "listViewA11y": "Προβολή λίστας",
+    "resultsCount": "{{count}} αποτελέσματα",
+    "resultsCountOne": "{{count}} αποτέλεσμα",
+    "sortA11y": "Ταξινόμηση",
+    "sortNearest": "Πιο κοντινά",
+    "sortTopRated": "Καλύτερη αξιολόγηση"
+  },
+  "map": {
+    "webUnsupportedTitle": "Ο χάρτης χρειάζεται την εφαρμογή",
+    "webUnsupportedSubtitle": "Οι χάρτες δεν είναι διαθέσιμοι σε αυτή την προεπισκόπηση web — δοκίμασε την προβολή λίστας, ή άνοιξε την εφαρμογή στο κινητό σου."
   },
   "filters": {
     "title": "Φίλτρα",
+    "reset": "Επαναφορά",
     "categorySection": "Κατηγορία",
+    "locationSection": "Τοποθεσία",
+    "locating": "Εντοπισμός…",
     "distanceSection": "Απόσταση",
     "distanceAll": "Όλες",
-    "apply": "Εφαρμογή φίλτρων"
+    "distanceValue": "{{km}} km",
+    "ratingSection": "Αξιολόγηση",
+    "ratingValue": "{{rating}}+",
+    "apply": "Εφαρμογή φίλτρων",
+    "applyWithCount": "Εφαρμογή φίλτρων ({{count}} αποτελέσματα)"
   },
   "profile": {
     "favorites": "Αγαπημένα",
@@ -91,8 +109,11 @@
     "languageEnglish": "English"
   },
   "favorites": {
-    "emptyTitle": "Δεν έχεις προσφορές ακόμα",
-    "emptySubtitle": "Οι προσφορές που θα διεκδικήσεις θα εμφανίζονται εδώ."
+    "subtitle": "Οι αγαπημένοι σου χώροι και οι κωδικοί σου",
+    "savedPlacesTitle": "Αποθηκευμένα",
+    "savedCodesTitle": "Προσφορές & κωδικοί",
+    "emptyTitle": "Δεν έχεις τίποτα αποθηκευμένο ακόμα",
+    "emptySubtitle": "Πάτησε την καρδιά σε ένα γυμναστήριο, προπονητή ή κατάστημα, ή διεκδίκησε μια προσφορά, και θα εμφανιστούν εδώ."
   },
   "offers": {
     "headerTitle": "Προσφορές",
@@ -116,6 +137,7 @@
     "aboutSection": "Σχετικά",
     "contactSection": "Επικοινωνία",
     "categoriesSection": "Κατηγορίες",
+    "specialtiesSection": "Ειδικεύσεις",
     "facilitiesSection": "Ανέσεις",
     "classesSection": "Μαθήματα",
     "popularBadge": "Δημοφιλές",
@@ -134,12 +156,25 @@
     "reviewsOne": "{{count}} αξιολόγηση",
     "hourlyRate": "{{rate}} € / ώρα",
     "callAction": "Κλήση",
+    "directionsAction": "Οδηγίες",
     "emailAction": "Email",
     "websiteAction": "Ιστοσελίδα",
     "shareAction": "Κοινοποίηση",
     "shareMessage": "Δες το {{name}} στο 2fit!",
     "notFound": "Δεν βρέθηκε.",
-    "loadError": "Κάτι πήγε στραβά. Δοκίμασε ξανά."
+    "loadError": "Κάτι πήγε στραβά. Δοκίμασε ξανά.",
+    "backA11y": "Πίσω",
+    "favoriteA11y": "Αγαπημένο",
+    "distanceLabel": "Απόσταση",
+    "priceLabel": "Τιμή",
+    "typeLabel": "Τύπος",
+    "todayLabel": "Σήμερα",
+    "closedTodayLabel": "Κλειστό σήμερα",
+    "popularClassesSection": "Δημοφιλή μαθήματα"
+  },
+  "categoryBrowse": {
+    "subtitle": "Επίλεξε υποκατηγορία",
+    "empty": "Δεν βρέθηκαν υποκατηγορίες."
   },
   "days": {
     "monday": "Δευτέρα",
@@ -194,19 +229,23 @@
     "statusCancelled": "Ακυρώθηκε",
     "doneAction": "Τέλεια"
   },
-  "myBookings": {
-    "headerTitle": "Οι κρατήσεις μου",
-    "emptyTitle": "Δεν έχεις κρατήσεις ακόμα",
-    "emptySubtitle": "Οι κρατήσεις που θα κάνεις θα εμφανίζονται εδώ.",
-    "generalBooking": "Γενική κράτηση",
-    "cancelAction": "Ακύρωση",
-    "cancelling": "Γίνεται ακύρωση…",
-    "cancelConfirmTitle": "Ακύρωση κράτησης;",
-    "cancelConfirmMessage": "Η θέση σου θα ελευθερωθεί για άλλους.",
-    "cancelConfirmYes": "Ναι, ακύρωση",
-    "cancelConfirmNo": "Όχι",
-    "cancelError": "Δεν μπορέσαμε να ακυρώσουμε την κράτηση. Δοκίμασε ξανά.",
-    "emptyForDay": "Δεν υπάρχουν κρατήσεις αυτή την ημέρα."
+  "reviews": {
+    "headerTitle": "Οι αξιολογήσεις μου",
+    "writeAction": "Γράψε αξιολόγηση",
+    "editAction": "Επεξεργασία αξιολόγησης",
+    "ratingLabel": "Η αξιολόγησή σου",
+    "commentLabel": "Σχόλιο (προαιρετικό)",
+    "commentPlaceholder": "Πες μας πώς ήταν η εμπειρία σου…",
+    "submitAction": "Υποβολή αξιολόγησης",
+    "pickRatingError": "Επίλεξε αριθμό αστεριών.",
+    "submitError": "Δεν μπορέσαμε να υποβάλουμε την αξιολόγηση. Δοκίμασε ξανά.",
+    "deleteConfirmTitle": "Διαγραφή αξιολόγησης;",
+    "deleteConfirmMessage": "Αυτή η ενέργεια δεν αναιρείται.",
+    "deleteConfirmYes": "Ναι, διαγραφή",
+    "deleteConfirmNo": "Όχι",
+    "emptyTitle": "Δεν έχεις γράψει αξιολογήσεις ακόμα",
+    "emptySubtitle": "Οι αξιολογήσεις που θα γράφεις για γυμναστήρια, προπονητές και καταστήματα θα εμφανίζονται εδώ.",
+    "unknownPlace": "Άγνωστη καταχώρηση"
   },
   "notifications": {
     "reminderTitle": "Η κράτησή σου πλησιάζει",

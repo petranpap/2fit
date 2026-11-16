@@ -28,48 +28,61 @@ class ShopResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
-    protected static ?string $navigationLabel = 'My Shop';
+    public static function getNavigationLabel(): string
+    {
+        return __('partner.nav.shop');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('partner.model.shop');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('partner.model.shops');
+    }
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('name')
+            TextInput::make('name')->label(__('partner.fields.name'))
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
                 ->afterStateUpdated(fn (string $state, callable $set) => $set('slug', Str::slug($state))),
-            TextInput::make('slug')
+            TextInput::make('slug')->label(__('partner.fields.slug'))
                 ->required()
                 ->maxLength(255)
                 ->unique(ignoreRecord: true),
-            Textarea::make('description')
+            Textarea::make('description')->label(__('partner.fields.description'))
                 ->maxLength(2000)
                 ->columnSpanFull(),
-            TextInput::make('address')->maxLength(255),
+            TextInput::make('address')->label(__('partner.fields.address'))->maxLength(255),
             ...self::locationFields(),
-            TextInput::make('phone')->tel()->maxLength(30),
-            TextInput::make('email')->email()->maxLength(255),
-            TextInput::make('website')->url()->maxLength(255),
-            FileUpload::make('logo_path')
-                ->label('Logo')
+            TextInput::make('phone')->label(__('partner.fields.phone'))->tel()->maxLength(30),
+            TextInput::make('email')->label(__('partner.fields.email'))->email()->maxLength(255),
+            TextInput::make('website')->label(__('partner.fields.website'))->url()->maxLength(255),
+            FileUpload::make('logo_path')->label(__('partner.fields.logo_path'))
+                ->label(__('partner.fields.logo_path'))
                 ->image()
                 ->disk('public')
                 ->directory('shops/logos'),
-            FileUpload::make('cover_image_path')
-                ->label('Cover photo')
+            FileUpload::make('cover_image_path')->label(__('partner.fields.cover_image_path'))
+                ->label(__('partner.fields.cover_image_path'))
                 ->image()
                 ->disk('public')
                 ->directory('shops/covers'),
             ...self::openingHoursFields(),
-            Select::make('categories')
-                ->relationship('categories', 'name')
+            Select::make('categories')->label(__('partner.fields.categories'))
+                ->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))
                 ->multiple()
                 ->preload(),
-            Select::make('facilities')
+            Select::make('facilities')->label(__('partner.fields.facilities'))
                 ->relationship('facilities', 'name')
                 ->multiple()
                 ->preload(),
-            Toggle::make('is_active')
+            Toggle::make('is_active')->label(__('partner.fields.is_active'))
                 ->default(true),
         ]);
     }
@@ -78,10 +91,10 @@ class ShopResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('address')->limit(40),
-                IconColumn::make('is_verified')->boolean(),
-                IconColumn::make('is_active')->boolean(),
+                TextColumn::make('name')->label(__('partner.fields.name'))->searchable(),
+                TextColumn::make('address')->label(__('partner.fields.address'))->limit(40),
+                IconColumn::make('is_verified')->label(__('partner.fields.is_verified'))->boolean(),
+                IconColumn::make('is_active')->label(__('partner.fields.is_active'))->boolean(),
             ])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),

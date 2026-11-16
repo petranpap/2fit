@@ -27,25 +27,38 @@ class DiscountCodeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-qr-code';
 
-    protected static ?string $navigationLabel = 'Redeem Codes';
+    public static function getNavigationLabel(): string
+    {
+        return __('partner.nav.codes');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('partner.model.code');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('partner.model.codes');
+    }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('code')->searchable()->copyable(),
-                TextColumn::make('offer.title')->label('Offer'),
-                TextColumn::make('user.name')->label('Customer'),
-                TextColumn::make('status')->badge()->color(fn (string $state) => match ($state) {
+                TextColumn::make('code')->label(__('partner.fields.code'))->searchable()->copyable(),
+                TextColumn::make('offer.title')->label(__('partner.fields.offer_title')),
+                TextColumn::make('user.name')->label(__('partner.fields.user_name')),
+                TextColumn::make('status')->label(__('partner.fields.status'))->badge()->formatStateUsing(fn (string $state): string => __('partner.options.'.$state))->color(fn (string $state) => match ($state) {
                     'active' => 'success',
                     'redeemed' => 'gray',
                     'expired' => 'danger',
                 }),
-                TextColumn::make('expires_at')->dateTime(),
+                TextColumn::make('expires_at')->label(__('partner.fields.expires_at'))->dateTime(),
             ])
             ->actions([
                 Action::make('redeem')
-                    ->label('Redeem')
+                    ->label(__('partner.actions.redeem'))
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn (DiscountCode $record) => $record->status === 'active')
@@ -55,7 +68,7 @@ class DiscountCodeResource extends Resource
                             app(OfferService::class)->redeem($record);
 
                             Notification::make()
-                                ->title('Code redeemed')
+                                ->title(__('partner.messages.redeemed'))
                                 ->success()
                                 ->send();
                         } catch (ValidationException $e) {
