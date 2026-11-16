@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import {
   Alert,
@@ -9,6 +10,7 @@ import {
 } from 'react-native';
 
 import Button from '../components/Button';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import ScreenContainer from '../components/ScreenContainer';
 import TextField from '../components/TextField';
 import { useAuth } from '../context/AuthContext';
@@ -18,7 +20,7 @@ import { validateLoginForm } from '../utils/validation';
 
 export default function LoginScreen({ navigation }) {
   const { login } = useAuth();
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -61,8 +63,10 @@ export default function LoginScreen({ navigation }) {
 
   const handleForgotPassword = () => {
     Alert.alert(
-      'Ξέχασα τον κωδικό',
-      'Η λειτουργία επαναφοράς κωδικού θα προστεθεί σύντομα.'
+      locale === 'el' ? 'Ξέχασα τον κωδικό' : 'Forgot password',
+      locale === 'el'
+        ? 'Η λειτουργία επαναφοράς κωδικού θα προστεθεί σύντομα.'
+        : 'Password reset will be available soon.'
     );
   };
 
@@ -70,6 +74,11 @@ export default function LoginScreen({ navigation }) {
     <ScreenContainer style={styles.content}>
 
       <View style={styles.card}>
+
+        {/* LANGUAGE SWITCHER */}
+        <View style={styles.languageRow}>
+          <LanguageSwitcher />
+        </View>
 
         {/* 2FIT LOGO */}
         <Image
@@ -80,31 +89,31 @@ export default function LoginScreen({ navigation }) {
 
         {/* LOGIN TITLE */}
         <Text style={styles.title}>
-          Σύνδεση / Login
+          {t('auth.login.submit')}
         </Text>
 
         {/* FORM */}
         <View style={styles.form}>
 
           <TextField
-            label="Email"
+            label={t('auth.login.emailLabel')}
             value={email}
             onChangeText={setEmail}
             error={errors.email}
             autoCapitalize="none"
             keyboardType="email-address"
             autoComplete="email"
-            placeholder="name@example.com"
+            placeholder={t('auth.login.emailPlaceholder')}
           />
 
           <TextField
-            label="Κωδικός"
+            label={t('auth.login.passwordLabel')}
             value={password}
             onChangeText={setPassword}
             error={errors.password}
             secureTextEntry={!showPassword}
             autoComplete="password"
-            placeholder="••••••••"
+            placeholder={t('auth.login.passwordPlaceholder')}
           />
 
           {/* SHOW PASSWORD */}
@@ -113,9 +122,13 @@ export default function LoginScreen({ navigation }) {
             onPress={() => setShowPassword(!showPassword)}
           >
             <Text style={styles.passwordToggleText}>
-              {showPassword
-                ? '👁 Απόκρυψη κωδικού'
-                : '👁 Εμφάνιση κωδικού'}
+              {locale === 'el'
+                ? showPassword
+                  ? '👁 Απόκρυψη κωδικού'
+                  : '👁 Εμφάνιση κωδικού'
+                : showPassword
+                  ? '👁 Hide password'
+                  : '👁 Show password'}
             </Text>
           </Pressable>
 
@@ -125,7 +138,9 @@ export default function LoginScreen({ navigation }) {
             onPress={handleForgotPassword}
           >
             <Text style={styles.forgotPasswordText}>
-              Ξέχασα τον κωδικό;
+              {locale === 'el'
+                ? 'Ξέχασα τον κωδικό;'
+                : 'Forgot password?'}
             </Text>
           </Pressable>
 
@@ -143,8 +158,10 @@ export default function LoginScreen({ navigation }) {
           >
             <Text style={styles.loginButtonText}>
               {isSubmitting
-                ? 'Παρακαλώ περιμένετε...'
-                : 'Σύνδεση / Login'}
+                ? locale === 'el'
+                  ? 'Παρακαλώ περιμένετε...'
+                  : 'Please wait...'
+                : t('auth.login.submit')}
             </Text>
           </Pressable>
 
@@ -153,14 +170,14 @@ export default function LoginScreen({ navigation }) {
         {/* REGISTER */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Δεν έχεις λογαριασμό;
+            {t('auth.login.noAccount')}
           </Text>
 
           <Text
             style={styles.footerLink}
             onPress={() => navigation.navigate('Register')}
           >
-            {' '}Εγγραφή
+            {' '}{t('auth.login.registerLink')}
           </Text>
         </View>
 
@@ -189,6 +206,12 @@ const styles = StyleSheet.create({
     borderRadius: 22,
 
     padding: spacing.xl,
+  },
+
+  languageRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 15,
   },
 
   logo: {

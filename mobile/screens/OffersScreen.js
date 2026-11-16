@@ -5,13 +5,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { fetchOffers } from '../api/offers';
 import OfferCard from '../components/OfferCard';
 import { useLocale } from '../i18n/LocaleContext';
-import { colors, spacing, typography } from '../theme/tokens';
+import { spacing, typography } from '../theme/tokens';
 
-export default function OffersScreen() {
+export default function OffersScreen({ navigation }) {
   const { t } = useLocale();
   const [offers, setOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTintColor: '#FFD400',
+      headerStyle: { backgroundColor: '#111111' },
+      headerTitleStyle: { color: '#FFFFFF' },
+      headerShadowVisible: false,
+    });
+  }, [navigation]);
 
   useEffect(() => {
     fetchOffers()
@@ -23,7 +32,7 @@ export default function OffersScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       {isLoading ? (
-        <ActivityIndicator color={colors.primary} style={styles.spinner} />
+        <ActivityIndicator color="#FFD400" style={styles.spinner} />
       ) : (
         <FlatList
           data={offers}
@@ -40,7 +49,7 @@ export default function OffersScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: '#111111',
   },
   list: {
     padding: spacing.xl,
@@ -51,7 +60,7 @@ const styles = StyleSheet.create({
   },
   message: {
     ...typography.body,
-    color: colors.textSecondary,
+    color: '#FFFFFF',
     textAlign: 'center',
     marginTop: spacing.xl,
   },

@@ -25,6 +25,7 @@ class TrainerController extends Controller
 
         $trainer->load([
             'categories',
+            'offers' => fn ($query) => $query->active()->orderByDesc('created_at'),
             'fitnessClasses' => fn ($query) => $query->where('is_active', true)
                 ->with('categories')
                 ->withCount(['bookings as active_bookings_count' => fn ($bookings) => $bookings->whereIn('status', ['pending', 'confirmed'])]),

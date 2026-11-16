@@ -1,7 +1,17 @@
 // Maps a category slug (or a place type) to an Ionicons glyph name.
 const ICONS_BY_SLUG = {
+  // Main categories (Home quick-browse, Explore top categories)
+  gyms: 'barbell-outline',
+  'martial-arts': 'body-outline',
+  wellness: 'flower-outline',
+  'personal-trainers': 'person-outline',
+  shops: 'storefront-outline',
+
+  // Subcategories
   gym: 'barbell-outline',
   crossfit: 'flame-outline',
+  kickboxing: 'flash-outline',
+  mma: 'shield-outline',
   'personal-training': 'person-outline',
   'yoga-pilates': 'flower-outline',
   sportswear: 'shirt-outline',
