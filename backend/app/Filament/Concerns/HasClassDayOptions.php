@@ -19,17 +19,10 @@ trait HasClassDayOptions
         'sunday' => 'Sunday',
     ];
 
-    protected static function dayOptions(): array
-    {
-        return collect(array_keys(self::DAY_OPTIONS))
-            ->mapWithKeys(fn (string $day): array => [$day => __('partner.days.'.$day)])
-            ->all();
-    }
-
     protected static function formatDaysOfWeek(?array $days): string
     {
         return $days
-            ? collect($days)->map(fn (string $day) => __('partner.days.'.$day))->join(', ')
+            ? collect($days)->map(fn (string $day) => self::DAY_OPTIONS[$day])->join(', ')
             : '—';
     }
 }

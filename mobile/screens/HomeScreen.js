@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -14,12 +13,11 @@ import {
 import { search } from '../api/search';
 import CategoryIconTile from '../components/CategoryIconTile';
 import IconButton from '../components/IconButton';
-import LanguageSwitcher from '../components/LanguageSwitcher';
 import PlaceCardCompact from '../components/PlaceCardCompact';
 import ScreenContainer from '../components/ScreenContainer';
 import SearchBar from '../components/SearchBar';
 import { useAuth } from '../context/AuthContext';
-import { usePrimaryCategories } from '../hooks/usePrimaryCategories';
+import { useCategories } from '../hooks/useCategories';
 import { useLocale } from '../i18n/LocaleContext';
 import { spacing } from '../theme/tokens';
 import { getCurrentCoords } from '../utils/location';
@@ -27,7 +25,7 @@ import { getCurrentCoords } from '../utils/location';
 export default function HomeScreen({ navigation }) {
   const { user } = useAuth();
   const { t } = useLocale();
-  const { categories } = usePrimaryCategories();
+  const { categories } = useCategories();
 
   const [nearby, setNearby] = useState([]);
   const [isLoadingNearby, setIsLoadingNearby] = useState(true);
@@ -50,21 +48,17 @@ export default function HomeScreen({ navigation }) {
           resizeMode="contain"
         />
 
-        <View style={styles.topActions}>
-          <LanguageSwitcher />
-
-          <View style={styles.notificationButton}>
-            <IconButton
-              name="notifications-outline"
-              accessibilityLabel={t('profile.notifications')}
-              onPress={() =>
-                Alert.alert(
-                  t('common.comingSoonTitle'),
-                  t('common.comingSoonMessage')
-                )
-              }
-            />
-          </View>
+        <View style={styles.notificationButton}>
+          <IconButton
+            name="notifications-outline"
+            accessibilityLabel={t('profile.notifications')}
+            onPress={() =>
+              Alert.alert(
+                t('common.comingSoonTitle'),
+                t('common.comingSoonMessage')
+              )
+            }
+          />
         </View>
       </View>
 
@@ -111,10 +105,9 @@ export default function HomeScreen({ navigation }) {
             renderItem={({ item }) => (
               <CategoryIconTile
                 category={item}
-                variant="dark"
                 onPress={() =>
-                  navigation.navigate('CategorySubcategories', {
-                    category: item,
+                  navigation.navigate('Search', {
+                    category: item.slug,
                   })
                 }
               />
@@ -163,14 +156,11 @@ export default function HomeScreen({ navigation }) {
 
       <View style={styles.promoCard}>
         <Text style={styles.promoTitle}>
-          {t('home.bannerTitlePlain')}
-          <Text style={styles.promoTitleAccent}>
-            {t('home.bannerTitleAccent')}
-          </Text>
+          Βρες. Προπονήσου. Εξοικονόμησε.
         </Text>
 
         <Text style={styles.promoSubtitle}>
-          {t('home.bannerSubtitle')}
+          Όλα σε μία εφαρμογή.
         </Text>
       </View>
 
@@ -194,11 +184,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 220,
     height: 110,
-  },
-
-  topActions: {
-    alignItems: 'flex-end',
-    gap: spacing.sm,
   },
 
   notificationButton: {
@@ -316,10 +301,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#111111',
     marginBottom: 8,
-  },
-
-  promoTitleAccent: {
-    color: '#111111',
   },
 
   promoSubtitle: {

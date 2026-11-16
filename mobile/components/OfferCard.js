@@ -2,8 +2,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useLocale } from '../i18n/LocaleContext';
+import { colors, radius, shadows, spacing, typography } from '../theme/tokens';
 import { formatDiscount } from '../utils/offers';
-import { formatOfferDate } from '../utils/formatOfferDate';
 
 export default function OfferCard({ offer }) {
   const { t } = useLocale();
@@ -12,13 +12,16 @@ export default function OfferCard({ offer }) {
   return (
     <Pressable
       onPress={() => navigation.navigate('OfferDetail', { offerId: offer.id })}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.card, shadows.small, pressed && styles.pressed]}
     >
       <View style={styles.badge}>
         <Text style={styles.badgeText}>{formatDiscount(offer, t)}</Text>
       </View>
+
       <View style={styles.body}>
-        <Text style={styles.title} numberOfLines={2}>{offer.title}</Text>
+        <Text style={styles.title} numberOfLines={2}>
+          {offer.title}
+        </Text>
         {offer.offerable ? (
           <Text style={styles.at} numberOfLines={1}>
             {t('offers.at', { name: offer.offerable.name })}
@@ -26,7 +29,7 @@ export default function OfferCard({ offer }) {
         ) : null}
         {offer.expires_at ? (
           <Text style={styles.expiry}>
-            {t('offers.expiresOn', { date: formatOfferDate(offer.expires_at) })}
+            {t('offers.expiresOn', { date: new Date(offer.expires_at).toLocaleDateString() })}
           </Text>
         ) : null}
       </View>
@@ -36,18 +39,41 @@ export default function OfferCard({ offer }) {
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#1A1A1A',
-    borderColor: '#FFD400', borderWidth: 1, borderRadius: 16,
-    padding: 14, marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    marginBottom: spacing.md,
   },
-  pressed: { opacity: 0.8 },
+  pressed: {
+    opacity: 0.85,
+  },
   badge: {
-    backgroundColor: '#FFD400', borderRadius: 9,
-    paddingHorizontal: 10, paddingVertical: 8, marginRight: 12,
+    backgroundColor: colors.secondary,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
+    marginRight: spacing.md,
   },
-  badgeText: { color: '#111111', fontWeight: '800', fontSize: 15 },
-  body: { flex: 1 },
-  title: { color: '#FFFFFF', fontWeight: '800', fontSize: 16 },
-  at: { color: '#FFD400', marginTop: 5, fontSize: 13 },
-  expiry: { color: '#D0D0D0', marginTop: 4, fontSize: 12 },
+  badgeText: {
+    ...typography.bodyStrong,
+    color: colors.surface,
+    fontSize: 14,
+  },
+  body: {
+    flex: 1,
+  },
+  title: {
+    ...typography.bodyStrong,
+  },
+  at: {
+    ...typography.caption,
+    color: colors.primary,
+    marginTop: 2,
+  },
+  expiry: {
+    ...typography.caption,
+    marginTop: 2,
+  },
 });

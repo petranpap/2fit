@@ -3,7 +3,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   ActivityIndicator,
-  ScrollView,
+  FlatList,
   StyleSheet,
   Text,
   View,
@@ -11,16 +11,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { fetchMyDiscountCodes } from '../api/discountCodes';
-import { fetchMyFavorites } from '../api/favorites';
 import DiscountCodeCard from '../components/DiscountCodeCard';
-import PlaceCard from '../components/PlaceCard';
 import { useLocale } from '../i18n/LocaleContext';
 import { spacing } from '../theme/tokens';
 
 export default function FavoritesScreen() {
   const { t } = useLocale();
 
-  const [places, setPlaces] = useState([]);
   const [codes, setCodes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,24 +25,28 @@ export default function FavoritesScreen() {
     useCallback(() => {
       let isCancelled = false;
 
-      Promise.all([
-        fetchMyFavorites().catch(() => ({ data: [] })),
-        fetchMyDiscountCodes().catch(() => ({ data: [] })),
-      ]).then(([favoritesRes, codesRes]) => {
-        if (isCancelled) return;
-        setPlaces(favoritesRes.data);
-        setCodes(codesRes.data);
-      }).finally(() => {
-        if (!isCancelled) setIsLoading(false);
-      });
+      fetchMyDiscountCodes()
+        .then(({ data }) => {
+          if (!isCancelled) {
+            setCodes(data);
+          }
+        })
+        .catch(() => {
+          if (!isCancelled) {
+            setCodes([]);
+          }
+        })
+        .finally(() => {
+          if (!isCancelled) {
+            setIsLoading(false);
+          }
+        });
 
       return () => {
         isCancelled = true;
       };
     }, [])
   );
-
-  const isEmpty = places.length === 0 && codes.length === 0;
 
   return (
     <SafeAreaView
@@ -58,7 +59,7 @@ export default function FavoritesScreen() {
         </Text>
 
         <Text style={styles.subtitle}>
-          {t('favorites.subtitle')}
+          Οι προσφορές και οι κωδικοί σου
         </Text>
       </View>
 
@@ -67,11 +68,11 @@ export default function FavoritesScreen() {
           color="#FFD400"
           style={styles.spinner}
         />
-      ) : isEmpty ? (
+      ) : codes.length === 0 ? (
         <View style={styles.emptyCard}>
           <View style={styles.iconCircle}>
             <Ionicons
-              name="heart-outline"
+              name="pricetag-outline"
               size={42}
               color="#111111"
             />
@@ -86,35 +87,18 @@ export default function FavoritesScreen() {
           </Text>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.list}>
-          {places.length > 0 ? (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>
-                {t('favorites.savedPlacesTitle')}
-              </Text>
-
-              {places.map((place) => (
-                <View key={`${place.type}-${place.id}`} style={styles.placeCardWrap}>
-                  <PlaceCard place={place} />
-                </View>
-              ))}
+        <FlatList
+          data={codes}
+          keyExtractor={(item) => item.code}
+          renderItem={({ item }) => (
+            <View style={styles.cardWrap}>
+              <DiscountCodeCard
+                discountCode={item}
+              />
             </View>
-          ) : null}
-
-          {codes.length > 0 ? (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>
-                {t('favorites.savedCodesTitle')}
-              </Text>
-
-              {codes.map((code) => (
-                <View key={code.code} style={styles.cardWrap}>
-                  <DiscountCodeCard discountCode={code} />
-                </View>
-              ))}
-            </View>
-          ) : null}
-        </ScrollView>
+          )}
+          contentContainerStyle={styles.list}
+        />
       )}
     </SafeAreaView>
   );
@@ -201,22 +185,6 @@ const styles = StyleSheet.create({
 
   list: {
     padding: spacing.xl,
-  },
-
-  section: {
-    marginBottom: spacing.lg,
-  },
-
-  sectionTitle: {
-    fontSize: 20,
-    lineHeight: 26,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    marginBottom: spacing.md,
-  },
-
-  placeCardWrap: {
-    marginBottom: spacing.md,
   },
 
   cardWrap: {

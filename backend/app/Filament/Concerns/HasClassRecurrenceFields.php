@@ -21,35 +21,35 @@ trait HasClassRecurrenceFields
     {
         return [
             Select::make('recurrence_type')
-                ->label(__('partner.fields.recurrence_type'))
+                ->label('Session type')
                 ->options([
-                    'recurring' => __('partner.options.recurring'),
-                    'one_time' => __('partner.options.one_time'),
+                    'recurring' => 'Recurring — repeats weekly',
+                    'one_time' => 'One-time — a single session',
                 ])
                 ->default('recurring')
                 ->live()
                 ->required(),
             DatePicker::make('starts_on')
-                ->label(fn (Get $get): string => $get('recurrence_type') === 'one_time' ? __('partner.fields.date') : __('partner.fields.starts_on'))
+                ->label(fn (Get $get): string => $get('recurrence_type') === 'one_time' ? 'Date' : 'Starts on')
                 ->default(now()->toDateString())
                 ->required(),
             CheckboxList::make('days_of_week')
-                ->label(__('partner.fields.days_of_week'))
-                ->options(self::dayOptions())
+                ->label('Available days')
+                ->options(self::DAY_OPTIONS)
                 ->columns(4)
                 ->required(fn (Get $get): bool => $get('recurrence_type') === 'recurring')
                 ->visible(fn (Get $get): bool => $get('recurrence_type') === 'recurring')
-                ->helperText(__('partner.help.recurrence')),
+                ->helperText('Pick every day this class runs — e.g. Monday/Wednesday/Friday for a 3x-a-week class.'),
             Select::make('recurrence_months')
-                ->label(__('partner.fields.recurrence_months'))
+                ->label('Repeat for')
                 ->options([
-                    1 => __('partner.options.one_month'),
-                    2 => __('partner.options.two_months'),
-                    3 => __('partner.options.three_months'),
-                    6 => __('partner.options.six_months'),
-                    12 => __('partner.options.twelve_months'),
+                    1 => '1 month',
+                    2 => '2 months',
+                    3 => '3 months',
+                    6 => '6 months',
+                    12 => '12 months',
                 ])
-                ->placeholder(__('partner.options.ongoing'))
+                ->placeholder('No end date (ongoing)')
                 ->visible(fn (Get $get): bool => $get('recurrence_type') === 'recurring'),
         ];
     }
@@ -66,6 +66,6 @@ trait HasClassRecurrenceFields
             return '—';
         }
 
-        return $days.($record->recurrence_months ? " · {$record->recurrence_months} ".__('partner.schedule.months_short') : ' · '.__('partner.schedule.ongoing'));
+        return $days.($record->recurrence_months ? " · {$record->recurrence_months} mo" : ' · ongoing');
     }
 }

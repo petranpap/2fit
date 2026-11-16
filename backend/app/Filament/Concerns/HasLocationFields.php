@@ -23,21 +23,21 @@ trait HasLocationFields
     {
         return [
             TextInput::make('maps_url')
-                ->label(__('partner.fields.maps_url'))
+                ->label('Google Maps link')
                 ->live()
                 ->dehydrated(false)
                 ->columnSpanFull()
-                ->placeholder(__('partner.help.maps_placeholder'))
-                ->helperText(__('partner.help.maps'))
+                ->placeholder('Paste the link here')
+                ->helperText('On Google Maps: find your business, tap Share, copy the link, paste it here — the location below fills in automatically.')
                 ->suffixAction(
                     Action::make('detectLocation')
-                        ->label(__('partner.actions.detect'))
+                        ->label('Detect')
                         ->icon('heroicon-m-map-pin')
                         ->action(function (Get $get, Set $set) {
                             $link = trim((string) $get('maps_url'));
 
                             if ($link === '') {
-                                Notification::make()->title(__('partner.messages.maps_missing'))->warning()->send();
+                                Notification::make()->title('Paste a Google Maps link first')->warning()->send();
 
                                 return;
                             }
@@ -46,8 +46,8 @@ trait HasLocationFields
 
                             if (! $coordinates) {
                                 Notification::make()
-                                    ->title(__('partner.messages.maps_invalid'))
-                                    ->body(__('partner.messages.maps_retry'))
+                                    ->title("Couldn't read a location from that link")
+                                    ->body('Try copying the link again from Google Maps, or fill in the coordinates below by hand.')
                                     ->danger()
                                     ->send();
 
@@ -57,14 +57,14 @@ trait HasLocationFields
                             $set('latitude', $coordinates['lat']);
                             $set('longitude', $coordinates['lng']);
 
-                            Notification::make()->title(__('partner.messages.maps_set'))->success()->send();
+                            Notification::make()->title('Location set')->success()->send();
                         })
                 ),
-            TextInput::make('latitude')->label(__('partner.fields.latitude'))
+            TextInput::make('latitude')
                 ->numeric()
                 ->step('0.0000001')
-                ->helperText(__('partner.help.maps_auto')),
-            TextInput::make('longitude')->label(__('partner.fields.longitude'))
+                ->helperText('Filled in automatically from the link above.'),
+            TextInput::make('longitude')
                 ->numeric()
                 ->step('0.0000001'),
         ];

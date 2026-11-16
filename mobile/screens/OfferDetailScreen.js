@@ -1,24 +1,14 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
 
 import { fetchDiscountCode } from '../api/discountCodes';
 import { claimOffer, fetchOffer } from '../api/offers';
+import Button from '../components/Button';
 import { useLocale } from '../i18n/LocaleContext';
-import { radius, spacing, typography } from '../theme/tokens';
+import { colors, radius, spacing, typography } from '../theme/tokens';
 import { formatDiscount } from '../utils/offers';
-import { formatOfferDate } from '../utils/formatOfferDate';
-
-// Same black / yellow / white palette as the 2Fit Home and Trainer pages.
-const PALETTE = {
-  background: '#111111',
-  card: '#1B1B1B',
-  yellow: '#FFD400',
-  white: '#FFFFFF',
-  muted: '#C9C9C9',
-  error: '#FF8080',
-};
 
 const STATUS_KEYS = {
   redeemed: 'offers.statusRedeemed',
@@ -33,17 +23,6 @@ export default function OfferDetailScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isClaiming, setIsClaiming] = useState(false);
   const [error, setError] = useState(null);
-
-  // The original navigation config uses the old blue header. Override it
-  // only for this screen, without changing other navigation routes.
-  useEffect(() => {
-    navigation.setOptions({
-      headerTintColor: PALETTE.yellow,
-      headerStyle: { backgroundColor: PALETTE.background },
-      headerTitleStyle: { color: PALETTE.white },
-      headerShadowVisible: false,
-    });
-  }, [navigation]);
 
   useEffect(() => {
     fetchOffer(offerId)
@@ -88,7 +67,7 @@ export default function OfferDetailScreen({ route, navigation }) {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.centered} edges={['bottom']}>
-        <ActivityIndicator color={PALETTE.yellow} />
+        <ActivityIndicator color={colors.primary} />
       </SafeAreaView>
     );
   }
@@ -115,7 +94,7 @@ export default function OfferDetailScreen({ route, navigation }) {
         {offer.description ? <Text style={styles.description}>{offer.description}</Text> : null}
         {offer.expires_at ? (
           <Text style={styles.expiry}>
-            {t('offers.expiresOn', { date: formatOfferDate(offer.expires_at) })}
+            {t('offers.expiresOn', { date: new Date(offer.expires_at).toLocaleDateString() })}
           </Text>
         ) : null}
 
@@ -141,22 +120,7 @@ export default function OfferDetailScreen({ route, navigation }) {
         ) : (
           <View style={styles.claimSection}>
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
-            <Pressable
-              onPress={handleClaim}
-              disabled={isClaiming}
-              accessibilityRole="button"
-              accessibilityState={{ disabled: isClaiming, busy: isClaiming }}
-              style={({ pressed }) => [
-                styles.claimButton,
-                (pressed || isClaiming) && styles.claimButtonPressed,
-              ]}
-            >
-              {isClaiming ? (
-                <ActivityIndicator color={PALETTE.background} />
-              ) : (
-                <Text style={styles.claimButtonText}>{t('offers.claimButton')}</Text>
-              )}
-            </Pressable>
+            <Button label={isClaiming ? t('offers.claiming') : t('offers.claimButton')} onPress={handleClaim} loading={isClaiming} />
           </View>
         )}
       </ScrollView>
@@ -167,30 +131,24 @@ export default function OfferDetailScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: PALETTE.background,
+    backgroundColor: colors.background,
   },
   centered: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: PALETTE.background,
-    padding: spacing.xl,
+    backgroundColor: colors.background,
   },
   message: {
     ...typography.body,
-    color: PALETTE.white,
-    textAlign: 'center',
+    color: colors.textSecondary,
   },
   content: {
     padding: spacing.xl,
-    paddingBottom: spacing['3xl'],
-    width: '100%',
-    maxWidth: 760,
-    alignSelf: 'center',
   },
   badge: {
     alignSelf: 'flex-start',
-    backgroundColor: PALETTE.yellow,
+    backgroundColor: colors.secondary,
     borderRadius: radius.sm,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
@@ -198,99 +156,73 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     ...typography.bodyStrong,
-    color: PALETTE.background,
+    color: colors.surface,
   },
   title: {
     ...typography.heading,
-    color: PALETTE.white,
-    fontSize: 23,
+    fontSize: 22,
   },
   at: {
     ...typography.body,
-    color: PALETTE.yellow,
+    color: colors.primary,
     marginTop: spacing.xs,
   },
   description: {
     ...typography.body,
-    color: PALETTE.white,
+    color: colors.textSecondary,
     marginTop: spacing.md,
   },
   expiry: {
     ...typography.caption,
-    color: PALETTE.muted,
     marginTop: spacing.sm,
   },
   claimSection: {
     marginTop: spacing.xl,
   },
-  claimButton: {
-    backgroundColor: PALETTE.yellow,
-    minHeight: 52,
-    borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  claimButtonPressed: {
-    opacity: 0.75,
-  },
-  claimButtonText: {
-    ...typography.bodyStrong,
-    color: PALETTE.background,
-    textAlign: 'center',
-  },
   errorText: {
     ...typography.caption,
-    color: PALETTE.error,
+    color: colors.danger,
     marginBottom: spacing.md,
   },
   codeSection: {
     marginTop: spacing.xl,
     alignItems: 'center',
-    backgroundColor: PALETTE.card,
-    borderWidth: 1,
-    borderColor: '#3A3A3A',
+    backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: spacing.xl,
   },
   sectionTitle: {
     ...typography.subheading,
-    color: PALETTE.white,
-    textAlign: 'center',
   },
   codeSubtitle: {
     ...typography.body,
-    color: PALETTE.muted,
+    color: colors.textSecondary,
     textAlign: 'center',
     marginTop: spacing.xs,
     marginBottom: spacing.lg,
   },
-  // Keep the QR code on white so scanners can read black modules.
   qrFrame: {
     padding: spacing.md,
-    backgroundColor: PALETTE.white,
-    borderWidth: 2,
-    borderColor: PALETTE.yellow,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
     borderRadius: radius.md,
     marginBottom: spacing.lg,
   },
   code: {
     ...typography.heading,
-    color: PALETTE.yellow,
     fontSize: 20,
     letterSpacing: 1,
-    textAlign: 'center',
   },
   statusPill: {
     marginTop: spacing.md,
-    backgroundColor: PALETTE.background,
+    backgroundColor: colors.background,
     borderRadius: radius.full,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
   },
   statusText: {
     ...typography.caption,
-    color: PALETTE.white,
+    color: colors.textSecondary,
   },
 });

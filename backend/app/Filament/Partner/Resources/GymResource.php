@@ -28,61 +28,48 @@ class GymResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
-    public static function getNavigationLabel(): string
-    {
-        return __('partner.nav.gym');
-    }
-
-    public static function getModelLabel(): string
-    {
-        return __('partner.model.gym');
-    }
-
-    public static function getPluralModelLabel(): string
-    {
-        return __('partner.model.gyms');
-    }
+    protected static ?string $navigationLabel = 'My Gym';
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('name')->label(__('partner.fields.name'))
+            TextInput::make('name')
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
                 ->afterStateUpdated(fn (string $state, callable $set) => $set('slug', Str::slug($state))),
-            TextInput::make('slug')->label(__('partner.fields.slug'))
+            TextInput::make('slug')
                 ->required()
                 ->maxLength(255)
                 ->unique(ignoreRecord: true),
-            Textarea::make('description')->label(__('partner.fields.description'))
+            Textarea::make('description')
                 ->maxLength(2000)
                 ->columnSpanFull(),
-            TextInput::make('address')->label(__('partner.fields.address'))->maxLength(255),
+            TextInput::make('address')->maxLength(255),
             ...self::locationFields(),
-            TextInput::make('phone')->label(__('partner.fields.phone'))->tel()->maxLength(30),
-            TextInput::make('email')->label(__('partner.fields.email'))->email()->maxLength(255),
-            TextInput::make('website')->label(__('partner.fields.website'))->url()->maxLength(255),
-            FileUpload::make('logo_path')->label(__('partner.fields.logo_path'))
-                ->label(__('partner.fields.logo_path'))
+            TextInput::make('phone')->tel()->maxLength(30),
+            TextInput::make('email')->email()->maxLength(255),
+            TextInput::make('website')->url()->maxLength(255),
+            FileUpload::make('logo_path')
+                ->label('Logo')
                 ->image()
                 ->disk('public')
                 ->directory('gyms/logos'),
-            FileUpload::make('cover_image_path')->label(__('partner.fields.cover_image_path'))
-                ->label(__('partner.fields.cover_image_path'))
+            FileUpload::make('cover_image_path')
+                ->label('Cover photo')
                 ->image()
                 ->disk('public')
                 ->directory('gyms/covers'),
             ...self::openingHoursFields(),
-            Select::make('categories')->label(__('partner.fields.categories'))
-                ->relationship('categories', 'name', fn (Builder $query) => $query->whereNotNull('parent_id'))
+            Select::make('categories')
+                ->relationship('categories', 'name')
                 ->multiple()
                 ->preload(),
-            Select::make('facilities')->label(__('partner.fields.facilities'))
+            Select::make('facilities')
                 ->relationship('facilities', 'name')
                 ->multiple()
                 ->preload(),
-            Toggle::make('is_active')->label(__('partner.fields.is_active'))
+            Toggle::make('is_active')
                 ->default(true),
         ]);
     }
@@ -91,10 +78,10 @@ class GymResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label(__('partner.fields.name'))->searchable(),
-                TextColumn::make('address')->label(__('partner.fields.address'))->limit(40),
-                IconColumn::make('is_verified')->label(__('partner.fields.is_verified'))->boolean(),
-                IconColumn::make('is_active')->label(__('partner.fields.is_active'))->boolean(),
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('address')->limit(40),
+                IconColumn::make('is_verified')->boolean(),
+                IconColumn::make('is_active')->boolean(),
             ])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),

@@ -17,7 +17,7 @@ class CreateFitnessClass extends CreateRecord
 
         if (! $classable) {
             Notification::make()
-                ->title(__('partner.messages.profile_first'))
+                ->title('Create your business profile first')
                 ->danger()
                 ->send();
 

@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Widgets\AdminStatsWidget;
-use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -20,77 +19,32 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /**
- * 2Fit Admin Panel
- *
- * Platform moderation:
- * - Approve gym, trainer and shop registrations.
- * - Moderate reviews.
- * - Manage existing admin resources.
- *
- * Admin-only access through User::canAccessPanel.
- * Separate from the Partner Panel.
+ * Sprint 6 — platform moderation: approving new gym/trainer/shop
+ * registrations (they're publicly invisible — see SearchService/*Controller
+ * is_verified gating — until approved here) and moderating reviews.
+ * Admin-only (see User::canAccessPanel), separate from Partner.
  */
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-
-            // ADMIN PANEL IDENTIFICATION
             ->id('admin')
             ->path('admin')
-            ->brandName('2Fit Admin')
-
-            // ADMIN LOGIN
             ->login()
-            ->darkMode(true, isForced: true)
-            // SHOW / HIDE PASSWORD (EYE ICON)
-            ->revealablePasswords(true)
-
-            // FORGOT PASSWORD
-            ->passwordReset()
-
-            // 2FIT BLACK / YELLOW DESIGN
-            ->darkMode(true)
-            ->defaultThemeMode(ThemeMode::Dark)
-
-            // 2FIT COLORS
             ->colors([
-                'primary' => Color::hex('#FFD600'),
+                'primary' => Color::hex('#0F6E8C'),
                 'danger' => Color::hex('#C23B3B'),
-                'success' => Color::hex('#22C55E'),
-                'warning' => Color::hex('#F59E0B'),
-                'info' => Color::hex('#38BDF8'),
             ])
-
-            // EXISTING ADMIN RESOURCES
-            ->discoverResources(
-                in: app_path('Filament/Admin/Resources'),
-                for: 'App\\Filament\\Admin\\Resources'
-            )
-
-            // EXISTING ADMIN PAGES
-            ->discoverPages(
-                in: app_path('Filament/Admin/Pages'),
-                for: 'App\\Filament\\Admin\\Pages'
-            )
-
-            // ADMIN DASHBOARD
+            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
+            ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
                 Dashboard::class,
             ])
-
-            // EXISTING ADMIN WIDGETS
-            ->discoverWidgets(
-                in: app_path('Filament/Admin/Widgets'),
-                for: 'App\\Filament\\Admin\\Widgets'
-            )
-
+            ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 AdminStatsWidget::class,
             ])
-
-            // LARAVEL MIDDLEWARE
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -102,11 +56,8 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-
-            // ADMIN AUTHENTICATION
             ->authMiddleware([
                 Authenticate::class,
             ]);
     }
 }
-

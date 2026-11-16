@@ -25,45 +25,32 @@ class OfferResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
-    public static function getNavigationLabel(): string
-    {
-        return __('partner.nav.offers');
-    }
-
-    public static function getModelLabel(): string
-    {
-        return __('partner.model.offer');
-    }
-
-    public static function getPluralModelLabel(): string
-    {
-        return __('partner.model.offers');
-    }
+    protected static ?string $navigationLabel = 'Offers';
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('title')->label(__('partner.fields.title'))
+            TextInput::make('title')
                 ->required()
                 ->maxLength(255),
-            Textarea::make('description')->label(__('partner.fields.description'))
+            Textarea::make('description')
                 ->maxLength(2000)
                 ->columnSpanFull(),
-            Select::make('discount_type')->label(__('partner.fields.discount_type'))
+            Select::make('discount_type')
                 ->options([
-                    'percentage' => __('partner.options.percentage'),
-                    'fixed_amount' => __('partner.options.fixed_amount'),
+                    'percentage' => 'Percentage',
+                    'fixed_amount' => 'Fixed amount',
                 ])
                 ->required()
                 ->live(),
-            TextInput::make('discount_value')->label(__('partner.fields.discount_value'))
+            TextInput::make('discount_value')
                 ->numeric()
                 ->required()
                 ->suffix(fn (callable $get) => $get('discount_type') === 'percentage' ? '%' : '€')
                 ->maxValue(fn (callable $get) => $get('discount_type') === 'percentage' ? 100 : null),
-            DateTimePicker::make('starts_at')->label(__('partner.fields.starts_at')),
-            DateTimePicker::make('expires_at')->label(__('partner.fields.expires_at'))->after('starts_at'),
-            Toggle::make('is_active')->label(__('partner.fields.is_active'))->default(true),
+            DateTimePicker::make('starts_at'),
+            DateTimePicker::make('expires_at')->after('starts_at'),
+            Toggle::make('is_active')->default(true),
         ]);
     }
 
@@ -71,11 +58,11 @@ class OfferResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title')->label(__('partner.fields.title'))->searchable(),
-                TextColumn::make('discount_type')->label(__('partner.fields.discount_type'))->formatStateUsing(fn (string $state): string => __('partner.options.'.$state)),
-                TextColumn::make('discount_value')->label(__('partner.fields.discount_value')),
-                TextColumn::make('expires_at')->label(__('partner.fields.expires_at'))->dateTime(),
-                IconColumn::make('is_active')->label(__('partner.fields.is_active'))->boolean(),
+                TextColumn::make('title')->searchable(),
+                TextColumn::make('discount_type'),
+                TextColumn::make('discount_value'),
+                TextColumn::make('expires_at')->dateTime(),
+                IconColumn::make('is_active')->boolean(),
             ])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),
